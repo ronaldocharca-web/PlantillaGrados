@@ -27,25 +27,31 @@ export default function Home() {
           </p>
         </Link>
 
-        <div className="rounded-xl bg-white p-6 shadow-sm">
+        <Link
+          href="/actas/tesis"
+          className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"
+        >
           <h2 className="text-lg font-semibold text-slate-800">
-            Acta 2
+            Tesis
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Próximamente.
+            Generar actas de defensa de Tesis.
           </p>
-        </div>
+        </Link>
 
-        <div className="rounded-xl bg-white p-6 shadow-sm">
+        <Link
+          href="/actas/examen-grado"
+          className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"
+        >
           <h2 className="text-lg font-semibold text-slate-800">
             Acta 3
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Próximamente.
+            Generar actas de examen de grado.
           </p>
-        </div>
+        </Link>
 
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-800">

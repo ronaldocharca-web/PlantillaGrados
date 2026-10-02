@@ -13,12 +13,12 @@ const opciones = [
     ruta: "/actas/proyecto-grado",
   },
   {
-    nombre: "Acta 2",
-    ruta: "#",
+    nombre: "Tesis",
+    ruta: "/actas/tesis",
   },
   {
-    nombre: "Acta 3",
-    ruta: "#",
+    nombre: "Examen de Grado",
+    ruta: "/actas/examen-grado",
   },
   {
     nombre: "Acta 4",

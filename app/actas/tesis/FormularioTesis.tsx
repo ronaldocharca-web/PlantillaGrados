@@ -16,13 +16,18 @@ type Props = {
   presidente: string;
 };
 
-export default function FormularioProyectoGrado({
+export default function FormularioTesis({
   docentes,
   presidente,
 }: Props) {
+  const apiBase = "/api/actas/tesis";
+  const titulo = "Acta de Tesis";
+  const nombreArchivo = "acta-tesis-generada";
   const [formulario, setFormulario] = useState({
     postulante: "",
+    postulante2: "",
     genero: "masculino",
+    genero2: "masculino",
     tribunal1: "",
     tribunal2: "",
     tutor: "",
@@ -78,7 +83,7 @@ async function generarPdf() {
     setGenerandoPdf(true);
 
     const respuesta = await fetch(
-      "/api/actas/proyecto-grado/pdf",
+      `${apiBase}/pdf`,
       {
         method: "POST",
 
@@ -145,7 +150,7 @@ async function descargarPdf() {
 
   try {
     const respuesta = await fetch(
-      "/api/actas/proyecto-grado/pdf",
+      `${apiBase}/pdf`,
       {
         method: "POST",
 
@@ -191,7 +196,7 @@ async function descargarPdf() {
     enlace.href = url;
 
     enlace.download =
-      "acta-proyecto-grado.pdf";
+      `${nombreArchivo}.pdf`;
 
     document.body.appendChild(enlace);
 
@@ -305,7 +310,7 @@ async function generarActa() {
   try {
     // aquí continúa tu código actual
     const respuesta = await fetch(
-      "/api/actas/proyecto-grado/docx",
+      `${apiBase}/docx`,
       {
         method: "POST",
 
@@ -344,7 +349,7 @@ async function generarActa() {
     enlace.href = url;
 
     enlace.download =
-      "acta-proyecto-grado.docx";
+      `${nombreArchivo}.docx`;
 
     document.body.appendChild(enlace);
 
@@ -368,7 +373,7 @@ async function generarActa() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800">
-          Acta de Proyecto de Grado
+          {titulo}
         </h1>
 
         <p className="mt-1 text-slate-500">
@@ -385,6 +390,19 @@ async function generarActa() {
           <h2 className="mb-6 text-lg font-semibold text-slate-800">
             Datos del acta
           </h2>
+
+          {Object.keys(errores).length > 0 && (
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              <p className="font-semibold">
+                Completa los siguientes campos antes de descargar el Word:
+              </p>
+              <ul className="mt-2 list-disc pl-5">
+                {Object.values(errores).map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="space-y-5">
 
@@ -406,7 +424,7 @@ async function generarActa() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Género
+                Género persona 1
               </label>
 
               <select
@@ -416,15 +434,45 @@ async function generarActa() {
                 }
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
               >
-                <option value="masculino">
-                  Masculino
-                </option>
-
-                <option value="femenino">
-                  Femenino
-                </option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
               </select>
             </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Nombre del segundo postulante (opcional)
+              </label>
+
+              <input
+                type="text"
+                value={formulario.postulante2}
+                onChange={(e) =>
+                  cambiarCampo("postulante2", e.target.value)
+                }
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
+                placeholder="Nombre completo"
+              />
+            </div>
+
+            {formulario.postulante2.trim() && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Género persona 2
+                </label>
+
+                <select
+                  value={formulario.genero2}
+                  onChange={(e) =>
+                    cambiarCampo("genero2", e.target.value)
+                  }
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
+                >
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -558,7 +606,7 @@ async function generarActa() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Tema del Proyecto de Grado
+                Tema de la tesis
               </label>
 
               <textarea
@@ -568,7 +616,7 @@ async function generarActa() {
                   cambiarCampo("tema", e.target.value)
                 }
                 className="w-full resize-none rounded-lg border border-slate-300 px-4 py-2.5"
-                placeholder="Ingrese el título completo del Proyecto de Grado"
+                placeholder="Ingrese el título completo de la tesis"
               />
             </div>
 
@@ -599,6 +647,14 @@ async function generarActa() {
   {generandoPdf
     ? "Generando PDF..."
     : "Generar vista previa PDF"}
+</button>
+
+<button
+  type="button"
+  onClick={generarActa}
+  className="w-full rounded-lg border border-slate-800 px-5 py-3 font-medium text-slate-900 hover:bg-slate-100"
+>
+  Descargar Word
 </button>
 
           </div>
@@ -666,3 +722,5 @@ async function generarActa() {
     </div>
   );
 }
+
+

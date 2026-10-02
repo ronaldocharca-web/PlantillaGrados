@@ -10,24 +10,17 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   try {
     const datos = await request.json();
-
     const rutaPlantilla = path.join(
       process.cwd(),
       "templates",
-      "proyecto-grado.docx"
+      "tesis_word.docx"
     );
-
     const contenido = fs.readFileSync(rutaPlantilla);
-
     const zip = new PizZip(contenido);
-
     const documento = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
-      delimiters: {
-        start: "{{",
-        end: "}}",
-      },
+      delimiters: { start: "{{", end: "}}" },
     });
 
     documento.render(construirDatosActa(datos));
@@ -36,7 +29,6 @@ export async function POST(request: NextRequest) {
       type: "uint8array",
       compression: "DEFLATE",
     });
-
     const arrayBuffer = archivo.buffer.slice(
       archivo.byteOffset,
       archivo.byteOffset + archivo.byteLength
@@ -47,26 +39,18 @@ export async function POST(request: NextRequest) {
       headers: {
         "Content-Type":
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-
         "Content-Disposition":
-          'attachment; filename="acta-proyecto-grado.docx"',
+          'attachment; filename="acta-tesis-generada.docx"',
+        "Cache-Control": "no-store",
       },
     });
   } catch (error) {
-    console.error("Error generando documento:", error);
-
-    const mensaje =
-      error instanceof Error
-        ? error.message
-        : "Error desconocido";
-
+    console.error("Error generando acta de tesis:", error);
     return NextResponse.json(
       {
-        error: mensaje,
+        error: error instanceof Error ? error.message : "Error desconocido",
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

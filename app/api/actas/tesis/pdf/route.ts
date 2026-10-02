@@ -10,36 +10,25 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   try {
     const datos = await request.json();
-
-    // 1. Leer plantilla Word
     const rutaPlantilla = path.join(
       process.cwd(),
       "templates",
-      "proyecto-grado.docx"
+      "tesis_word.docx"
     );
-
     const contenido = fs.readFileSync(rutaPlantilla);
-
-    // 2. Rellenar plantilla
     const zip = new PizZip(contenido);
-
     const documento = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
-      delimiters: {
-        start: "{{",
-        end: "}}",
-      },
+      delimiters: { start: "{{", end: "}}" },
     });
 
     documento.render(construirDatosActa(datos));
 
-    // 3. Generar DOCX en memoria
     const docx = documento.getZip().generate({
       type: "uint8array",
       compression: "DEFLATE",
     });
-
     const converterUrl = process.env.CONVERTER_SERVICE_URL || "http://127.0.0.1:8000/convert";
     const respuestaPdf = await fetch(converterUrl, {
       method: "POST",
@@ -54,37 +43,20 @@ export async function POST(request: NextRequest) {
       throw new Error(`El servidor de conversión respondió ${respuestaPdf.status}: ${detalle}`);
     }
 
-    const pdf = await respuestaPdf.arrayBuffer();
-
-    // 10. Devolver PDF al navegador
-    return new NextResponse(pdf, {
+    return new NextResponse(await respuestaPdf.arrayBuffer(), {
       status: 200,
-
       headers: {
         "Content-Type": "application/pdf",
-
-        "Content-Disposition":
-          'inline; filename="acta-proyecto-grado.pdf"',
+        "Content-Disposition": 'inline; filename="acta-tesis.pdf"',
       },
     });
   } catch (error) {
-    console.error(
-      "Error generando PDF:",
-      error
-    );
-
-    const mensaje =
-      error instanceof Error
-        ? error.message
-        : "Error desconocido";
-
+    console.error("Error generando PDF de tesis:", error);
     return NextResponse.json(
       {
-        error: mensaje,
+        error: error instanceof Error ? error.message : "Error desconocido",
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

@@ -1,0 +1,184 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+type Docente = { id: number; nombre: string };
+
+type Props = { docentes: Docente[]; presidente: string };
+
+type Formulario = {
+  postulante: string;
+  materia: string;
+  area: string;
+  aula: string;
+  convocatoria: string;
+  gestion: string;
+  fecha: string;
+  hora: string;
+  duracion: string;
+  nota: string;
+  aprobado: string;
+  reprobado: string;
+  tribunal1: string;
+  tribunal2: string;
+};
+
+const inicial: Formulario = {
+  postulante: "",
+  materia: "",
+  area: "",
+  aula: "",
+  convocatoria: "",
+  gestion: String(new Date().getFullYear()),
+  fecha: "",
+  hora: "",
+  duracion: "30",
+  nota: "",
+  aprobado: "X",
+  reprobado: "",
+  tribunal1: "",
+  tribunal2: "",
+};
+
+export default function FormularioExamenGrado({ docentes, presidente }: Props) {
+  const [formulario, setFormulario] = useState<Formulario>(inicial);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [generando, setGenerando] = useState(false);
+  const [errores, setErrores] = useState<Record<string, string>>({});
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  function cambiar(campo: keyof Formulario, valor: string) {
+    setFormulario((actual) => ({ ...actual, [campo]: valor }));
+  }
+
+  function fechaTexto(fecha: string) {
+    if (!fecha) return "";
+    const partes = fecha.includes("/")
+      ? fecha.split("/").map(Number)
+      : fecha.split("-").map(Number).reverse();
+    const [dia, mes, anio] = partes;
+    return new Date(anio, mes - 1, dia).toLocaleDateString("es-BO", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+    });
+  }
+
+  function validar() {
+    const nuevos: Record<string, string> = {};
+    if (!formulario.postulante.trim()) nuevos.postulante = "Ingrese el nombre del postulante.";
+    if (!formulario.materia.trim()) nuevos.materia = "Ingrese la materia.";
+    if (!formulario.area.trim()) nuevos.area = "Ingrese el área.";
+    if (!formulario.aula.trim()) nuevos.aula = "Ingrese el aula.";
+    if (!formulario.convocatoria.trim()) nuevos.convocatoria = "Ingrese el número de convocatoria.";
+    if (!formulario.fecha) nuevos.fecha = "Seleccione la fecha.";
+    if (!formulario.hora) nuevos.hora = "Seleccione la hora.";
+    if (!formulario.tribunal1) nuevos.tribunal1 = "Seleccione el primer tribunal evaluador.";
+    if (!formulario.tribunal2) nuevos.tribunal2 = "Seleccione el segundo tribunal evaluador.";
+    if (formulario.tribunal1 && formulario.tribunal1 === formulario.tribunal2) nuevos.tribunal2 = "Los tribunales deben ser diferentes.";
+    if (formulario.nota === "" || Number(formulario.nota) < 0 || Number(formulario.nota) > 100) nuevos.nota = "La nota debe estar entre 0 y 100.";
+    setErrores(nuevos);
+    return Object.keys(nuevos).length === 0;
+  }
+
+  const datos = () => ({ ...formulario, presidente, fechaTexto: fechaTexto(formulario.fecha) });
+
+  async function obtenerArchivo(ruta: string) {
+    const respuesta = await fetch(ruta, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos()),
+    });
+    if (!respuesta.ok) {
+      const detalle = await respuesta.json().catch(() => ({}));
+      throw new Error(detalle.error || "No se pudo generar el documento.");
+    }
+    return respuesta.blob();
+  }
+
+  async function generarPdf() {
+    if (!validar()) return;
+    try {
+      setGenerando(true);
+      const blob = await obtenerArchivo("/api/actas/examen-grado/pdf");
+      const url = URL.createObjectURL(blob);
+      setPdfUrl((anterior) => { if (anterior) URL.revokeObjectURL(anterior); return url; });
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo generar el PDF.");
+    } finally { setGenerando(false); }
+  }
+
+  async function descargarWord() {
+    if (!validar()) return;
+    try {
+      const blob = await obtenerArchivo("/api/actas/examen-grado/docx");
+      const url = URL.createObjectURL(blob);
+      const enlace = document.createElement("a");
+      enlace.href = url;
+      enlace.download = "acta-examen-grado-generada.docx";
+      enlace.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo generar el Word.");
+    }
+  }
+
+  async function descargarPdf() {
+    if (!validar()) return;
+    try {
+      const blob = await obtenerArchivo("/api/actas/examen-grado/pdf");
+      const url = URL.createObjectURL(blob);
+      const enlace = document.createElement("a");
+      enlace.href = url;
+      enlace.download = "acta-examen-grado-generada.pdf";
+      enlace.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo generar el PDF.");
+    }
+  }
+
+  useEffect(() => () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); }, [pdfUrl]);
+
+  const campo = (label: string, key: keyof Formulario, placeholder = "") => (
+    <div>
+      <label className="mb-2 block text-sm font-medium text-slate-700">{label}</label>
+      <input value={formulario[key]} onChange={(e) => cambiar(key, e.target.value)} placeholder={placeholder} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+    </div>
+  );
+
+  return (
+    <div className="p-6">
+      <div className="mb-6"><h1 className="text-2xl font-bold text-slate-800">Acta de Examen de Grado</h1><p className="mt-1 text-slate-500">Complete la información para generar el acta.</p></div>
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <section className="rounded-xl bg-white p-6 shadow-sm">
+          <h2 className="mb-6 text-lg font-semibold text-slate-800">Datos del examen</h2>
+          {Object.keys(errores).length > 0 && <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"><p className="font-semibold">Completa los siguientes campos:</p><ul className="mt-2 list-disc pl-5">{Object.values(errores).map((e) => <li key={e}>{e}</li>)}</ul></div>}
+          <div className="space-y-5">
+            {campo("Nombre del postulante", "postulante", "Nombre completo")}
+            {campo("Materia", "materia", "Ej. TUR – 327 PLANIFICACIÓN TURÍSTICA")}
+            {campo("Área", "area", "Ej. TURÍSTICA Y ADMINISTRATIVA")}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Aula", "aula", "Ej. 11-05")}{campo("N.º de convocatoria", "convocatoria", "Ej. 02")}</div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Gestión", "gestion", "Ej. 2026")}{campo("Duración en minutos", "duracion", "Ej. 30")}</div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Fecha</label>
+                <input type="text" inputMode="numeric" placeholder="dd/mm/aaaa" value={formulario.fecha} onChange={(e) => cambiar("fecha", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Hora</label>
+                <input type="time" value={formulario.hora} onChange={(e) => cambiar("hora", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
+            </div>
+            {campo("Nota", "nota", "Ej. 90")}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Texto de aprobado", "aprobado", "Ej. X")}{campo("Texto de reprobado", "reprobado", "Dejar vacío si no corresponde")}</div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 1</label><select value={formulario.tribunal1} onChange={(e) => cambiar("tribunal1", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5"><option value="">Seleccione un docente</option>{docentes.map((d) => <option key={d.id} value={d.nombre}>{d.nombre}</option>)}</select></div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 2</label><select value={formulario.tribunal2} onChange={(e) => cambiar("tribunal2", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5"><option value="">Seleccione un docente</option>{docentes.map((d) => <option key={d.id} value={d.nombre}>{d.nombre}</option>)}</select></div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Presidente del tribunal</label><input value={presidente} disabled className="w-full rounded-lg border border-slate-200 bg-slate-100 px-4 py-2.5" /></div>
+            <button type="button" onClick={generarPdf} disabled={generando} className="w-full rounded-lg bg-slate-800 px-5 py-3 font-medium text-white hover:bg-slate-900 disabled:opacity-50">{generando ? "Generando PDF..." : "Generar vista previa PDF"}</button>
+            <button type="button" onClick={descargarWord} className="w-full rounded-lg border border-slate-800 px-5 py-3 font-medium text-slate-900 hover:bg-slate-100">Descargar Word</button>
+          </div>
+        </section>
+        <section className="rounded-xl bg-slate-200 p-6 shadow-sm"><div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-slate-800">Vista previa PDF</h2>{pdfUrl && <div className="flex gap-2"><button type="button" onClick={descargarPdf} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">Descargar PDF</button><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}</div>{pdfUrl ? <iframe ref={iframeRef} src={pdfUrl} title="Vista previa del examen de grado" className="h-[850px] w-full rounded-lg bg-white" /> : <div className="flex h-[850px] items-center justify-center rounded-lg bg-white"><div className="text-center"><p className="font-medium text-slate-600">Vista previa del documento</p><p className="mt-2 text-sm text-slate-400">Complete el formulario y genere el PDF.</p></div></div>}</section>
+      </div>
+    </div>
+  );
+}
