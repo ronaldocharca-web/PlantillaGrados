@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 
 type Docente = {
   id: number;
@@ -371,7 +372,8 @@ async function generarActa() {
 
   return (
     <div className="p-6">
-      <div className="mb-6">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
         <h1 className="text-2xl font-bold text-slate-800">
           {titulo}
         </h1>
@@ -379,6 +381,8 @@ async function generarActa() {
         <p className="mt-1 text-slate-500">
           Complete la información para generar el acta.
         </p>
+        </div>
+        <ActivarGeneradorPdf />
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
