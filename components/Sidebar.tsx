@@ -21,12 +21,12 @@ const opciones = [
     ruta: "/actas/examen-grado",
   },
   {
-    nombre: "Acta 4",
-    ruta: "#",
+    nombre: "Excelencia",
+    ruta: "/actas/excelencia",
   },
   {
-    nombre: "Acta 5",
-    ruta: "#",
+    nombre: "Trabajo Dirigido",
+    ruta: "/actas/trab-dirigido",
   },
 ];
 

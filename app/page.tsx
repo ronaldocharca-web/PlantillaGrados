@@ -45,7 +45,7 @@ export default function Home() {
           className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"
         >
           <h2 className="text-lg font-semibold text-slate-800">
-            Acta 3
+            Examen de Grado
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
@@ -53,25 +53,31 @@ export default function Home() {
           </p>
         </Link>
 
-        <div className="rounded-xl bg-white p-6 shadow-sm">
+        <Link
+          href="/actas/excelencia"
+          className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"
+        >
           <h2 className="text-lg font-semibold text-slate-800">
-            Acta 4
+            Excelencia
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Próximamente.
+            Generar actas de graduación por excelencia.
           </p>
-        </div>
+        </Link>
 
-        <div className="rounded-xl bg-white p-6 shadow-sm">
+        <Link
+          href="/actas/trab-dirigido"
+          className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"
+        >
           <h2 className="text-lg font-semibold text-slate-800">
-            Acta 5
+            Trabajo Dirigido
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Próximamente.
+            Generar actas de defensa de Trabajo Dirigido.
           </p>
-        </div>
+        </Link>
 
         <Link
           href="/admin"

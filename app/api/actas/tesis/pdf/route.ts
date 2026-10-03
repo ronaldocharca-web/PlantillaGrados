@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const rutaPlantilla = path.join(
       process.cwd(),
       "templates",
-      "tesis_word.docx"
+      "tesis_word_actualizada.docx"
     );
     const contenido = fs.readFileSync(rutaPlantilla);
     const zip = new PizZip(contenido);

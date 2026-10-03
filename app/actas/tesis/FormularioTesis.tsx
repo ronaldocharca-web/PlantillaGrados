@@ -282,10 +282,7 @@ function validarFormulario() {
       "El nombre del proyecto es obligatorio.";
   }
 
-  if (formulario.nota === "") {
-    nuevosErrores.nota =
-      "Ingrese la nota.";
-  } else {
+  if (formulario.nota !== "") {
     const nota = Number(formulario.nota);
 
     if (
