@@ -615,14 +615,6 @@ async function generarActa() {
 
         <button
           type="button"
-          onClick={descargarPdf}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-        >
-          Descargar PDF
-        </button>
-
-        <button
-          type="button"
           onClick={imprimirPdf}
           className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
         >

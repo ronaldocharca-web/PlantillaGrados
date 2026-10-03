@@ -210,7 +210,7 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
         <section className="rounded-xl bg-slate-200 p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-slate-800">Vista previa PDF</h2>
-            {pdfUrl && <div className="flex gap-2"><button type="button" onClick={descargarPdf} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">Descargar PDF</button><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}
+            {pdfUrl && <div className="flex gap-2"><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}
           </div>
           {pdfUrl ? <iframe ref={iframeRef} src={pdfUrl} title="Vista previa del Trabajo Dirigido" className="h-[850px] w-full rounded-lg bg-white" /> : <div className="flex h-[850px] items-center justify-center rounded-lg bg-white"><div className="text-center"><p className="font-medium text-slate-600">Vista previa del documento</p><p className="mt-2 text-sm text-slate-400">Complete el formulario y genere el PDF.</p></div></div>}
         </section>

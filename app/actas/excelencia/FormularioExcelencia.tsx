@@ -280,9 +280,6 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
             <h2 className="font-semibold text-slate-800">Vista previa PDF</h2>
             {pdfUrl && (
               <div className="flex gap-2">
-                <button type="button" onClick={descargarPdf} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">
-                  Descargar PDF
-                </button>
                 <button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">
                   Imprimir
                 </button>
