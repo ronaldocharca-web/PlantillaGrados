@@ -65,17 +65,10 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
 
   function validar() {
     const nuevos: Record<string, string> = {};
-    if (!formulario.postulante.trim()) nuevos.postulante = "Ingrese el nombre del postulante.";
-    if (!formulario.materia.trim()) nuevos.materia = "Ingrese la materia.";
-    if (!formulario.area.trim()) nuevos.area = "Ingrese el área.";
-    if (!formulario.aula.trim()) nuevos.aula = "Ingrese el aula.";
-    if (!formulario.convocatoria.trim()) nuevos.convocatoria = "Ingrese el número de convocatoria.";
-    if (!formulario.fecha) nuevos.fecha = "Seleccione la fecha.";
-    if (!formulario.hora) nuevos.hora = "Seleccione la hora.";
-    if (!formulario.tribunal1) nuevos.tribunal1 = "Seleccione el primer tribunal evaluador.";
-    if (!formulario.tribunal2) nuevos.tribunal2 = "Seleccione el segundo tribunal evaluador.";
     if (formulario.tribunal1 && formulario.tribunal1 === formulario.tribunal2) nuevos.tribunal2 = "Los tribunales deben ser diferentes.";
-    if (formulario.nota === "" || Number(formulario.nota) < 0 || Number(formulario.nota) > 100) nuevos.nota = "La nota debe estar entre 0 y 100.";
+    if (formulario.nota !== "" && (Number(formulario.nota) < 0 || Number(formulario.nota) > 100 || Number.isNaN(Number(formulario.nota)))) {
+      nuevos.nota = "La nota debe estar entre 0 y 100.";
+    }
     setErrores(nuevos);
     return Object.keys(nuevos).length === 0;
   }
@@ -162,7 +155,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">Fecha</label>
-                <input type="text" inputMode="numeric" placeholder="dd/mm/aaaa" value={formulario.fecha} onChange={(e) => cambiar("fecha", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+                <input type="date" value={formulario.fecha} onChange={(e) => cambiar("fecha", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">Hora</label>

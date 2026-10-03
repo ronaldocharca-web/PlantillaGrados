@@ -57,14 +57,6 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
 
   function validar() {
     const nuevos: Record<string, string> = {};
-    if (!formulario.postulante.trim()) {
-      nuevos.postulante = "Ingrese el nombre del postulante.";
-    }
-    if (!formulario.fecha) nuevos.fecha = "Seleccione la fecha.";
-    if (!formulario.hora) nuevos.hora = "Seleccione la hora.";
-    if (!formulario.tribunal1) {
-      nuevos.tribunal1 = "Seleccione el primer tribunal evaluador.";
-    }
     const tribunales = [
       formulario.tribunal1,
       formulario.tribunal2,
@@ -233,9 +225,7 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">Fecha</label>
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="dd/mm/aaaa"
+                  type="date"
                   value={formulario.fecha}
                   onChange={(e) => cambiar("fecha", e.target.value)}
                   className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
@@ -252,7 +242,7 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
               </div>
             </div>
 
-            {selectorTribunal("Tribunal evaluador 1", "tribunal1", true)}
+            {selectorTribunal("Tribunal evaluador 1", "tribunal1")}
             {selectorTribunal("Tribunal evaluador 2", "tribunal2")}
             {selectorTribunal("Tribunal evaluador 3", "tribunal3")}
 

@@ -277,10 +277,7 @@ function validarFormulario() {
       "El nombre del proyecto es obligatorio.";
   }
 
-  if (formulario.nota === "") {
-    nuevosErrores.nota =
-      "Ingrese la nota.";
-  } else {
+  if (formulario.nota !== "") {
     const nota = Number(formulario.nota);
 
     if (
@@ -532,13 +529,9 @@ async function generarActa() {
                 </label>
 
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="dd/mm/aaaa"
+                  type="date"
                   value={formulario.fecha}
-                  onChange={(e) =>
-                    cambiarCampo("fecha", e.target.value)
-                  }
+                  onChange={(e) => cambiarCampo("fecha", e.target.value)}
                   className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
                 />
               </div>

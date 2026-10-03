@@ -6,6 +6,11 @@ type ExamenRequest = {
 };
 
 export function construirDatosExamen(datos: ExamenRequest) {
+  const notaTexto =
+    datos.nota === undefined || String(datos.nota).trim() === ""
+      ? "\u00a0__"
+      : `\u00a0${String(datos.nota).trim()}`;
+
   return {
     ...datos,
     pagina: "08",
@@ -18,6 +23,7 @@ export function construirDatosExamen(datos: ExamenRequest) {
     gestion: datos.gestion?.trim() ?? "",
     duracion: datos.duracion?.trim() ?? "",
     nota: datos.nota ?? "",
+    notaTexto,
     aprobado: datos.aprobado ?? "",
     reprobado: datos.reprobado ?? "",
     tribunal1: datos.tribunal1?.trim() ?? "",
