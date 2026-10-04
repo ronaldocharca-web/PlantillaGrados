@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
+import ManualUsuario from "@/components/ManualUsuario";
 
 type Docente = { id: number; nombre: string };
 
@@ -152,7 +153,10 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
           <h1 className="text-2xl font-bold text-slate-800">Acta de Trabajo Dirigido</h1>
           <p className="mt-1 text-slate-500">Complete la información para generar el acta.</p>
         </div>
-        <ActivarGeneradorPdf />
+        <div className="acta-header-tools">
+          <ManualUsuario pantalla="trab-dirigido" />
+          <ActivarGeneradorPdf />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">

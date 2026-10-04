@@ -1,36 +1,265 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Actas — Carrera de Turismo
 
-## Getting Started
+Aplicación web para generar actas académicas en Word y PDF usando plantillas `.docx`.
 
-First, run the development server:
+## Tecnologías y ejecución
+
+- Next.js 16, React 19 y TypeScript.
+- Tailwind CSS 4.
+- Docxtemplater y PizZip para completar Word.
+- LibreOffice para convertir DOCX a PDF.
+- Supabase para docentes y configuración.
+- Render para publicar la aplicación y el conversor.
+
+Instalar y ejecutar:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Direcciones locales:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+Aplicación: http://localhost:3000
+Conversor:  http://localhost:8000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Otros comandos: `npm run next:dev`, `npm run converter:dev`, `npm run build`, `npm run start` y `npm run lint`.
 
-## Learn More
+## Variables de entorno
 
-To learn more about Next.js, take a look at the following resources:
+Crear `.env.local` en la raíz y no publicarlo:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+SUPABASE_SECRET_KEY=...
+CONVERTER_SERVICE_URL=http://127.0.0.1:8000/convert
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+En producción, `CONVERTER_SERVICE_URL` debe apuntar al servicio conversor de Render.
 
-## Deploy on Vercel
+## Flujo general
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. El usuario llena el formulario.
+2. La pantalla envía los datos a una API de Next.js.
+3. La API carga una plantilla de `templates/`.
+4. Docxtemplater reemplaza etiquetas como `{{postulante}}` y `{{fechaTexto}}`.
+5. Para PDF, el DOCX se envía al conversor LibreOffice.
+6. El PDF vuelve al navegador y se muestra dentro de un `iframe`.
+7. El visor permite imprimir o descargar el PDF.
+8. `Descargar Word` devuelve el DOCX rellenado.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ejemplo:
+
+```ts
+const zip = new PizZip(contenido);
+const documento = new Docxtemplater(zip, {
+  paragraphLoop: true,
+  linebreaks: true,
+  delimiters: { start: "{{", end: "}}" },
+});
+documento.render(datos);
+```
+
+## Pantalla de inicio
+
+```text
+/                 app/page.tsx
+Menú lateral      components/Sidebar.tsx
+Estilos globales  app/globals.css
+```
+
+Desde el inicio se accede a Proyecto de Grado, Tesis, Examen de Grado, Excelencia, Trabajo Dirigido y Administración.
+
+## Pantallas y APIs
+
+### Proyecto de Grado
+
+```text
+Pantalla:  app/actas/proyecto-grado/FormularioProyectoGrado.tsx
+Word:      app/api/actas/proyecto-grado/docx/route.ts
+PDF:       app/api/actas/proyecto-grado/pdf/route.ts
+Plantilla: templates/proyecto-grado.docx
+```
+
+La nota es opcional: sin nota se muestra `__/100`; con nota se muestra, por ejemplo, `90/100`.
+
+### Tesis
+
+```text
+Pantalla:  app/actas/tesis/FormularioTesis.tsx
+Word:      app/api/actas/tesis/docx/route.ts
+PDF:       app/api/actas/tesis/pdf/route.ts
+Plantilla: templates/tesis_word_actualizada.docx
+Datos:     lib/acta-data.ts
+```
+
+Controla uno o dos postulantes, género, artículos, verbos, nombres en mayúscula, `UNIV.` y nota en negrita. Genera `el/la postulante`, `los/las postulantes` y las formas correctas de `misma/mismas`.
+
+### Examen de Grado
+
+```text
+Pantalla:  app/actas/examen-grado/FormularioExamenGrado.tsx
+Word:      app/api/actas/examen-grado/docx/route.ts
+PDF:       app/api/actas/examen-grado/pdf/route.ts
+Plantilla: templates/examen-grado.docx
+Datos:     lib/examen-grado-data.ts
+```
+
+La nota aparece en negrita como `__/100` o `10/100`. Los campos pueden quedar vacíos durante las pruebas.
+
+### Excelencia
+
+```text
+Pantalla: app/actas/excelencia/FormularioExcelencia.tsx
+Word/PDF: app/api/actas/excelencia/
+Selector: lib/excelencia-template.ts
+```
+
+Plantillas: `excelencia-1-tribunal.docx`, `excelencia-2-tribunales.docx` y `excelencia.docx`, según la cantidad de tribunales.
+
+### Trabajo Dirigido
+
+```text
+Pantalla: app/actas/trab-dirigido/FormularioTrabajoDirigido.tsx
+Word/PDF: app/api/actas/trab-dirigido/
+Selector: lib/trab-dirigido-template.ts
+Datos:    lib/trab-dirigido-data.ts
+```
+
+Usa `trab-dirigido-1-tribunal.docx` o `trab-dirigido-2-tribunales.docx`. La nota usa `__/100` cuando está vacía.
+
+### Administración
+
+```text
+Página:        app/admin/page.tsx
+Docentes:      app/api/admin/docentes/route.ts
+Docente ID:    app/api/admin/docentes/[id]/route.ts
+Configuración: app/api/admin/configuracion/route.ts
+Supabase:      lib/supabase.ts y lib/supabase-admin.ts
+```
+
+## Plantillas Word
+
+Las plantillas están en `templates/` y usan etiquetas como:
+
+```text
+{{postulante}}
+{{fechaTexto}}
+{{hora}}
+{{tema}}
+{{tribunal1}}
+{{tribunal2}}
+{{presidente}}
+{{notaTexto}}
+```
+
+Para modificar una plantilla: abrir el `.docx`, conservar el diseño, cambiar las etiquetas, guardar dentro de `templates/` y probar Word y PDF. El formato principal del PDF proviene del Word, no de HTML.
+
+## Conversor DOCX → PDF
+
+```text
+converter-server/server.mjs
+converter-server/Dockerfile
+converter-server/README.md
+```
+
+Endpoints: `POST /convert` recibe un DOCX y `GET /health` comprueba el servicio. LibreOffice se ejecuta en modo invisible.
+
+En Windows:
+
+```powershell
+$env:LIBREOFFICE_PATH = "C:\Program Files\LibreOffice\program\soffice.exe"
+npm run converter:dev
+```
+
+En Docker:
+
+```bash
+docker build -t actas-converter ./converter-server
+docker run --rm -p 8000:8000 actas-converter
+```
+
+Ruta de salud desde Next.js: `/api/converter/health`.
+
+## Estructura principal
+
+```text
+app/                 Pantallas, layout y APIs
+components/          Componentes compartidos
+lib/                 Reglas, datos y Supabase
+templates/           Plantillas Word
+converter-server/    Servicio LibreOffice
+scripts/dev-all.mjs  Arranca Next.js y el conversor
+```
+
+## Manuales de uso dentro de la aplicación
+
+Inicio, las cinco actas y Administración tienen un botón **Manual** en su encabezado.
+Abre una guía propia de la pantalla, con pasos, capturas reales e instrucciones de
+los botones. El usuario puede avanzar, retroceder o elegir un paso, y cerrar con
+la X, la tecla Escape o el botón final **Entendido**. Abrir la guía conserva los
+datos del formulario.
+
+- `components/ManualUsuario.tsx`: botón y ventana del manual, compartidos por las siete pantallas.
+- `lib/manuales.ts`: textos, pasos y reglas específicas de cada pantalla.
+- `public/manuales/`: capturas de los formularios, Inicio, Administración, el conversor listo y la vista previa.
+- `app/globals.css`: estilos del manual y su adaptación a celulares.
+
+Los manuales de las actas comienzan con la activación del conversor y explican
+la vista previa, la descarga desde el visor PDF, la impresión y la descarga Word.
+Describen las validaciones actuales de cada formulario; el Word no requiere
+activar el conversor. Si se cambia la interfaz o una regla, actualizar el texto
+en `lib/manuales.ts` y sustituir la captura correspondiente.
+
+## Problemas frecuentes
+
+- `spawn soffice ENOENT`: instalar LibreOffice o configurar `LIBREOFFICE_PATH`.
+- `EADDRINUSE: port 8000`: el conversor ya está activo; `dev-all.mjs` lo detecta.
+- Error `502` en Render: el servicio gratuito puede estar dormido. Revisar su URL `/health` y volver a intentar.
+- Word funciona pero PDF no: revisar `CONVERTER_SERVICE_URL`, `/health` y los logs del conversor.
+
+### Word muestra contenido no legible
+
+Las plantillas deben conservar las declaraciones XML referenciadas por `mc:Ignorable`.
+Al editar el XML con herramientas que cambian los prefijos, pueden desaparecer
+declaraciones como `xmlns:w14` aunque `Ignorable` siga mencionando `w14`.
+Microsoft Word rechaza ese archivo; que se genere un PDF no garantiza que el DOCX sea válido.
+
+Para comprobar todas las plantillas con Python 3, sin dependencias adicionales:
+
+```bash
+python scripts/check-docx-templates.py
+```
+
+Si se detectan declaraciones faltantes, se pueden restaurar desde las declaraciones
+existentes en otras partes del mismo DOCX:
+
+```bash
+python scripts/check-docx-templates.py --fix
+```
+
+La reparación agrega únicamente declaraciones de espacios de nombres y comprueba
+que los elementos, atributos, texto y formato permanezcan iguales. Después de
+reparar una plantilla, volver a descargar el Word y comprobar que abre sin reparación
+en Microsoft Word. Los archivos descargados anteriormente conservan el defecto.
+
+## Publicar cambios
+
+```bash
+git add .
+git commit -m "actualiza sistema de actas"
+git push origin main
+```
+
+Después de publicar, probar cada pantalla, descargar un Word, generar un PDF y revisar `/health`.
+
+## Recomendaciones
+
+- No publicar `.env.local` ni claves secretas.
+- Mantener copias de las plantillas Word originales.
+- Probar Word y PDF después de cada cambio de plantilla.
+- No renombrar plantillas sin actualizar las rutas o selectores.
+- Mantener separado el servidor conversor porque Render no convierte DOCX a PDF por sí solo.

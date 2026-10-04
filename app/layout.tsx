@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <div className="flex min-h-screen bg-slate-100">
+        <div className="app-shell flex min-h-screen">
           <Sidebar />
 
           <main className="flex-1 overflow-auto">

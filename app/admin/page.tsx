@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ManualUsuario from "@/components/ManualUsuario";
 
 type Docente = {
   id: number;
@@ -273,7 +274,8 @@ async function cambiarEstado(
 
   return (
     <div className="p-8">
-      <div className="mb-8">
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
         <h1 className="text-3xl font-bold text-slate-800">
           Administración
         </h1>
@@ -281,6 +283,8 @@ async function cambiarEstado(
         <p className="mt-2 text-slate-600">
           Gestión de docentes y configuración del sistema.
         </p>
+        </div>
+        <ManualUsuario pantalla="admin" />
       </div>
 
       <section className="rounded-xl bg-white p-6 shadow-sm">

@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
+import ManualUsuario from "@/components/ManualUsuario";
 
 type Docente = {
   id: number;
@@ -228,26 +229,6 @@ function imprimirPdf() {
 function validarFormulario() {
   const nuevosErrores: Record<string, string> = {};
 
-  if (!formulario.postulante.trim()) {
-    nuevosErrores.postulante =
-      "El nombre del postulante es obligatorio.";
-  }
-
-  if (!formulario.tribunal1) {
-    nuevosErrores.tribunal1 =
-      "Seleccione el primer miembro del tribunal.";
-  }
-
-  if (!formulario.tribunal2) {
-    nuevosErrores.tribunal2 =
-      "Seleccione el segundo miembro del tribunal.";
-  }
-
-  if (!formulario.tutor) {
-    nuevosErrores.tutor =
-      "Seleccione el docente tutor.";
-  }
-
   if (
     formulario.tribunal1 &&
     formulario.tribunal1 === formulario.tribunal2
@@ -265,21 +246,6 @@ function validarFormulario() {
   ) {
     nuevosErrores.tutor =
       "El docente tutor no puede ser también miembro del tribunal.";
-  }
-
-  if (!formulario.fecha) {
-    nuevosErrores.fecha =
-      "Seleccione la fecha de la defensa.";
-  }
-
-  if (!formulario.hora) {
-    nuevosErrores.hora =
-      "Seleccione la hora.";
-  }
-
-  if (!formulario.tema.trim()) {
-    nuevosErrores.tema =
-      "El nombre del proyecto es obligatorio.";
   }
 
   if (formulario.nota !== "") {
@@ -306,7 +272,6 @@ async function generarActa() {
   }
 
   try {
-    // aquí continúa tu código actual
     const respuesta = await fetch(
       `${apiBase}/docx`,
       {
@@ -379,7 +344,10 @@ async function generarActa() {
           Complete la información para generar el acta.
         </p>
         </div>
-        <ActivarGeneradorPdf />
+        <div className="acta-header-tools">
+          <ManualUsuario pantalla="tesis" />
+          <ActivarGeneradorPdf />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -395,7 +363,7 @@ async function generarActa() {
           {Object.keys(errores).length > 0 && (
             <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
               <p className="font-semibold">
-                Completa los siguientes campos antes de descargar el Word:
+                Revisa los siguientes datos antes de descargar el Word:
               </p>
               <ul className="mt-2 list-disc pl-5">
                 {Object.values(errores).map((error) => (

@@ -26,15 +26,10 @@ export async function POST(request: NextRequest) {
     documento.render(construirDatosActa(datos));
 
     const archivo = documento.getZip().generate({
-      type: "uint8array",
+      type: "nodebuffer",
       compression: "DEFLATE",
     });
-    const arrayBuffer = archivo.buffer.slice(
-      archivo.byteOffset,
-      archivo.byteOffset + archivo.byteLength
-    ) as ArrayBuffer;
-
-    return new NextResponse(arrayBuffer, {
+    return new NextResponse(new Uint8Array(archivo), {
       status: 200,
       headers: {
         "Content-Type":

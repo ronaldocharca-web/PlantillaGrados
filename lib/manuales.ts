@@ -1,0 +1,183 @@
+export type PantallaManual =
+  | "inicio"
+  | "proyecto-grado"
+  | "tesis"
+  | "examen-grado"
+  | "excelencia"
+  | "trab-dirigido"
+  | "admin";
+
+type Detalle = { titulo: string; texto: string };
+export type PasoManual = {
+  titulo: string;
+  descripcion: string;
+  imagen?: string;
+  pieImagen?: string;
+  detalles: Detalle[];
+};
+type Manual = { titulo: string; resumen: string; pasos: PasoManual[] };
+
+const activarPdf: PasoManual = {
+  titulo: "Primero, activa el generador PDF",
+  descripcion: "Al entrar al acta, comprueba el conversor antes de generar la vista previa. Puedes ir llenando los datos mientras se activa.",
+  imagen: "/manuales/generador-listo.jpg",
+  pieImagen: "Activador comprobado en Tesis. Este control funciona igual en las cinco actas.",
+  detalles: [
+    { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. Se abrirá una pequeña ventana para comprobar el servicio." },
+    { titulo: "2. Espera la confirmación", texto: "Mientras diga «Despertando generador…», espera. Cuando diga «Generador listo ✓» y «Ya puedes generar la vista previa», puedes crear el PDF. Si la ventana muestra «ok: true», el servicio mostrado allí está respondiendo." },
+    { titulo: "3. Si sigue iniciando", texto: "Pulsa «Reintentar activación» después de esperar un momento. El servicio gratuito puede tardar en iniciar. Si aparece un error 502 al generar, vuelve a comprobarlo y reintenta." },
+    { titulo: "Reactivar y cerrar", texto: "Después de 10 minutos, el botón avisa que Render puede haberlo apagado; es un recordatorio, no una comprobación de que esté apagado. Pulsa «Reactivar generador PDF». «Cerrar» solo oculta la ventana del estado." },
+    { titulo: "Para descargar Word", texto: "El archivo Word se genera directamente. No necesitas activar el conversor PDF para descargarlo." },
+  ],
+};
+
+const revisarPdf: PasoManual = {
+  titulo: "Genera y revisa la vista previa",
+  descripcion: "Pulsa «Generar vista previa PDF» al terminar de ingresar los datos que quieras incluir.",
+  imagen: "/manuales/vista-previa.jpg",
+  pieImagen: "Encabezado del panel de vista previa y botón Imprimir en Tesis. Los controles internos del visor dependen de tu navegador.",
+  detalles: [
+    { titulo: "Mientras se genera", texto: "El botón muestra «Generando PDF…». Espera a que el documento aparezca en el panel de vista previa." },
+    { titulo: "Revisa el documento", texto: "Comprueba nombres, fecha, tema, nota y firmas. Usa el zoom del visor para leerlo y revisa todas las páginas." },
+    { titulo: "Si modificas un dato", texto: "La vista previa no se actualiza sola. Vuelve a pulsar «Generar vista previa PDF» para que el PDF refleje los cambios." },
+  ],
+};
+
+function guardar(word: string): PasoManual {
+  return {
+    titulo: "Descarga o imprime tu acta",
+    descripcion: "Elige Word para continuar editando el acta, o PDF para guardar la versión que revisaste.",
+    imagen: "/manuales/descargar-word.jpg",
+    pieImagen: "Botones al final del formulario de Tesis. Las cinco actas usan estos mismos nombres de botón.",
+    detalles: [
+      { titulo: "Descargar Word", texto: word },
+      { titulo: "Guardar PDF", texto: "En la barra del visor de vista previa, pulsa el icono de descarga (flecha hacia abajo). Si no lo ves, abre el menú del visor. El PDF descargado corresponde a la última vista previa generada." },
+      { titulo: "Imprimir", texto: "Cuando haya una vista previa, usa «Imprimir» o el icono de impresora del propio visor. Revisa el tamaño del papel y la vista de impresión antes de confirmar." },
+      { titulo: "Antes de salir", texto: "Descarga tu archivo antes de cambiar de pantalla o recargar. Los datos del formulario y la vista previa no se guardan como un borrador permanente." },
+    ],
+  };
+}
+
+function acta(titulo: string, pantalla: PantallaManual, detalles: Detalle[], word: string): Manual {
+  return {
+    titulo,
+    resumen: "Sigue estos cuatro pasos para preparar y guardar el acta.",
+    pasos: [activarPdf, {
+      titulo: "Ingresa los datos del acta",
+      descripcion: "Escribe la información que debe aparecer en el documento. Revisa los nombres y la selección de docentes.",
+      imagen: `/manuales/${pantalla}.jpg`,
+      pieImagen: `Pantalla de ${titulo}. Los campos en blanco no incluyen datos de ejemplo.`,
+      detalles,
+    }, revisarPdf, guardar(word)],
+  };
+}
+
+const fechaPresidente: Detalle[] = [
+  { titulo: "Fecha y hora", texto: "Escribe la fecha en el campo o elígela con el icono de calendario. El orden de día y mes lo muestra tu navegador. Selecciona también la hora de la defensa." },
+  { titulo: "Presidente del tribunal", texto: "Se llena automáticamente y no se edita en este formulario. Para cambiarlo, entra a Administración y guarda el nuevo presidente." },
+];
+const nota: Detalle = { titulo: "Nota", texto: "Ingresa la calificación entre 0 y 100. Si dejas la nota vacía, el documento muestra __/100. Revisa el resultado en la vista previa." };
+
+export const manuales: Record<PantallaManual, Manual> = {
+  inicio: {
+    titulo: "Inicio",
+    resumen: "Conoce las opciones del sistema y elige el acta que necesitas.",
+    pasos: [{
+      titulo: "¿Para qué sirve cada tarjeta?",
+      descripcion: "Pulsa una tarjeta del panel principal para abrir su formulario. También puedes entrar desde el menú lateral.",
+      imagen: "/manuales/inicio.jpg",
+      pieImagen: "Panel principal del Sistema de Actas.",
+      detalles: [
+        { titulo: "Proyecto de Grado", texto: "Prepara el acta de defensa pública de un Proyecto de Grado, con postulante, tribunales, tutor, tema y nota." },
+        { titulo: "Tesis", texto: "Prepara el acta de defensa de Tesis. Permite uno o dos postulantes y ajusta el texto según su género." },
+        { titulo: "Examen de Grado", texto: "Registra un examen con materia, área, aula, convocatoria, duración, tribunales y calificación." },
+        { titulo: "Excelencia", texto: "Genera un acta de graduación por excelencia con uno, dos o tres tribunales evaluadores." },
+        { titulo: "Trabajo Dirigido", texto: "Genera el acta de defensa de Trabajo Dirigido, con tutor y uno o dos miembros del tribunal." },
+        { titulo: "Administración", texto: "Permite agregar, editar, activar o desactivar docentes, y configurar al presidente del tribunal." },
+      ],
+    }, {
+      titulo: "Conoce los botones de las actas",
+      descripcion: "Cada formulario tiene los controles para crear y revisar su documento.",
+      detalles: [
+        { titulo: "Manual", texto: "Abre la guía de la pantalla actual. Cierra la guía para volver al formulario sin perder los datos que ya escribiste." },
+        { titulo: "Activar generador PDF", texto: "Comprueba y despierta el conversor. Actívalo al comenzar a llenar el formulario y espera «Generador listo ✓» antes de crear el PDF." },
+        { titulo: "Generar vista previa PDF", texto: "Crea el PDF con los datos actuales y lo muestra en el visor." },
+        { titulo: "Descargar Word", texto: "Guarda un archivo .docx editable. No necesita el conversor PDF." },
+        { titulo: "Descarga del visor e Imprimir", texto: "La flecha del visor guarda el PDF. «Imprimir» abre la impresión del documento generado." },
+        { titulo: "Sistema activo", texto: "Identifica el panel principal; no comprueba el estado del conversor. Ese estado se consulta en «Activar generador PDF» dentro del acta." },
+      ],
+    }],
+  },
+  "proyecto-grado": acta("Proyecto de Grado", "proyecto-grado", [
+    { titulo: "Postulante y género", texto: "Escribe el nombre completo y selecciona el género para ajustar el texto del acta." },
+    { titulo: "Tribunales y tutor", texto: "Selecciona los dos miembros del tribunal y al docente tutor. Para descargar Word, deben estar seleccionados; los tribunales deben ser distintos y el tutor no puede repetirse como tribunal." },
+    ...fechaPresidente,
+    { titulo: "Tema del Proyecto de Grado", texto: "Escribe el título completo del trabajo tal como debe aparecer en el documento." },
+    nota,
+  ], "Pulsa «Descargar Word». En Proyecto de Grado, la descarga requiere nombre del postulante, dos tribunales, tutor, fecha, hora y tema. La nota puede quedar vacía. La vista previa PDF permite revisar el documento con campos vacíos."),
+  tesis: acta("Tesis", "tesis", [
+    { titulo: "Uno o dos postulantes", texto: "Ingresa el nombre y género del primer postulante. Si hay un segundo, completa su nombre en el campo opcional; aparecerá su selector de género. Si hay solo uno, deja vacío el segundo nombre." },
+    { titulo: "Tribunales y tutor", texto: "Selecciona los docentes que correspondan. Si seleccionas ambos tribunales, deben ser distintos. El tutor seleccionado no puede repetirse como tribunal." },
+    ...fechaPresidente,
+    { titulo: "Tema de la tesis", texto: "Escribe el título completo. Los nombres de los postulantes se presentan en mayúsculas en el texto de la defensa." },
+    nota,
+    { titulo: "Campos incompletos", texto: "Puedes generar una vista previa y descargar Word con el formulario vacío o incompleto, para trabajar con un borrador." },
+  ], "Pulsa «Descargar Word» para obtener el documento con los datos actuales. No hace falta completar todos los campos. Si ingresas una nota, debe estar entre 0 y 100; tampoco se permiten docentes repetidos entre tutor y tribunales."),
+  "examen-grado": acta("Examen de Grado", "examen-grado", [
+    { titulo: "Postulante, materia y área", texto: "Escribe el nombre completo, la materia del examen y el área correspondiente." },
+    { titulo: "Aula y convocatoria", texto: "Completa el lugar del examen, el número de convocatoria y la gestión. La gestión comienza con el año actual; puedes cambiarla." },
+    { titulo: "Duración", texto: "Ingresa cuántos minutos duró el examen. El formulario comienza con 30 minutos; modifica ese valor si corresponde." },
+    ...fechaPresidente,
+    nota,
+    { titulo: "Aprobado o reprobado", texto: "Coloca una X en «Texto de aprobado» o en «Texto de reprobado», y deja vacío el otro. El formulario empieza con aprobado marcado; verifica que corresponda al resultado. La nota no cambia estas marcas automáticamente." },
+    { titulo: "Tribunales", texto: "Selecciona los evaluadores que correspondan. Si eliges los dos, deben ser distintos. Los campos pueden quedar vacíos para preparar un borrador." },
+  ], "Pulsa «Descargar Word». Puedes descargarlo con campos vacíos o incompletos; solo se comprueba que la nota ingresada esté entre 0 y 100 y que los dos tribunales no estén repetidos."),
+  excelencia: acta("Excelencia", "excelencia", [
+    { titulo: "Postulante y género", texto: "Ingresa el nombre y selecciona el género del postulante." },
+    ...fechaPresidente,
+    { titulo: "Uno, dos o tres tribunales", texto: "Completa los evaluadores en orden: primero el tribunal 1, después el 2 y finalmente el 3, si corresponde. Deja vacíos los restantes. El sistema elige el formato de firmas según la cantidad seleccionada." },
+    { titulo: "No repitas evaluadores", texto: "Cada tribunal seleccionado debe corresponder a un docente distinto." },
+    { titulo: "Calificación de excelencia", texto: "Esta acta no tiene un campo de nota: la plantilla incluye 100 puntos (100 %) y aprobado con mención honorífica. Revisa que corresponda al caso." },
+    { titulo: "Borrador", texto: "No es obligatorio completar todos los datos para generar la vista previa o descargar Word." },
+  ], "Pulsa «Descargar Word». Se utiliza la plantilla de uno, dos o tres tribunales según los docentes seleccionados. También puedes descargar un borrador con campos vacíos."),
+  "trab-dirigido": acta("Trabajo Dirigido", "trab-dirigido", [
+    { titulo: "Postulante y género", texto: "Ingresa el nombre y selecciona el género del postulante." },
+    { titulo: "Uno o dos tribunales", texto: "Selecciona el primer tribunal y, si corresponde, el segundo. Deja el segundo vacío cuando haya un solo evaluador. La plantilla de firmas cambia automáticamente; esta pantalla no usa tres tribunales." },
+    { titulo: "Docente tutor", texto: "Selecciona al tutor del trabajo entre los docentes disponibles." },
+    ...fechaPresidente,
+    { titulo: "Tema", texto: "Escribe el título completo del Trabajo Dirigido." },
+    nota,
+    { titulo: "Borrador", texto: "Puedes generar la vista previa y descargar Word sin completar todos los datos, aunque una etiqueta del formulario señale «obligatorio». Comprueba los datos antes de usar el acta final." },
+  ], "Pulsa «Descargar Word». El sistema elige la plantilla de uno o dos tribunales. Puedes descargar el documento aunque haya campos vacíos."),
+  admin: {
+    titulo: "Administración",
+    resumen: "Gestiona los docentes de los formularios y al presidente del tribunal.",
+    pasos: [{
+      titulo: "Agrega un docente",
+      descripcion: "En «Gestión de docentes», escribe el nombre como debe aparecer en el acta.",
+      imagen: "/manuales/admin.jpg",
+      pieImagen: "Controles de Administración. No hace falta activar el generador PDF en esta pantalla.",
+      detalles: [
+        { titulo: "Agregar docente", texto: "Incluye el grado académico y el nombre completo, y pulsa «Agregar docente». Espera a que aparezca en la lista." },
+        { titulo: "Antes de agregar", texto: "Comprueba si ya existe en la lista para evitar registros duplicados." },
+      ],
+    }, {
+      titulo: "Edita o cambia el estado",
+      descripcion: "Utiliza los botones de la fila del docente que quieres gestionar.",
+      detalles: [
+        { titulo: "Editar", texto: "Abre el nombre para corregirlo. Pulsa «Guardar» para registrar el cambio o «Cancelar» para salir sin guardarlo." },
+        { titulo: "Desactivar", texto: "Oculta al docente de las opciones de las actas, sin eliminar su registro." },
+        { titulo: "Activar", texto: "Vuelve a habilitar al docente para que se pueda seleccionar en los formularios." },
+        { titulo: "Ver el cambio", texto: "Vuelve a abrir o recarga el acta para cargar la lista actualizada. Los archivos ya descargados no cambian." },
+      ],
+    }, {
+      titulo: "Configura al presidente",
+      descripcion: "Busca «Configuración del tribunal» debajo de la lista de docentes.",
+      detalles: [
+        { titulo: "Presidente del Tribunal", texto: "Escribe el nombre completo, con su grado académico, y pulsa el botón «Guardar» de esta sección." },
+        { titulo: "Confirma que se guardó", texto: "Espera el mensaje «Presidente actualizado correctamente». Vuelve a abrir el formulario del acta para ver el nuevo presidente." },
+        { titulo: "Alcance del cambio", texto: "El presidente se aplica a las nuevas actas generadas. Los Word y PDF descargados previamente conservan los datos anteriores." },
+      ],
+    }],
+  },
+};

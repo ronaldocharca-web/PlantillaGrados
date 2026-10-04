@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
+import ManualUsuario from "@/components/ManualUsuario";
 
 type Docente = { id: number; nombre: string };
 
@@ -176,7 +177,10 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
             Complete la información para generar el acta.
           </p>
         </div>
-        <ActivarGeneradorPdf />
+        <div className="acta-header-tools">
+          <ManualUsuario pantalla="excelencia" />
+          <ActivarGeneradorPdf />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
