@@ -1,6 +1,9 @@
+import { construirDatosCi } from "@/lib/ci";
+
 type ActaRequestData = {
   postulante?: string;
   postulante2?: string;
+  ci?: string;
   genero?: string;
   genero2?: string;
   tribunal1?: string;
@@ -17,9 +20,10 @@ function articuloUniversitario(genero: string | undefined) {
   return genero === "femenino" ? "la" : "el";
 }
 
-export function construirDatosActa(datos: ActaRequestData) {
+export function construirDatosActa(datos: ActaRequestData, siglaModalidad: string) {
   const postulante = datos.postulante?.trim() ?? "";
   const postulante2 = datos.postulante2?.trim() ?? "";
+  const datosCi = construirDatosCi(datos.ci, siglaModalidad);
 
   const nombrePostulante1 = postulante.toLocaleUpperCase("es-BO");
   const nombrePostulante2 = postulante2.toLocaleUpperCase("es-BO");
@@ -57,6 +61,7 @@ export function construirDatosActa(datos: ActaRequestData) {
 
   return {
     ...datos,
+    ...datosCi,
     postulante,
     postulante2,
     postulantesTexto,

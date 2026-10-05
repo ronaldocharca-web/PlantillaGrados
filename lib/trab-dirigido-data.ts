@@ -1,5 +1,8 @@
+import { construirDatosCi, SIGLAS_MODALIDAD } from "@/lib/ci";
+
 type TrabajoDirigidoRequest = {
   postulante?: string;
+  ci?: string;
   genero?: string;
   tribunal1?: string;
   tribunal2?: string;
@@ -12,12 +15,14 @@ type TrabajoDirigidoRequest = {
 };
 
 export function construirDatosTrabajoDirigido(datos: TrabajoDirigidoRequest) {
+  const datosCi = construirDatosCi(datos.ci, SIGLAS_MODALIDAD.trabajoDirigido);
   const notaTexto =
     datos.nota === undefined || String(datos.nota).trim() === ""
       ? "__"
       : String(datos.nota).trim();
 
   return {
+    ...datosCi,
     pagina: "24",
     libro: "9",
     postulante: datos.postulante?.trim() ?? "",

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = { id: number; nombre: string };
 
@@ -10,6 +11,7 @@ type Props = { docentes: Docente[]; presidente: string };
 
 type Formulario = {
   postulante: string;
+  ci: string;
   materia: string;
   area: string;
   aula: string;
@@ -27,6 +29,7 @@ type Formulario = {
 
 const inicial: Formulario = {
   postulante: "",
+  ci: "",
   materia: "",
   area: "",
   aula: "",
@@ -66,6 +69,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
 
   function validar() {
     const nuevos: Record<string, string> = {};
+    if (!formulario.ci.trim()) nuevos.ci = "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
     if (formulario.tribunal1 && formulario.tribunal1 === formulario.tribunal2) nuevos.tribunal2 = "Los tribunales deben ser diferentes.";
     if (formulario.nota !== "" && (Number(formulario.nota) < 0 || Number(formulario.nota) > 100 || Number.isNaN(Number(formulario.nota)))) {
       nuevos.nota = "La nota debe estar entre 0 y 100.";
@@ -108,7 +112,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
       const url = URL.createObjectURL(blob);
       const enlace = document.createElement("a");
       enlace.href = url;
-      enlace.download = "acta-examen-grado-generada.docx";
+      enlace.download = nombreArchivoActa(formulario.ci, SIGLAS_MODALIDAD.examenGrado, "docx");
       enlace.click();
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -116,19 +120,14 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
     }
   }
 
-  async function descargarPdf() {
-    if (!validar()) return;
-    try {
-      const blob = await obtenerArchivo("/api/actas/examen-grado/pdf");
-      const url = URL.createObjectURL(blob);
-      const enlace = document.createElement("a");
-      enlace.href = url;
-      enlace.download = "acta-examen-grado-generada.pdf";
-      enlace.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      alert(error instanceof Error ? error.message : "No se pudo generar el PDF.");
-    }
+  function descargarPdf() {
+    if (!pdfUrl || !validar()) return;
+    const enlace = document.createElement("a");
+    enlace.href = pdfUrl;
+    enlace.download = nombreArchivoActa(formulario.ci, SIGLAS_MODALIDAD.examenGrado, "pdf");
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
   }
 
   useEffect(() => () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); }, [pdfUrl]);
@@ -155,6 +154,11 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
           {Object.keys(errores).length > 0 && <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"><p className="font-semibold">Completa los siguientes campos:</p><ul className="mt-2 list-disc pl-5">{Object.values(errores).map((e) => <li key={e}>{e}</li>)}</ul></div>}
           <div className="space-y-5">
             {campo("Nombre del postulante", "postulante", "Nombre completo")}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Carnet de identidad (CI) *</label>
+              <input required value={formulario.ci} onChange={(e) => cambiar("ci", e.target.value)} placeholder="Ej. 12345678" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              <p className="mt-1 text-xs text-slate-500">Solo se usará para nombrar la descarga, por ejemplo 12345678-EG.</p>
+            </div>
             {campo("Materia", "materia", "Ej. TUR – 327 PLANIFICACIÓN TURÍSTICA")}
             {campo("Área", "area", "Ej. TURÍSTICA Y ADMINISTRATIVA")}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Aula", "aula", "Ej. 11-05")}{campo("N.º de convocatoria", "convocatoria", "Ej. 02")}</div>
@@ -178,7 +182,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
             <button type="button" onClick={descargarWord} className="w-full rounded-lg border border-slate-800 px-5 py-3 font-medium text-slate-900 hover:bg-slate-100">Descargar Word</button>
           </div>
         </section>
-        <section className="rounded-xl bg-slate-200 p-6 shadow-sm"><div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-slate-800">Vista previa PDF</h2>{pdfUrl && <div className="flex gap-2"><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}</div>{pdfUrl ? <iframe ref={iframeRef} src={pdfUrl} title="Vista previa del examen de grado" className="h-[850px] w-full rounded-lg bg-white" /> : <div className="flex h-[850px] items-center justify-center rounded-lg bg-white"><div className="text-center"><p className="font-medium text-slate-600">Vista previa del documento</p><p className="mt-2 text-sm text-slate-400">Complete el formulario y genere el PDF.</p></div></div>}</section>
+        <section className="rounded-xl bg-slate-200 p-6 shadow-sm"><div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-slate-800">Vista previa PDF</h2>{pdfUrl && <div className="flex gap-2"><button type="button" onClick={descargarPdf} className="rounded-lg border border-slate-500 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100">Descargar PDF</button><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}</div>{pdfUrl ? <iframe ref={iframeRef} src={pdfUrl} title="Vista previa del examen de grado" className="h-[850px] w-full rounded-lg bg-white" /> : <div className="flex h-[850px] items-center justify-center rounded-lg bg-white"><div className="text-center"><p className="font-medium text-slate-600">Vista previa del documento</p><p className="mt-2 text-sm text-slate-400">Complete el formulario y genere el PDF.</p></div></div>}</section>
       </div>
     </div>
   );

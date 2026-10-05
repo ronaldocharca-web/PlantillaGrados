@@ -1,5 +1,8 @@
+import { construirDatosCi, SIGLAS_MODALIDAD } from "@/lib/ci";
+
 type ExcelenciaRequest = {
   postulante?: string;
+  ci?: string;
   genero?: string;
   tribunal1?: string;
   tribunal2?: string;
@@ -10,7 +13,10 @@ type ExcelenciaRequest = {
 };
 
 export function construirDatosExcelencia(datos: ExcelenciaRequest) {
+  const datosCi = construirDatosCi(datos.ci, SIGLAS_MODALIDAD.excelencia);
+
   return {
+    ...datosCi,
     pagina: "33",
     libro: "9",
     postulante: datos.postulante?.trim() ?? "",

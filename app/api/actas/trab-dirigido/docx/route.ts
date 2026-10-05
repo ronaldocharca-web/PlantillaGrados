@@ -5,6 +5,7 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { construirDatosTrabajoDirigido } from "@/lib/trab-dirigido-data";
 import { obtenerPlantillaTrabajoDirigido } from "@/lib/trab-dirigido-template";
+import { estadoErrorActa } from "@/lib/ci";
 
 export const runtime = "nodejs";
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     console.error("Error generando acta de trabajo dirigido:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error desconocido" },
-      { status: 500 }
+      { status: estadoErrorActa(error) }
     );
   }
 }

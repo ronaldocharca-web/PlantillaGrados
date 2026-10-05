@@ -4,6 +4,7 @@ import path from "path";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { construirDatosActa } from "@/lib/acta-data";
+import { estadoErrorActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 export const runtime = "nodejs";
 
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    documento.render(construirDatosActa(datos));
+    documento.render(construirDatosActa(datos, SIGLAS_MODALIDAD.proyectoGrado));
 
     const archivo = documento.getZip().generate({
       type: "nodebuffer",
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
         error: mensaje,
       },
       {
-        status: 500,
+        status: estadoErrorActa(error),
       }
     );
   }

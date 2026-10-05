@@ -51,7 +51,7 @@ function guardar(word: string): PasoManual {
     pieImagen: "Botones al final del formulario de Tesis. Las cinco actas usan estos mismos nombres de botón.",
     detalles: [
       { titulo: "Descargar Word", texto: word },
-      { titulo: "Guardar PDF", texto: "En la barra del visor de vista previa, pulsa el icono de descarga (flecha hacia abajo). Si no lo ves, abre el menú del visor. El PDF descargado corresponde a la última vista previa generada." },
+      { titulo: "Descargar PDF", texto: "Después de generar la vista previa, usa el botón «Descargar PDF» de la pantalla. Ese botón guarda el archivo con el nombre CI-sigla, por ejemplo 12345678-T.pdf. La flecha interna del visor puede usar un nombre aleatorio del navegador." },
       { titulo: "Imprimir", texto: "Cuando haya una vista previa, usa «Imprimir» o el icono de impresora del propio visor. Revisa el tamaño del papel y la vista de impresión antes de confirmar." },
       { titulo: "Antes de salir", texto: "Descarga tu archivo antes de cambiar de pantalla o recargar. Los datos del formulario y la vista previa no se guardan como un borrador permanente." },
     ],
@@ -77,6 +77,10 @@ const fechaPresidente: Detalle[] = [
   { titulo: "Presidente del tribunal", texto: "Se llena automáticamente y no se edita en este formulario. Para cambiarlo, entra a Administración y guarda el nuevo presidente." },
 ];
 const nota: Detalle = { titulo: "Nota", texto: "Ingresa la calificación entre 0 y 100. Si dejas la nota vacía, el documento muestra __/100. Revisa el resultado en la vista previa." };
+const carnet = (sigla: string): Detalle => ({
+  titulo: "Carnet de identidad (obligatorio)",
+  texto: `Ingresa el CI antes de generar la vista previa PDF o descargar Word. El CI no se inserta dentro del acta: solo se usa para nombrar los archivos descargados con la sigla ${sigla.replace(/[^A-Z]/gi, "")}, por ejemplo 12345678-${sigla.replace(/[^A-Z]/gi, "")}.pdf. Los demás campos pueden conservar las reglas de borrador de esta pantalla.`,
+});
 
 export const manuales: Record<PantallaManual, Manual> = {
   inicio: {
@@ -110,45 +114,50 @@ export const manuales: Record<PantallaManual, Manual> = {
   },
   "proyecto-grado": acta("Proyecto de Grado", "proyecto-grado", [
     { titulo: "Postulante y género", texto: "Escribe el nombre completo y selecciona el género para ajustar el texto del acta." },
+    carnet("P.G."),
     { titulo: "Tribunales y tutor", texto: "Selecciona los dos miembros del tribunal y al docente tutor. Para descargar Word, deben estar seleccionados; los tribunales deben ser distintos y el tutor no puede repetirse como tribunal." },
     ...fechaPresidente,
     { titulo: "Tema del Proyecto de Grado", texto: "Escribe el título completo del trabajo tal como debe aparecer en el documento." },
     nota,
-  ], "Pulsa «Descargar Word». En Proyecto de Grado, la descarga requiere nombre del postulante, dos tribunales, tutor, fecha, hora y tema. La nota puede quedar vacía. La vista previa PDF permite revisar el documento con campos vacíos."),
+  ], "Pulsa «Descargar Word». En Proyecto de Grado, la descarga requiere CI, nombre del postulante, dos tribunales, tutor, fecha, hora y tema. La nota puede quedar vacía. Para la vista previa PDF, el único dato siempre obligatorio es el CI."),
   tesis: acta("Tesis", "tesis", [
     { titulo: "Uno o dos postulantes", texto: "Ingresa el nombre y género del primer postulante. Si hay un segundo, completa su nombre en el campo opcional; aparecerá su selector de género. Si hay solo uno, deja vacío el segundo nombre." },
+    carnet("T."),
     { titulo: "Tribunales y tutor", texto: "Selecciona los docentes que correspondan. Si seleccionas ambos tribunales, deben ser distintos. El tutor seleccionado no puede repetirse como tribunal." },
     ...fechaPresidente,
     { titulo: "Tema de la tesis", texto: "Escribe el título completo. Los nombres de los postulantes se presentan en mayúsculas en el texto de la defensa." },
     nota,
-    { titulo: "Campos incompletos", texto: "Puedes generar una vista previa y descargar Word con el formulario vacío o incompleto, para trabajar con un borrador." },
-  ], "Pulsa «Descargar Word» para obtener el documento con los datos actuales. No hace falta completar todos los campos. Si ingresas una nota, debe estar entre 0 y 100; tampoco se permiten docentes repetidos entre tutor y tribunales."),
+    { titulo: "Campos incompletos", texto: "Puedes generar una vista previa y descargar Word con los demás campos incompletos para trabajar con un borrador, pero el CI siempre debe estar escrito." },
+  ], "Pulsa «Descargar Word» para obtener el documento con los datos actuales. El CI es obligatorio; los demás campos pueden quedar incompletos. Si ingresas una nota, debe estar entre 0 y 100; tampoco se permiten docentes repetidos entre tutor y tribunales."),
   "examen-grado": acta("Examen de Grado", "examen-grado", [
     { titulo: "Postulante, materia y área", texto: "Escribe el nombre completo, la materia del examen y el área correspondiente." },
+    carnet("E.G."),
     { titulo: "Aula y convocatoria", texto: "Completa el lugar del examen, el número de convocatoria y la gestión. La gestión comienza con el año actual; puedes cambiarla." },
     { titulo: "Duración", texto: "Ingresa cuántos minutos duró el examen. El formulario comienza con 30 minutos; modifica ese valor si corresponde." },
     ...fechaPresidente,
     nota,
     { titulo: "Aprobado o reprobado", texto: "Coloca una X en «Texto de aprobado» o en «Texto de reprobado», y deja vacío el otro. El formulario empieza con aprobado marcado; verifica que corresponda al resultado. La nota no cambia estas marcas automáticamente." },
     { titulo: "Tribunales", texto: "Selecciona los evaluadores que correspondan. Si eliges los dos, deben ser distintos. Los campos pueden quedar vacíos para preparar un borrador." },
-  ], "Pulsa «Descargar Word». Puedes descargarlo con campos vacíos o incompletos; solo se comprueba que la nota ingresada esté entre 0 y 100 y que los dos tribunales no estén repetidos."),
+  ], "Pulsa «Descargar Word». El CI es obligatorio; los demás campos pueden quedar vacíos o incompletos. También se comprueba que la nota ingresada esté entre 0 y 100 y que los dos tribunales no estén repetidos."),
   excelencia: acta("Excelencia", "excelencia", [
     { titulo: "Postulante y género", texto: "Ingresa el nombre y selecciona el género del postulante." },
+    carnet("E."),
     ...fechaPresidente,
     { titulo: "Uno, dos o tres tribunales", texto: "Completa los evaluadores en orden: primero el tribunal 1, después el 2 y finalmente el 3, si corresponde. Deja vacíos los restantes. El sistema elige el formato de firmas según la cantidad seleccionada." },
     { titulo: "No repitas evaluadores", texto: "Cada tribunal seleccionado debe corresponder a un docente distinto." },
     { titulo: "Calificación de excelencia", texto: "Esta acta no tiene un campo de nota: la plantilla incluye 100 puntos (100 %) y aprobado con mención honorífica. Revisa que corresponda al caso." },
-    { titulo: "Borrador", texto: "No es obligatorio completar todos los datos para generar la vista previa o descargar Word." },
-  ], "Pulsa «Descargar Word». Se utiliza la plantilla de uno, dos o tres tribunales según los docentes seleccionados. También puedes descargar un borrador con campos vacíos."),
+    { titulo: "Borrador", texto: "Puedes dejar incompletos los demás datos para generar la vista previa o descargar Word, pero el CI es obligatorio." },
+  ], "Pulsa «Descargar Word». Se utiliza la plantilla de uno, dos o tres tribunales según los docentes seleccionados. El CI es obligatorio; los demás campos pueden quedar vacíos en un borrador."),
   "trab-dirigido": acta("Trabajo Dirigido", "trab-dirigido", [
     { titulo: "Postulante y género", texto: "Ingresa el nombre y selecciona el género del postulante." },
+    carnet("T.D."),
     { titulo: "Uno o dos tribunales", texto: "Selecciona el primer tribunal y, si corresponde, el segundo. Deja el segundo vacío cuando haya un solo evaluador. La plantilla de firmas cambia automáticamente; esta pantalla no usa tres tribunales." },
     { titulo: "Docente tutor", texto: "Selecciona al tutor del trabajo entre los docentes disponibles." },
     ...fechaPresidente,
     { titulo: "Tema", texto: "Escribe el título completo del Trabajo Dirigido." },
     nota,
-    { titulo: "Borrador", texto: "Puedes generar la vista previa y descargar Word sin completar todos los datos, aunque una etiqueta del formulario señale «obligatorio». Comprueba los datos antes de usar el acta final." },
-  ], "Pulsa «Descargar Word». El sistema elige la plantilla de uno o dos tribunales. Puedes descargar el documento aunque haya campos vacíos."),
+    { titulo: "Borrador", texto: "Puedes generar la vista previa y descargar Word sin completar los demás datos, pero el CI siempre es obligatorio. Comprueba el documento antes de usar el acta final." },
+  ], "Pulsa «Descargar Word». El sistema elige la plantilla de uno o dos tribunales. El CI es obligatorio; los demás campos pueden quedar vacíos."),
   admin: {
     titulo: "Administración",
     resumen: "Gestiona los docentes de los formularios y al presidente del tribunal.",

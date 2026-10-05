@@ -4,6 +4,7 @@ import path from "path";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { construirDatosExamen } from "@/lib/examen-grado-data";
+import { estadoErrorActa } from "@/lib/ci";
 
 export const runtime = "nodejs";
 
@@ -17,6 +18,6 @@ export async function POST(request: NextRequest) {
     return new NextResponse(new Uint8Array(archivo), { status: 200, headers: { "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Content-Disposition": 'attachment; filename="acta-examen-grado-generada.docx"', "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Error generando examen de grado:", error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Error desconocido" }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Error desconocido" }, { status: estadoErrorActa(error) });
   }
 }

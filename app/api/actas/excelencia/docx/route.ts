@@ -5,6 +5,7 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { construirDatosExcelencia } from "@/lib/excelencia-data";
 import { obtenerPlantillaExcelencia } from "@/lib/excelencia-template";
+import { estadoErrorActa } from "@/lib/ci";
 
 export const runtime = "nodejs";
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     console.error("Error generando acta de excelencia:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error desconocido" },
-      { status: 500 }
+      { status: estadoErrorActa(error) }
     );
   }
 }

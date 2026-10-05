@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = { id: number; nombre: string };
 
@@ -10,6 +11,7 @@ type Props = { docentes: Docente[]; presidente: string };
 
 type Formulario = {
   postulante: string;
+  ci: string;
   genero: string;
   tribunal1: string;
   tribunal2: string;
@@ -22,6 +24,7 @@ type Formulario = {
 
 const inicial: Formulario = {
   postulante: "",
+  ci: "",
   genero: "masculino",
   tribunal1: "",
   tribunal2: "",
@@ -58,8 +61,12 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
   }
 
   function validar() {
-    setErrores({});
-    return true;
+    const nuevos: Record<string, string> = {};
+    if (!formulario.ci.trim()) {
+      nuevos.ci = "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
+    }
+    setErrores(nuevos);
+    return Object.keys(nuevos).length === 0;
   }
 
   function datos() {
@@ -103,7 +110,7 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
       const url = URL.createObjectURL(blob);
       const enlace = document.createElement("a");
       enlace.href = url;
-      enlace.download = "acta-trabajo-dirigido-generada.docx";
+       enlace.download = nombreArchivoActa(formulario.ci, SIGLAS_MODALIDAD.trabajoDirigido, "docx");
       enlace.click();
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -111,19 +118,14 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
     }
   }
 
-  async function descargarPdf() {
-    if (!validar()) return;
-    try {
-      const blob = await obtenerArchivo("/api/actas/trab-dirigido/pdf");
-      const url = URL.createObjectURL(blob);
-      const enlace = document.createElement("a");
-      enlace.href = url;
-      enlace.download = "acta-trabajo-dirigido-generada.pdf";
-      enlace.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      alert(error instanceof Error ? error.message : "No se pudo generar el PDF.");
-    }
+  function descargarPdf() {
+    if (!pdfUrl || !validar()) return;
+    const enlace = document.createElement("a");
+    enlace.href = pdfUrl;
+    enlace.download = nombreArchivoActa(formulario.ci, SIGLAS_MODALIDAD.trabajoDirigido, "pdf");
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
   }
 
   useEffect(() => () => {
@@ -175,6 +177,11 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
               <input value={formulario.postulante} onChange={(e) => cambiar("postulante", e.target.value)} placeholder="Nombre completo" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
             </div>
             <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Carnet de identidad (CI) *</label>
+              <input required value={formulario.ci} onChange={(e) => cambiar("ci", e.target.value)} placeholder="Ej. 12345678" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              <p className="mt-1 text-xs text-slate-500">Solo se usará para nombrar la descarga, por ejemplo 12345678-TD.</p>
+            </div>
+            <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Género del postulante</label>
               <select value={formulario.genero} onChange={(e) => cambiar("genero", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5">
                 <option value="masculino">Masculino</option>
@@ -214,7 +221,7 @@ export default function FormularioTrabajoDirigido({ docentes, presidente }: Prop
         <section className="rounded-xl bg-slate-200 p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-slate-800">Vista previa PDF</h2>
-            {pdfUrl && <div className="flex gap-2"><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}
+            {pdfUrl && <div className="flex gap-2"><button type="button" onClick={descargarPdf} className="rounded-lg border border-slate-500 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100">Descargar PDF</button><button type="button" onClick={() => iframeRef.current?.contentWindow?.print()} className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white">Imprimir</button></div>}
           </div>
           {pdfUrl ? <iframe ref={iframeRef} src={pdfUrl} title="Vista previa del Trabajo Dirigido" className="h-[850px] w-full rounded-lg bg-white" /> : <div className="flex h-[850px] items-center justify-center rounded-lg bg-white"><div className="text-center"><p className="font-medium text-slate-600">Vista previa del documento</p><p className="mt-2 text-sm text-slate-400">Complete el formulario y genere el PDF.</p></div></div>}
         </section>

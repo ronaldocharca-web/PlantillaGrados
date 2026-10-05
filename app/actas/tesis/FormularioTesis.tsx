@@ -7,6 +7,7 @@ import {
 } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = {
   id: number;
@@ -24,10 +25,10 @@ export default function FormularioTesis({
 }: Props) {
   const apiBase = "/api/actas/tesis";
   const titulo = "Acta de Tesis";
-  const nombreArchivo = "acta-tesis-generada";
   const [formulario, setFormulario] = useState({
     postulante: "",
     postulante2: "",
+    ci: "",
     genero: "masculino",
     genero2: "masculino",
     tribunal1: "",
@@ -81,6 +82,10 @@ const iframeRef =
 }
 
 async function generarPdf() {
+  if (!validarCi()) {
+    return;
+  }
+
   try {
     setGenerandoPdf(true);
 
@@ -145,79 +150,19 @@ useEffect(() => {
   };
 }, [pdfUrl]);
 
-async function descargarPdf() {
-  if (!validarFormulario()) {
-    return;
-  }
+function descargarPdf() {
+  if (!pdfUrl || !validarCi()) return;
 
-  try {
-    const respuesta = await fetch(
-      `${apiBase}/pdf`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          ...formulario,
-          presidente,
-          fechaTexto: formatearFecha(formulario.fecha),
-        }),
-      }
-    );
-
-    if (!respuesta.ok) {
-      const tipoContenido =
-        respuesta.headers.get("content-type") || "";
-
-      let mensaje = "No se pudo generar el PDF";
-
-      if (tipoContenido.includes("application/json")) {
-        const error = await respuesta.json();
-
-        mensaje =
-          error.error || mensaje;
-      } else {
-        mensaje =
-          `Error del servidor (${respuesta.status})`;
-      }
-
-      throw new Error(mensaje);
-    }
-
-    const archivo = await respuesta.blob();
-
-    const url =
-      URL.createObjectURL(archivo);
-
-    const enlace =
-      document.createElement("a");
-
-    enlace.href = url;
-
-    enlace.download =
-      `${nombreArchivo}.pdf`;
-
-    document.body.appendChild(enlace);
-
-    enlace.click();
-
-    enlace.remove();
-
-    URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-
-    if (error instanceof Error) {
-      alert(error.message);
-    } else {
-      alert(
-        "Ocurrió un error al descargar el PDF."
-      );
-    }
-  }
+  const enlace = document.createElement("a");
+  enlace.href = pdfUrl;
+  enlace.download = nombreArchivoActa(
+    formulario.ci,
+    SIGLAS_MODALIDAD.tesis,
+    "pdf"
+  );
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
 }
 
 function imprimirPdf() {
@@ -226,8 +171,25 @@ function imprimirPdf() {
   iframeRef.current?.contentWindow?.print();
 }
 
+function validarCi() {
+  if (!formulario.ci.trim()) {
+    setErrores({
+      ci: "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.",
+    });
+    return false;
+  }
+
+  setErrores({});
+  return true;
+}
+
 function validarFormulario() {
   const nuevosErrores: Record<string, string> = {};
+
+  if (!formulario.ci.trim()) {
+    nuevosErrores.ci =
+      "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
+  }
 
   if (
     formulario.tribunal1 &&
@@ -311,8 +273,11 @@ async function generarActa() {
 
     enlace.href = url;
 
-    enlace.download =
-      `${nombreArchivo}.docx`;
+    enlace.download = nombreArchivoActa(
+      formulario.ci,
+      SIGLAS_MODALIDAD.tesis,
+      "docx"
+    );
 
     document.body.appendChild(enlace);
 
@@ -363,7 +328,7 @@ async function generarActa() {
           {Object.keys(errores).length > 0 && (
             <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
               <p className="font-semibold">
-                Revisa los siguientes datos antes de descargar el Word:
+                Revisa los siguientes datos antes de generar el PDF o descargar el Word:
               </p>
               <ul className="mt-2 list-disc pl-5">
                 {Object.values(errores).map((error) => (
@@ -389,6 +354,24 @@ async function generarActa() {
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
                 placeholder="Nombre completo"
               />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Carnet de identidad (CI) *
+              </label>
+
+              <input
+                type="text"
+                value={formulario.ci}
+                onChange={(e) => cambiarCampo("ci", e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
+                placeholder="Ej. 12345678"
+                required
+              />
+              <p className="mt-1 text-xs text-slate-500">
+                Solo se usará para nombrar la descarga, por ejemplo 12345678-T.
+              </p>
             </div>
 
             <div>
@@ -636,6 +619,14 @@ async function generarActa() {
 
     {pdfUrl && (
       <div className="flex gap-2">
+
+        <button
+          type="button"
+          onClick={descargarPdf}
+          className="rounded-lg border border-slate-500 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100"
+        >
+          Descargar PDF
+        </button>
 
         <button
           type="button"
