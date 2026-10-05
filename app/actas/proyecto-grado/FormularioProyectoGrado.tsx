@@ -26,6 +26,8 @@ export default function FormularioProyectoGrado({
   const [formulario, setFormulario] = useState({
     postulante: "",
     ci: "",
+    pagina: "19",
+    libro: "9",
     genero: "masculino",
     tribunal1: "",
     tribunal2: "",
@@ -179,88 +181,8 @@ function validarCi() {
   return true;
 }
 
-function validarFormulario() {
-  const nuevosErrores: Record<string, string> = {};
-
-  if (!formulario.ci.trim()) {
-    nuevosErrores.ci =
-      "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
-  }
-
-  if (!formulario.postulante.trim()) {
-    nuevosErrores.postulante =
-      "El nombre del postulante es obligatorio.";
-  }
-
-  if (!formulario.tribunal1) {
-    nuevosErrores.tribunal1 =
-      "Seleccione el primer miembro del tribunal.";
-  }
-
-  if (!formulario.tribunal2) {
-    nuevosErrores.tribunal2 =
-      "Seleccione el segundo miembro del tribunal.";
-  }
-
-  if (!formulario.tutor) {
-    nuevosErrores.tutor =
-      "Seleccione el docente tutor.";
-  }
-
-  if (
-    formulario.tribunal1 &&
-    formulario.tribunal1 === formulario.tribunal2
-  ) {
-    nuevosErrores.tribunal2 =
-      "Los dos miembros del tribunal deben ser diferentes.";
-  }
-
-  if (
-    formulario.tutor &&
-    (
-      formulario.tutor === formulario.tribunal1 ||
-      formulario.tutor === formulario.tribunal2
-    )
-  ) {
-    nuevosErrores.tutor =
-      "El docente tutor no puede ser también miembro del tribunal.";
-  }
-
-  if (!formulario.fecha) {
-    nuevosErrores.fecha =
-      "Seleccione la fecha de la defensa.";
-  }
-
-  if (!formulario.hora) {
-    nuevosErrores.hora =
-      "Seleccione la hora.";
-  }
-
-  if (!formulario.tema.trim()) {
-    nuevosErrores.tema =
-      "El nombre del proyecto es obligatorio.";
-  }
-
-  if (formulario.nota !== "") {
-    const nota = Number(formulario.nota);
-
-    if (
-      Number.isNaN(nota) ||
-      nota < 0 ||
-      nota > 100
-    ) {
-      nuevosErrores.nota =
-        "La nota debe estar entre 0 y 100.";
-    }
-  }
-
-  setErrores(nuevosErrores);
-
-  return Object.keys(nuevosErrores).length === 0;
-}
-
 async function generarActa() {
-  if (!validarFormulario()) {
+  if (!validarCi()) {
     return;
   }
 
@@ -404,6 +326,17 @@ async function generarActa() {
               <p className="mt-1 text-xs text-slate-500">
                 Solo se usará para nombrar la descarga, por ejemplo 12345678-PG.
               </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Número superior</label>
+                <input type="number" min="1" value={formulario.pagina} onChange={(e) => cambiarCampo("pagina", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Libro N.º</label>
+                <input type="number" min="1" value={formulario.libro} onChange={(e) => cambiarCampo("libro", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
             </div>
 
             <div>

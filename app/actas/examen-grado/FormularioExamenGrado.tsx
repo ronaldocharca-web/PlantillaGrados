@@ -12,6 +12,8 @@ type Props = { docentes: Docente[]; presidente: string };
 type Formulario = {
   postulante: string;
   ci: string;
+  pagina: string;
+  libro: string;
   materia: string;
   area: string;
   aula: string;
@@ -30,6 +32,8 @@ type Formulario = {
 const inicial: Formulario = {
   postulante: "",
   ci: "",
+  pagina: "08",
+  libro: "9",
   materia: "",
   area: "",
   aula: "",
@@ -159,6 +163,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
               <input required value={formulario.ci} onChange={(e) => cambiar("ci", e.target.value)} placeholder="Ej. 12345678" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               <p className="mt-1 text-xs text-slate-500">Solo se usará para nombrar la descarga, por ejemplo 12345678-EG.</p>
             </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Número superior", "pagina", "Ej. 08")}{campo("Libro N.º", "libro", "Ej. 9")}</div>
             {campo("Materia", "materia", "Ej. TUR – 327 PLANIFICACIÓN TURÍSTICA")}
             {campo("Área", "area", "Ej. TURÍSTICA Y ADMINISTRATIVA")}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Aula", "aula", "Ej. 11-05")}{campo("N.º de convocatoria", "convocatoria", "Ej. 02")}</div>

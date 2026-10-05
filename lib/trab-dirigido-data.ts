@@ -3,6 +3,8 @@ import { construirDatosCi, SIGLAS_MODALIDAD } from "@/lib/ci";
 type TrabajoDirigidoRequest = {
   postulante?: string;
   ci?: string;
+  pagina?: string;
+  libro?: string;
   genero?: string;
   tribunal1?: string;
   tribunal2?: string;
@@ -23,8 +25,8 @@ export function construirDatosTrabajoDirigido(datos: TrabajoDirigidoRequest) {
 
   return {
     ...datosCi,
-    pagina: "24",
-    libro: "9",
+    pagina: datos.pagina?.trim() || "24",
+    libro: datos.libro?.trim() || "9",
     postulante: datos.postulante?.trim() ?? "",
     articulo: datos.genero === "femenino" ? "la" : "el",
     tribunal1: datos.tribunal1?.trim() ?? "",

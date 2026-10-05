@@ -29,6 +29,8 @@ export default function FormularioTesis({
     postulante: "",
     postulante2: "",
     ci: "",
+    pagina: "06",
+    libro: "9",
     genero: "masculino",
     genero2: "masculino",
     tribunal1: "",
@@ -372,6 +374,17 @@ async function generarActa() {
               <p className="mt-1 text-xs text-slate-500">
                 Solo se usará para nombrar la descarga, por ejemplo 12345678-T.
               </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Número superior</label>
+                <input type="number" min="1" value={formulario.pagina} onChange={(e) => cambiarCampo("pagina", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Libro N.º</label>
+                <input type="number" min="1" value={formulario.libro} onChange={(e) => cambiarCampo("libro", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
+              </div>
             </div>
 
             <div>

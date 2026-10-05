@@ -3,6 +3,7 @@ import { construirDatosCi, SIGLAS_MODALIDAD } from "@/lib/ci";
 type ExamenRequest = {
   postulante?: string; materia?: string; area?: string; aula?: string;
   ci?: string;
+  pagina?: string; libro?: string;
   convocatoria?: string; gestion?: string; hora?: string; fechaTexto?: string;
   duracion?: string; nota?: string | number; aprobado?: string; reprobado?: string;
   tribunal1?: string; tribunal2?: string; presidente?: string;
@@ -18,8 +19,8 @@ export function construirDatosExamen(datos: ExamenRequest) {
   return {
     ...datos,
     ...datosCi,
-    pagina: "08",
-    libro: "9",
+    pagina: datos.pagina?.trim() || "08",
+    libro: datos.libro?.trim() || "9",
     postulante: datos.postulante?.trim() ?? "",
     materia: datos.materia?.trim() ?? "",
     Area: datos.area?.trim() ?? "",

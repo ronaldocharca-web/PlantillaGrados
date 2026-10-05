@@ -4,6 +4,8 @@ type ActaRequestData = {
   postulante?: string;
   postulante2?: string;
   ci?: string;
+  pagina?: string;
+  libro?: string;
   genero?: string;
   genero2?: string;
   tribunal1?: string;
@@ -62,6 +64,8 @@ export function construirDatosActa(datos: ActaRequestData, siglaModalidad: strin
   return {
     ...datos,
     ...datosCi,
+    pagina: datos.pagina?.trim() || "06",
+    libro: datos.libro?.trim() || "9",
     postulante,
     postulante2,
     postulantesTexto,

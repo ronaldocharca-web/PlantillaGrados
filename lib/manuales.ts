@@ -73,6 +73,7 @@ function acta(titulo: string, pantalla: PantallaManual, detalles: Detalle[], wor
 }
 
 const fechaPresidente: Detalle[] = [
+  { titulo: "Número superior y Libro N.º", texto: "Escribe únicamente números en estos dos campos. El número superior se muestra arriba del acta y el Libro N.º aparece junto a la palabra «Libro». Cada pantalla conserva un valor inicial que puedes editar antes de generar el Word o el PDF." },
   { titulo: "Fecha y hora", texto: "Escribe la fecha en el campo o elígela con el icono de calendario. El orden de día y mes lo muestra tu navegador. Selecciona también la hora de la defensa." },
   { titulo: "Presidente del tribunal", texto: "Se llena automáticamente y no se edita en este formulario. Para cambiarlo, entra a Administración y guarda el nuevo presidente." },
 ];
@@ -119,7 +120,7 @@ export const manuales: Record<PantallaManual, Manual> = {
     ...fechaPresidente,
     { titulo: "Tema del Proyecto de Grado", texto: "Escribe el título completo del trabajo tal como debe aparecer en el documento." },
     nota,
-  ], "Pulsa «Descargar Word». En Proyecto de Grado, la descarga requiere CI, nombre del postulante, dos tribunales, tutor, fecha, hora y tema. La nota puede quedar vacía. Para la vista previa PDF, el único dato siempre obligatorio es el CI."),
+  ], "Pulsa «Descargar Word». En Proyecto de Grado, el único dato obligatorio es el CI; los demás campos pueden quedar vacíos para preparar un borrador. La nota también puede quedar vacía."),
   tesis: acta("Tesis", "tesis", [
     { titulo: "Uno o dos postulantes", texto: "Ingresa el nombre y género del primer postulante. Si hay un segundo, completa su nombre en el campo opcional; aparecerá su selector de género. Si hay solo uno, deja vacío el segundo nombre." },
     carnet("T."),
