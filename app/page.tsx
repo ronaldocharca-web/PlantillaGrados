@@ -91,6 +91,12 @@ export default function Home() {
           </p>
         </Link>
 
+        <Link href="/actas/maestria" className="acta-card acta-mint group rounded-2xl p-6 transition">
+          <span className="card-code">MA</span>
+          <h2 className="text-lg font-semibold text-slate-800">Maestría</h2>
+          <p className="mt-2 text-sm text-slate-500">Generar actas de defensa de tesis de postgrado de Maestría.</p>
+        </Link>
+
         <Link
           href="/admin"
           className="acta-card admin-card rounded-2xl p-6 text-white transition"

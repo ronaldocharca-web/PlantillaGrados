@@ -258,6 +258,40 @@ Después de publicar, probar cada pantalla, descargar un Word, generar un PDF y 
 
 ## Recomendaciones
 
+### Acta de Maestría
+
+La pantalla `/actas/maestria` genera el acta de defensa de tesis de postgrado.
+La página carga docentes y presidentes activos de la configuración existente en
+Supabase. El formulario requiere postulante, CI, folio inicial, género, fecha,
+hora, título, maestría, siglas del grado, dos tribunales docentes, revisor,
+presidente y nota entera de 0 a 100.
+
+- `app/actas/maestria/page.tsx`: carga los catálogos.
+- `app/actas/maestria/FormularioMaestria.tsx`: formulario, validación, vista previa y descargas.
+- `lib/maestria-data.ts`: validación compartida, género, hora a. m./p. m., nota literal y valoración.
+- `lib/maestria-documento.ts`: rellena `templates/acta-defensa-maestria.docx` con Docxtemplater.
+- `app/api/actas/maestria/docx/route.ts`: descarga Word, sin requerir conversor.
+- `app/api/actas/maestria/pdf/route.ts`: convierte el mismo Word mediante el conversor configurado.
+
+Ambos endpoints son POST y validan todos los campos en el servidor. El CI solo
+se utiliza en el nombre `CI-M.docx` / `CI-M.pdf`: no se pasa a los marcadores
+del documento. El folio inicial determina la numeración consecutiva. Después
+de «versión» hay exactamente tres espacios, sin guiones ni variable de versión.
+
+La valoración se calcula con la regla confirmada por el usuario: **0–65 reprobado**,
+66–70 aprobado, 71–80 bueno, 81–90 muy bueno y 91–100 excelente. El resultado
+concuerda con el género (aprobado/aprobada) y la nota literal se genera automáticamente.
+
+Pruebas: `node --test scripts/maestria.test.mjs`. El script
+`scripts/preparar-plantilla-maestria.py` convierte de forma idempotente la
+transcripción original a marcadores manteniendo los estilos. El script
+`scripts/fijar-numero-maestria.py` convierte el encabezado automático PAGE en
+el marcador fijo `{{pagina}}`, por lo que el mismo número aparece en la primera
+y segunda hoja. No ejecutar el antiguo generador de transcripción sobre la
+plantilla variable.
+
+### Cuidados generales
+
 - No publicar `.env.local` ni claves secretas.
 - Mantener copias de las plantillas Word originales.
 - Probar Word y PDF después de cada cambio de plantilla.

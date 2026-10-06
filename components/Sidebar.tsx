@@ -54,6 +54,7 @@ const opciones: Array<{ nombre: string; ruta: string; icono: IconName }> = [
     ruta: "/actas/trab-dirigido",
     icono: "work",
   },
+  { nombre: "Maestría", ruta: "/actas/maestria", icono: "thesis" },
 ];
 
 export default function Sidebar() {

@@ -4,6 +4,7 @@ export const SIGLAS_MODALIDAD = {
   examenGrado: "E.G.",
   excelencia: "E.",
   trabajoDirigido: "T.D.",
+  maestria: "M.",
 } as const;
 
 export class ErrorValidacionActa extends Error {

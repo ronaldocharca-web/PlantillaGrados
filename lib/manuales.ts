@@ -5,6 +5,7 @@ export type PantallaManual =
   | "examen-grado"
   | "excelencia"
   | "trab-dirigido"
+  | "maestria"
   | "admin";
 
 type Detalle = { titulo: string; texto: string };
@@ -21,7 +22,7 @@ const activarPdf: PasoManual = {
   titulo: "Primero, activa el generador PDF",
   descripcion: "Al entrar al acta, comprueba el conversor antes de generar la vista previa. Puedes ir llenando los datos mientras se activa.",
   imagen: "/manuales/generador-listo.jpg",
-  pieImagen: "Activador comprobado en Tesis. Este control funciona igual en las cinco actas.",
+  pieImagen: "Activador comprobado en Tesis. Este control funciona igual en todas las actas.",
   detalles: [
     { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. El mensaje debajo del botón indica el estado del conversor." },
     { titulo: "2. Espera la confirmación", texto: "Mientras diga «Activando generador…», espera. Cuando diga «Generador listo ✓» y «Ya puedes generar la vista previa», el conversor habrá confirmado que está disponible." },
@@ -48,7 +49,7 @@ function guardar(word: string): PasoManual {
     titulo: "Descarga o imprime tu acta",
     descripcion: "Elige Word para continuar editando el acta, o PDF para guardar la versión que revisaste.",
     imagen: "/manuales/descargar-word.jpg",
-    pieImagen: "Botones al final del formulario de Tesis. Las cinco actas usan estos mismos nombres de botón.",
+    pieImagen: "Botones al final del formulario de Tesis. Todas las actas usan estos mismos nombres de botón.",
     detalles: [
       { titulo: "Descargar Word", texto: word },
       { titulo: "Descargar PDF", texto: "Después de generar la vista previa, usa el botón «Descargar PDF» de la pantalla. Ese botón guarda el archivo con el nombre CI-sigla, por ejemplo 12345678-T.pdf. La flecha interna del visor puede usar un nombre aleatorio del navegador." },
@@ -84,6 +85,21 @@ const carnet = (sigla: string): Detalle => ({
 });
 
 export const manuales: Record<PantallaManual, Manual> = {
+  maestria: {
+    titulo: "Tesis de postgrado de Maestría",
+    resumen: "Prepara el acta y las firmas con la plantilla de Maestría.",
+    pasos: [activarPdf, {
+      titulo: "Completa los datos de Maestría",
+      descripcion: "Todos los campos del formulario son obligatorios para generar el PDF o descargar Word.",
+      detalles: [
+        { titulo: "Postulante y CI", texto: "Escribe el nombre y elige el género. El documento ajustará Licenciado/Licenciada y aprobado/aprobada. El CI solo nombra las descargas: 12345678-M.docx o 12345678-M.pdf; no aparece dentro del acta." },
+        { titulo: "Fecha, hora y número superior", texto: "Selecciona la fecha y hora de la defensa. El acta convierte la hora a a. m. o p. m. El número superior indica el folio inicial; las páginas siguientes continúan la numeración." },
+        { titulo: "Tesis y grado", texto: "Escribe el título completo, el nombre de la maestría y las siglas del grado. Después de «versión» se conservan tres espacios, sin guiones bajos." },
+        { titulo: "Tribunales", texto: "Selecciona dos tribunales docentes, un revisor y un presidente. Los docentes y presidentes activos se gestionan en Administración." },
+        { titulo: "Nota", texto: "Ingresa un entero entre 0 y 100. El literal y el resultado se calculan automáticamente: 0–65 reprobado; 66–70 aprobado; 71–80 bueno; 81–90 muy bueno; 91–100 excelente." },
+      ],
+    }, revisarPdf, guardar("Descarga un Word editable con el nombre CI-M.docx. No necesitas activar el conversor para generar Word.")],
+  },
   inicio: {
     titulo: "Inicio",
     resumen: "Conoce las opciones del sistema y elige el acta que necesitas.",
@@ -98,6 +114,7 @@ export const manuales: Record<PantallaManual, Manual> = {
         { titulo: "Examen de Grado", texto: "Registra un examen con materia, área, aula, convocatoria, duración, tribunales y calificación." },
         { titulo: "Excelencia", texto: "Genera un acta de graduación por excelencia con uno, dos o tres tribunales evaluadores." },
         { titulo: "Trabajo Dirigido", texto: "Genera el acta de defensa de Trabajo Dirigido, con tutor y uno o dos miembros del tribunal." },
+        { titulo: "Maestría", texto: "Prepara el acta de tesis de postgrado, con dos tribunales docentes, un revisor, presidente y valoración automática de la nota." },
         { titulo: "Administración", texto: "Permite agregar, editar, activar o desactivar docentes, y configurar al presidente del tribunal." },
       ],
     }, {
