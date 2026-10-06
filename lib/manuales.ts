@@ -24,10 +24,10 @@ const activarPdf: PasoManual = {
   imagen: "/manuales/generador-listo.jpg",
   pieImagen: "Activador comprobado en Tesis. Este control funciona igual en todas las actas.",
   detalles: [
-    { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. El mensaje debajo del botón indica el estado del conversor." },
+    { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. Se abre una ventanita con la página de carga del conversor y el estado de la conexión. Puedes cerrarla y seguir llenando los datos mientras se comprueba el servicio." },
     { titulo: "2. Espera la confirmación", texto: "Mientras diga «Activando generador…», espera. Cuando diga «Generador listo ✓» y «Ya puedes generar la vista previa», el conversor habrá confirmado que está disponible." },
     { titulo: "3. Si sigue iniciando", texto: "Pulsa «Reintentar activación» después de esperar un momento. El servicio gratuito puede tardar en iniciar. Si aparece un error 502 al generar, vuelve a comprobarlo y reintenta." },
-    { titulo: "Reactivar", texto: "Después de 10 minutos, pulsa «Reactivar generador PDF» para volver a comprobar la conexión. El estado aparece debajo del botón, sin abrir una ventana adicional ni desplazar el formulario." },
+    { titulo: "Reactivar", texto: "Después de 10 minutos, pulsa «Reactivar generador PDF» para volver a comprobar la conexión. «Reintentar activación» también abre y recarga la ventanita. Si la página no se muestra dentro, pulsa «Abrir página del conversor». La ventana flota sobre el formulario y se cierra con «Cerrar»." },
     { titulo: "Para descargar Word", texto: "El archivo Word se genera directamente. No necesitas activar el conversor PDF para descargarlo." },
   ],
 };
