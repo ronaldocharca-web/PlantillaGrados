@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ManualUsuario from "@/components/ManualUsuario";
+import GestionPresidentes from "@/components/GestionPresidentes";
 
 type Docente = {
   id: number;
@@ -19,15 +20,6 @@ export default function AdminPage() {
   useState<number | null>(null);
 
 const [nombreEditado, setNombreEditado] =
-  useState("");
-
-  const [presidente, setPresidente] =
-  useState("");
-
-const [guardandoPresidente, setGuardandoPresidente] =
-  useState(false);
-
-const [mensajePresidente, setMensajePresidente] =
   useState("");
 
   function comenzarEdicion(docente: Docente) {
@@ -147,60 +139,7 @@ async function cambiarEstado(
 
   useEffect(() => {
   cargarDocentes();
-  cargarConfiguracion();
 }, []);
-
-    async function guardarPresidente() {
-  if (!presidente.trim()) {
-    alert(
-      "Ingrese el nombre del presidente del tribunal."
-    );
-    return;
-  }
-
-  try {
-    setGuardandoPresidente(true);
-    setMensajePresidente("");
-
-    const respuesta = await fetch(
-      "/api/admin/configuracion",
-      {
-        method: "PUT",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          presidente,
-        }),
-      }
-    );
-
-    const datos = await respuesta.json();
-
-    if (!respuesta.ok) {
-      throw new Error(
-        datos.error ||
-          "No se pudo guardar el presidente"
-      );
-    }
-
-    setPresidente(datos.presidente);
-
-    setMensajePresidente(
-      "Presidente actualizado correctamente."
-    );
-  } catch (error) {
-    console.error(error);
-
-    if (error instanceof Error) {
-      alert(error.message);
-    }
-  } finally {
-    setGuardandoPresidente(false);
-  }
-}
 
   async function agregarDocente() {
     if (!nuevoNombre.trim()) {
@@ -248,29 +187,6 @@ async function cambiarEstado(
       setGuardando(false);
     }
   }
-
-  async function cargarConfiguracion() {
-  try {
-    const respuesta = await fetch(
-      "/api/admin/configuracion"
-    );
-
-    const datos = await respuesta.json();
-
-    if (!respuesta.ok) {
-      throw new Error(
-        datos.error ||
-          "No se pudo cargar la configuración"
-      );
-    }
-
-    setPresidente(
-      datos.presidente ?? ""
-    );
-  } catch (error) {
-    console.error(error);
-  }
-}
 
   return (
     <div className="p-8">
@@ -459,54 +375,7 @@ async function cambiarEstado(
         )}
       </section>
 
-      <section className="mt-8 rounded-xl bg-white p-6 shadow-sm">
-  <div className="mb-6">
-    <h2 className="text-xl font-semibold text-slate-800">
-      Configuración del tribunal
-    </h2>
-
-    <p className="mt-1 text-sm text-slate-500">
-      Configure el presidente que aparecerá
-      automáticamente en las actas.
-    </p>
-  </div>
-
-  <div className="max-w-2xl">
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Presidente del Tribunal
-    </label>
-
-    <div className="flex gap-3">
-      <input
-        type="text"
-        value={presidente}
-        onChange={(e) => {
-          setPresidente(e.target.value);
-          setMensajePresidente("");
-        }}
-        className="flex-1 rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
-        placeholder="Nombre completo del presidente"
-      />
-
-      <button
-        type="button"
-        onClick={guardarPresidente}
-        disabled={guardandoPresidente}
-        className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-      >
-        {guardandoPresidente
-          ? "Guardando..."
-          : "Guardar"}
-      </button>
-    </div>
-
-    {mensajePresidente && (
-      <p className="mt-3 text-sm font-medium text-green-600">
-        {mensajePresidente}
-      </p>
-    )}
-  </div>
-</section>
+      <GestionPresidentes />
     </div>
   );
 }

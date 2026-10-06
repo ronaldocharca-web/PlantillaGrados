@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { cargarPresidentes } from "@/lib/presidentes-server";
 import FormularioExamenGrado from "./FormularioExamenGrado";
 
 export const dynamic = "force-dynamic";
@@ -10,11 +11,7 @@ export default async function ExamenGradoPage() {
     .eq("activo", true)
     .order("nombre");
 
-  const { data: presidente } = await supabase
-    .from("configuracion")
-    .select("valor")
-    .eq("clave", "presidente_tribunal")
-    .single();
+  const { presidentes, presidente } = await cargarPresidentes();
 
   if (error) {
     return <div className="p-8 text-red-600">Error al cargar docentes: {error.message}</div>;
@@ -23,7 +20,8 @@ export default async function ExamenGradoPage() {
   return (
     <FormularioExamenGrado
       docentes={docentes ?? []}
-      presidente={presidente?.valor ?? ""}
+      presidente={presidente}
+      presidentes={presidentes.filter((p) => p.activo)}
     />
   );
 }

@@ -23,10 +23,10 @@ const activarPdf: PasoManual = {
   imagen: "/manuales/generador-listo.jpg",
   pieImagen: "Activador comprobado en Tesis. Este control funciona igual en las cinco actas.",
   detalles: [
-    { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. Se abrirá una pequeña ventana para comprobar el servicio." },
-    { titulo: "2. Espera la confirmación", texto: "Mientras diga «Despertando generador…», espera. Cuando diga «Generador listo ✓» y «Ya puedes generar la vista previa», puedes crear el PDF. Si la ventana muestra «ok: true», el servicio mostrado allí está respondiendo." },
+    { titulo: "1. Activar generador PDF", texto: "Pulsa el botón que está arriba del formulario. El mensaje debajo del botón indica el estado del conversor." },
+    { titulo: "2. Espera la confirmación", texto: "Mientras diga «Activando generador…», espera. Cuando diga «Generador listo ✓» y «Ya puedes generar la vista previa», el conversor habrá confirmado que está disponible." },
     { titulo: "3. Si sigue iniciando", texto: "Pulsa «Reintentar activación» después de esperar un momento. El servicio gratuito puede tardar en iniciar. Si aparece un error 502 al generar, vuelve a comprobarlo y reintenta." },
-    { titulo: "Reactivar y cerrar", texto: "Después de 10 minutos, el botón avisa que Render puede haberlo apagado; es un recordatorio, no una comprobación de que esté apagado. Pulsa «Reactivar generador PDF». «Cerrar» solo oculta la ventana del estado." },
+    { titulo: "Reactivar", texto: "Después de 10 minutos, pulsa «Reactivar generador PDF» para volver a comprobar la conexión. El estado aparece debajo del botón, sin abrir una ventana adicional ni desplazar el formulario." },
     { titulo: "Para descargar Word", texto: "El archivo Word se genera directamente. No necesitas activar el conversor PDF para descargarlo." },
   ],
 };
@@ -75,7 +75,7 @@ function acta(titulo: string, pantalla: PantallaManual, detalles: Detalle[], wor
 const fechaPresidente: Detalle[] = [
   { titulo: "Número superior y Libro N.º", texto: "Escribe únicamente números en estos dos campos. El número superior se muestra arriba del acta y el Libro N.º aparece junto a la palabra «Libro». Cada pantalla conserva un valor inicial que puedes editar antes de generar el Word o el PDF." },
   { titulo: "Fecha y hora", texto: "Escribe la fecha en el campo o elígela con el icono de calendario. El orden de día y mes lo muestra tu navegador. Selecciona también la hora de la defensa." },
-  { titulo: "Presidente del tribunal", texto: "Se llena automáticamente y no se edita en este formulario. Para cambiarlo, entra a Administración y guarda el nuevo presidente." },
+  { titulo: "Presidente del tribunal", texto: "Selecciona uno de los presidentes activos registrados en Administración. El nombre elegido se utilizará tanto en el PDF como en el Word." },
 ];
 const nota: Detalle = { titulo: "Nota", texto: "Ingresa la calificación entre 0 y 100. Si dejas la nota vacía, el documento muestra __/100. Revisa el resultado en la vista previa." };
 const carnet = (sigla: string): Detalle => ({
@@ -181,12 +181,13 @@ export const manuales: Record<PantallaManual, Manual> = {
         { titulo: "Ver el cambio", texto: "Vuelve a abrir o recarga el acta para cargar la lista actualizada. Los archivos ya descargados no cambian." },
       ],
     }, {
-      titulo: "Configura al presidente",
-      descripcion: "Busca «Configuración del tribunal» debajo de la lista de docentes.",
+      titulo: "Gestiona los presidentes del tribunal",
+      descripcion: "Busca «Gestión de presidentes del tribunal» debajo de la lista de docentes. Funciona igual que la gestión de docentes.",
       detalles: [
-        { titulo: "Presidente del Tribunal", texto: "Escribe el nombre completo, con su grado académico, y pulsa el botón «Guardar» de esta sección." },
-        { titulo: "Confirma que se guardó", texto: "Espera el mensaje «Presidente actualizado correctamente». Vuelve a abrir el formulario del acta para ver el nuevo presidente." },
-        { titulo: "Alcance del cambio", texto: "El presidente se aplica a las nuevas actas generadas. Los Word y PDF descargados previamente conservan los datos anteriores." },
+        { titulo: "Agregar presidente", texto: "Escribe el nombre completo con su grado académico y pulsa «Agregar presidente». Aparecerá en la tabla con estado Activo." },
+        { titulo: "Editar", texto: "Pulsa «Editar» para corregir el nombre; luego «Guardar» o «Cancelar»." },
+        { titulo: "Activar o desactivar", texto: "«Desactivar» oculta al presidente de las opciones de las actas sin borrarlo. «Activar» vuelve a habilitarlo." },
+        { titulo: "Usarlo en un acta", texto: "Abre o recarga cualquiera de las cinco pantallas y elige un presidente activo en el selector. Ese nombre se incluirá en los nuevos Word y PDF; los archivos descargados previamente no cambian." },
       ],
     }],
   },

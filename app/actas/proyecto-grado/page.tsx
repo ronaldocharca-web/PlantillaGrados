@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { cargarPresidentes } from "@/lib/presidentes-server";
 import FormularioProyectoGrado from "./FormularioProyectoGrado";
 
 export const dynamic = "force-dynamic";
@@ -10,11 +11,7 @@ export default async function ProyectoGradoPage() {
     .eq("activo", true)
     .order("nombre");
 
-  const { data: presidente } = await supabase
-    .from("configuracion")
-    .select("valor")
-    .eq("clave", "presidente_tribunal")
-    .single();
+  const { presidentes, presidente } = await cargarPresidentes();
 
   if (error) {
     return (
@@ -29,7 +26,8 @@ export default async function ProyectoGradoPage() {
   return (
     <FormularioProyectoGrado
       docentes={docentes ?? []}
-      presidente={presidente?.valor ?? ""}
+      presidente={presidente}
+      presidentes={presidentes.filter((p) => p.activo)}
     />
   );
 }

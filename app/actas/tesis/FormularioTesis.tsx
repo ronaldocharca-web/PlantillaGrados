@@ -7,6 +7,8 @@ import {
 } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import SelectorPresidente from "@/components/SelectorPresidente";
+import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = {
@@ -16,13 +18,13 @@ type Docente = {
 
 type Props = {
   docentes: Docente[];
-  presidente: string;
+  presidentes: Presidente[]; presidente: string;
 };
 
 export default function FormularioTesis({
-  docentes,
-  presidente,
+  docentes, presidentes, presidente: presidenteInicial,
 }: Props) {
+  const [presidente, setPresidente] = useState(presidenteInicial);
   const apiBase = "/api/actas/tesis";
   const titulo = "Acta de Tesis";
   const [formulario, setFormulario] = useState({
@@ -525,12 +527,7 @@ async function generarActa() {
                 Presidente del tribunal
               </label>
 
-              <input
-                type="text"
-                value={presidente}
-                disabled
-                className="w-full rounded-lg border border-slate-200 bg-slate-100 px-4 py-2.5 text-slate-600"
-              />
+              <SelectorPresidente presidentes={presidentes} value={presidente} onChange={setPresidente} />
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -1,115 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { randomUUID } from "node:crypto";
+import { cargarPresidentes, persistirPresidentes } from "@/lib/presidentes-server";
+import { ErrorPresidentes, modificarPresidentes } from "@/lib/presidentes";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+function responderError(error: unknown) {
+  if (error instanceof ErrorPresidentes) return Response.json({ error: error.message }, { status: error.status });
+  console.error("Error en la gestión de presidentes:", error);
+  return Response.json({ error: "No se pudo completar la operación. Intente nuevamente." }, { status: 500 });
+}
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseAdmin
-      .from("configuracion")
-      .select("id, clave, valor")
-      .eq("clave", "presidente_tribunal")
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json({
-      presidente: data?.valor ?? "",
-    });
-  } catch (error) {
-    console.error(
-      "Error obteniendo configuración:",
-      error
-    );
-
-    return NextResponse.json(
-      {
-        error: "No se pudo obtener la configuración",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+    const { presidentes, presidente } = await cargarPresidentes();
+    return Response.json({ presidentes, presidente }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) { return responderError(error); }
 }
 
-export async function PUT(
-  request: NextRequest
-) {
+async function guardar(request: Request, accion: "agregar" | "editar") {
   try {
-    const { presidente } = await request.json();
-
-    if (
-      !presidente ||
-      !presidente.trim()
-    ) {
-      return NextResponse.json(
-        {
-          error:
-            "El nombre del presidente es obligatorio",
-        },
-        {
-          status: 400,
-        }
-      );
+    const cuerpo = await request.json().catch(() => null);
+    if (!cuerpo || typeof cuerpo !== "object" || Array.isArray(cuerpo)) {
+      throw new ErrorPresidentes("Los datos enviados no son válidos.");
     }
-
-    const { data: existente, error: errorConsulta } =
-      await supabaseAdmin
-        .from("configuracion")
-        .select("id")
-        .eq("clave", "presidente_tribunal")
-        .maybeSingle();
-
-    if (errorConsulta) {
-      throw errorConsulta;
-    }
-
-    if (existente) {
-      const { error } = await supabaseAdmin
-        .from("configuracion")
-        .update({
-          valor: presidente.trim(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", existente.id);
-
-      if (error) {
-        throw error;
-      }
-    } else {
-      const { error } = await supabaseAdmin
-        .from("configuracion")
-        .insert({
-          clave: "presidente_tribunal",
-          valor: presidente.trim(),
-        });
-
-      if (error) {
-        throw error;
-      }
-    }
-
-    return NextResponse.json({
-      mensaje: "Presidente actualizado correctamente",
-      presidente: presidente.trim(),
-    });
-  } catch (error) {
-    console.error(
-      "Error actualizando presidente:",
-      error
-    );
-
-    return NextResponse.json(
-      {
-        error:
-          "No se pudo actualizar el presidente",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+    const estado = await cargarPresidentes();
+    const presidentes = modificarPresidentes(estado.presidentes, accion, cuerpo, randomUUID());
+    await persistirPresidentes(estado, presidentes);
+    return Response.json({ presidentes }, { status: accion === "agregar" ? 201 : 200 });
+  } catch (error) { return responderError(error); }
 }
+
+export async function POST(request: Request) { return guardar(request, "agregar"); }
+export async function PATCH(request: Request) { return guardar(request, "editar"); }

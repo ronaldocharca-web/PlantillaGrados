@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import SelectorPresidente from "@/components/SelectorPresidente";
+import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = { id: number; nombre: string };
 
-type Props = { docentes: Docente[]; presidente: string };
+type Props = { docentes: Docente[]; presidentes: Presidente[]; presidente: string };
 
 type Formulario = {
   postulante: string;
@@ -49,7 +51,8 @@ const inicial: Formulario = {
   tribunal2: "",
 };
 
-export default function FormularioExamenGrado({ docentes, presidente }: Props) {
+export default function FormularioExamenGrado({ docentes, presidentes, presidente: presidenteInicial }: Props) {
+  const [presidente, setPresidente] = useState(presidenteInicial);
   const [formulario, setFormulario] = useState<Formulario>(inicial);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [generando, setGenerando] = useState(false);
@@ -182,7 +185,7 @@ export default function FormularioExamenGrado({ docentes, presidente }: Props) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Texto de aprobado", "aprobado", "Ej. X")}{campo("Texto de reprobado", "reprobado", "Dejar vacío si no corresponde")}</div>
             <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 1</label><select value={formulario.tribunal1} onChange={(e) => cambiar("tribunal1", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5"><option value="">Seleccione un docente</option>{docentes.map((d) => <option key={d.id} value={d.nombre}>{d.nombre}</option>)}</select></div>
             <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 2</label><select value={formulario.tribunal2} onChange={(e) => cambiar("tribunal2", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5"><option value="">Seleccione un docente</option>{docentes.map((d) => <option key={d.id} value={d.nombre}>{d.nombre}</option>)}</select></div>
-            <div><label className="mb-2 block text-sm font-medium text-slate-700">Presidente del tribunal</label><input value={presidente} disabled className="w-full rounded-lg border border-slate-200 bg-slate-100 px-4 py-2.5" /></div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Presidente del tribunal</label><SelectorPresidente presidentes={presidentes} value={presidente} onChange={setPresidente} /></div>
             <button type="button" onClick={generarPdf} disabled={generando} className="w-full rounded-lg bg-slate-800 px-5 py-3 font-medium text-white hover:bg-slate-900 disabled:opacity-50">{generando ? "Generando PDF..." : "Generar vista previa PDF"}</button>
             <button type="button" onClick={descargarWord} className="w-full rounded-lg border border-slate-800 px-5 py-3 font-medium text-slate-900 hover:bg-slate-100">Descargar Word</button>
           </div>

@@ -3,13 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
+import SelectorPresidente from "@/components/SelectorPresidente";
+import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
 type Docente = { id: number; nombre: string };
 
 type Props = {
   docentes: Docente[];
-  presidente: string;
+  presidentes: Presidente[]; presidente: string;
 };
 
 type Formulario = {
@@ -52,7 +54,8 @@ function formatearFecha(fecha: string) {
   });
 }
 
-export default function FormularioExcelencia({ docentes, presidente }: Props) {
+export default function FormularioExcelencia({ docentes, presidentes, presidente: presidenteInicial }: Props) {
+  const [presidente, setPresidente] = useState(presidenteInicial);
   const [formulario, setFormulario] = useState<Formulario>(inicial);
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -286,11 +289,7 @@ export default function FormularioExcelencia({ docentes, presidente }: Props) {
               <label className="mb-2 block text-sm font-medium text-slate-700">
                 Presidente del tribunal
               </label>
-              <input
-                value={presidente}
-                disabled
-                className="w-full rounded-lg border border-slate-200 bg-slate-100 px-4 py-2.5"
-              />
+              <SelectorPresidente presidentes={presidentes} value={presidente} onChange={setPresidente} />
             </div>
 
             <button
