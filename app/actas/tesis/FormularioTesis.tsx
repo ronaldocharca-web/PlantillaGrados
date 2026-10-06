@@ -86,7 +86,7 @@ const iframeRef =
 }
 
 async function generarPdf() {
-  if (!validarCi()) {
+  if (!validarFormulario()) {
     return;
   }
 
@@ -155,7 +155,7 @@ useEffect(() => {
 }, [pdfUrl]);
 
 function descargarPdf() {
-  if (!pdfUrl || !validarCi()) return;
+  if (!pdfUrl || !validarFormulario()) return;
 
   const enlace = document.createElement("a");
   enlace.href = pdfUrl;
@@ -175,28 +175,33 @@ function imprimirPdf() {
   iframeRef.current?.contentWindow?.print();
 }
 
-function validarCi() {
-  if (!formulario.ci.trim()) {
-    setErrores({
-      ci: "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.",
-    });
-    return false;
-  }
-
-  setErrores({});
-  return true;
-}
-
 function validarFormulario() {
   const nuevosErrores: Record<string, string> = {};
 
-  if (!formulario.ci.trim()) {
-    nuevosErrores.ci =
-      "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
+  const requeridos: Array<[keyof typeof formulario, string]> = [
+    ["postulante", "El nombre del primer postulante es obligatorio."],
+    ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
+    ["pagina", "El número superior es obligatorio."],
+    ["libro", "El número de libro es obligatorio."],
+    ["tribunal1", "Seleccione el primer miembro del tribunal."],
+    ["tribunal2", "Seleccione el segundo miembro del tribunal."],
+    ["tutor", "Seleccione el docente tutor."],
+    ["fecha", "Seleccione la fecha de la defensa."],
+    ["hora", "Seleccione la hora de la defensa."],
+    ["tema", "El tema de la tesis es obligatorio."],
+    ["nota", "La nota es obligatoria."],
+  ];
+
+  for (const [campo, mensaje] of requeridos) {
+    if (!formulario[campo].trim()) nuevosErrores[campo] = mensaje;
+  }
+
+  if (!presidente.trim()) {
+    nuevosErrores.presidente = "Seleccione el presidente del tribunal.";
   }
 
   if (
-    formulario.tribunal1 &&
+    formulario.tribunal1.trim() &&
     formulario.tribunal1 === formulario.tribunal2
   ) {
     nuevosErrores.tribunal2 =
@@ -204,7 +209,7 @@ function validarFormulario() {
   }
 
   if (
-    formulario.tutor &&
+    formulario.tutor.trim() &&
     (
       formulario.tutor === formulario.tribunal1 ||
       formulario.tutor === formulario.tribunal2
@@ -214,7 +219,7 @@ function validarFormulario() {
       "El docente tutor no puede ser también miembro del tribunal.";
   }
 
-  if (formulario.nota !== "") {
+  if (formulario.nota.trim()) {
     const nota = Number(formulario.nota);
 
     if (

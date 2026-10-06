@@ -27,10 +27,12 @@ export default function FormularioProyectoGrado({
   const [presidente, setPresidente] = useState(presidenteInicial);
   const [formulario, setFormulario] = useState({
     postulante: "",
+    postulante2: "",
     ci: "",
     pagina: "19",
     libro: "9",
     genero: "masculino",
+    genero2: "masculino",
     tribunal1: "",
     tribunal2: "",
     tutor: "",
@@ -82,7 +84,7 @@ const iframeRef =
 }
 
 async function generarPdf() {
-  if (!validarCi()) {
+  if (!validarFormulario()) {
     return;
   }
 
@@ -151,7 +153,7 @@ useEffect(() => {
 }, [pdfUrl]);
 
 function descargarPdf() {
-  if (!pdfUrl || !validarCi()) return;
+  if (!pdfUrl || !validarFormulario()) return;
 
   const enlace = document.createElement("a");
   enlace.href = pdfUrl;
@@ -171,20 +173,50 @@ function imprimirPdf() {
   iframeRef.current?.contentWindow?.print();
 }
 
-function validarCi() {
-  if (!formulario.ci.trim()) {
-    setErrores({
-      ci: "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.",
-    });
-    return false;
+function validarFormulario() {
+  const nuevos: Record<string, string> = {};
+  const requeridos: Array<[keyof typeof formulario, string]> = [
+    ["postulante", "El nombre del primer postulante es obligatorio."],
+    ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
+    ["pagina", "El número superior es obligatorio."],
+    ["libro", "El número de libro es obligatorio."],
+    ["tribunal1", "Seleccione el primer miembro del tribunal."],
+    ["tribunal2", "Seleccione el segundo miembro del tribunal."],
+    ["tutor", "Seleccione el docente tutor."],
+    ["fecha", "Seleccione la fecha de la defensa."],
+    ["hora", "Seleccione la hora de la defensa."],
+    ["tema", "El tema del Proyecto de Grado es obligatorio."],
+    ["nota", "La nota es obligatoria."],
+  ];
+
+  for (const [campo, mensaje] of requeridos) {
+    if (!formulario[campo].trim()) nuevos[campo] = mensaje;
   }
 
-  setErrores({});
-  return true;
+  if (!presidente.trim()) {
+    nuevos.presidente = "Seleccione el presidente del tribunal.";
+  }
+
+  if (
+    formulario.tribunal1.trim() &&
+    formulario.tribunal1 === formulario.tribunal2
+  ) {
+    nuevos.tribunal2 = "Los miembros del tribunal deben ser diferentes.";
+  }
+
+  if (formulario.nota.trim()) {
+    const nota = Number(formulario.nota);
+    if (Number.isNaN(nota) || nota < 0 || nota > 100) {
+      nuevos.nota = "La nota debe estar entre 0 y 100.";
+    }
+  }
+
+  setErrores(nuevos);
+  return Object.keys(nuevos).length === 0;
 }
 
 async function generarActa() {
-  if (!validarCi()) {
+  if (!validarFormulario()) {
     return;
   }
 
@@ -343,7 +375,7 @@ async function generarActa() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Género
+                Género persona 1
               </label>
 
               <select
@@ -362,6 +394,41 @@ async function generarActa() {
                 </option>
               </select>
             </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Nombre del segundo postulante (opcional)
+              </label>
+
+              <input
+                type="text"
+                value={formulario.postulante2}
+                onChange={(e) =>
+                  cambiarCampo("postulante2", e.target.value)
+                }
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
+                placeholder="Nombre completo"
+              />
+            </div>
+
+            {formulario.postulante2.trim() && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Género persona 2
+                </label>
+
+                <select
+                  value={formulario.genero2}
+                  onChange={(e) =>
+                    cambiarCampo("genero2", e.target.value)
+                  }
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
+                >
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">

@@ -89,6 +89,7 @@ function readRequestBody(request) {
 }
 
 const server = http.createServer(async (request, response) => {
+  const pathname = new URL(request.url, "http://localhost").pathname.replace(/\/+$/, "") || "/";
   if (request.method === "OPTIONS") {
     response.writeHead(204, {
       "Access-Control-Allow-Origin": "*",
@@ -98,11 +99,15 @@ const server = http.createServer(async (request, response) => {
     response.end();
     return;
   }
-  if (request.method === "GET" && request.url === "/health") {
-    sendJson(response, 200, { ok: true, service: "docx-to-pdf" });
+  if (request.method === "GET" && ["/", "/health", "/convert"].includes(pathname)) {
+    sendJson(response, 200, {
+      ok: true,
+      service: "docx-to-pdf",
+      message: "Conversor PDF activo. Genere el documento desde el Sistema de Actas.",
+    });
     return;
   }
-  if (request.method !== "POST" || request.url !== "/convert") {
+  if (request.method !== "POST" || pathname !== "/convert") {
     sendJson(response, 404, { error: "Ruta no encontrada" });
     return;
   }

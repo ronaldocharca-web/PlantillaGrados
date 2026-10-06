@@ -44,6 +44,9 @@ export function construirDatosActa(datos: ActaRequestData, siglaModalidad: strin
   const postulantesTexto = postulante2
     ? `${primerPostulante}${conectorPostulantes}${articuloPostulante2}${universitario2}`
     : primerPostulante;
+  const nombresPostulantes = postulante2
+    ? `${nombrePostulante1} y ${nombrePostulante2}`
+    : nombrePostulante1;
 
   const etiquetaPostulante = postulante2 ? "POSTULANTES" : "POSTULANTE";
   const grupoPostulantes = postulante2
@@ -68,6 +71,7 @@ export function construirDatosActa(datos: ActaRequestData, siglaModalidad: strin
     libro: datos.libro?.trim() || "9",
     postulante,
     postulante2,
+    nombresPostulantes,
     postulantesTexto,
     articuloPostulante1,
     universitario1,

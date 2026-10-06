@@ -68,8 +68,21 @@ export default function FormularioExcelencia({ docentes, presidentes, presidente
 
   function validar() {
     const nuevos: Record<string, string> = {};
-    if (!formulario.ci.trim()) {
-      nuevos.ci = "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
+    const requeridos: Array<[keyof Formulario, string]> = [
+      ["postulante", "El nombre del postulante es obligatorio."],
+      ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
+      ["pagina", "El número superior es obligatorio."],
+      ["libro", "El número de libro es obligatorio."],
+      ["fecha", "Seleccione la fecha de la defensa."],
+      ["hora", "Seleccione la hora de la defensa."],
+    ];
+
+    for (const [campo, mensaje] of requeridos) {
+      if (!formulario[campo].trim()) nuevos[campo] = mensaje;
+    }
+
+    if (!presidente.trim()) {
+      nuevos.presidente = "Seleccione el presidente del tribunal.";
     }
     const tribunales = [
       formulario.tribunal1,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { obtenerUrlsConversor } from "@/lib/converter";
 import fs from "fs";
 import path from "path";
 import PizZip from "pizzip";
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
       compression: "DEFLATE",
     });
 
-    const converterUrl = process.env.CONVERTER_SERVICE_URL || "http://127.0.0.1:8000/convert";
+    const { conversion: converterUrl } = obtenerUrlsConversor();
     const respuestaPdf = await fetch(converterUrl, {
       method: "POST",
       headers: {

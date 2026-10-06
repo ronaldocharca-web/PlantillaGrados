@@ -6,6 +6,7 @@ export default function ActivarGeneradorPdf() {
   const [estado, setEstado] = useState<
     "inactivo" | "activando" | "listo" | "posiblementeDormido" | "error"
   >("inactivo");
+  const [detalleError, setDetalleError] = useState("");
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
   const peticion = useRef<AbortController | null>(null);
 
@@ -29,18 +30,24 @@ export default function ActivarGeneradorPdf() {
     const controlador = new AbortController();
     peticion.current = controlador;
     setEstado("activando");
+    setDetalleError("");
 
     try {
       const respuesta = await fetch("/api/converter/health", {
         cache: "no-store", signal: controlador.signal,
       });
-      const datos = await respuesta.json();
-      if (!respuesta.ok || datos.ok !== true) throw new Error("El conversor todavía no está disponible.");
+      const datos = await respuesta.json().catch(() => null);
+      if (!respuesta.ok || datos?.ok !== true) {
+        throw new Error(datos?.error || "No se pudo comprobar el conversor PDF. Recargue la página e intente nuevamente.");
+      }
       if (controlador.signal.aborted) return;
       setEstado("listo");
       marcarPosiblementeDormido();
-    } catch {
-      if (!controlador.signal.aborted) setEstado("error");
+    } catch (error) {
+      if (!controlador.signal.aborted) {
+        setDetalleError(error instanceof Error ? error.message : "No se pudo conectar con el conversor PDF.");
+        setEstado("error");
+      }
     } finally {
       if (peticion.current === controlador) peticion.current = null;
     }
@@ -59,7 +66,7 @@ export default function ActivarGeneradorPdf() {
     activando: "Comprobando el conversor. Puede tardar unos instantes.",
     listo: "Ya puedes generar la vista previa.",
     posiblementeDormido: "Vuelve a comprobar la disponibilidad del generador.",
-    error: "No se pudo confirmar la conexión. Intenta nuevamente.",
+    error: detalleError || "No se pudo confirmar la conexión. Intenta nuevamente.",
   }[estado];
 
   return (

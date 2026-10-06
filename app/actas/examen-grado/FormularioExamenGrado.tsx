@@ -76,9 +76,35 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
 
   function validar() {
     const nuevos: Record<string, string> = {};
-    if (!formulario.ci.trim()) nuevos.ci = "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word.";
+    const requeridos: Array<[keyof Formulario, string]> = [
+      ["postulante", "El nombre del postulante es obligatorio."],
+      ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
+      ["pagina", "El número superior es obligatorio."],
+      ["libro", "El número de libro es obligatorio."],
+      ["materia", "La materia es obligatoria."],
+      ["area", "El área es obligatoria."],
+      ["aula", "El aula es obligatoria."],
+      ["convocatoria", "El número de convocatoria es obligatorio."],
+      ["gestion", "La gestión es obligatoria."],
+      ["fecha", "Seleccione la fecha del examen."],
+      ["hora", "Seleccione la hora del examen."],
+      ["duracion", "La duración es obligatoria."],
+      ["nota", "La nota es obligatoria."],
+      ["aprobado", "Indique el texto de aprobado."],
+      ["tribunal1", "Seleccione el primer tribunal evaluador."],
+      ["tribunal2", "Seleccione el segundo tribunal evaluador."],
+    ];
+
+    for (const [campo, mensaje] of requeridos) {
+      if (!formulario[campo].trim()) nuevos[campo] = mensaje;
+    }
+
+    if (!presidente.trim()) {
+      nuevos.presidente = "Seleccione el presidente del tribunal.";
+    }
+
     if (formulario.tribunal1 && formulario.tribunal1 === formulario.tribunal2) nuevos.tribunal2 = "Los tribunales deben ser diferentes.";
-    if (formulario.nota !== "" && (Number(formulario.nota) < 0 || Number(formulario.nota) > 100 || Number.isNaN(Number(formulario.nota)))) {
+    if (formulario.nota.trim() && (Number(formulario.nota) < 0 || Number(formulario.nota) > 100 || Number.isNaN(Number(formulario.nota)))) {
       nuevos.nota = "La nota debe estar entre 0 y 100.";
     }
     setErrores(nuevos);
