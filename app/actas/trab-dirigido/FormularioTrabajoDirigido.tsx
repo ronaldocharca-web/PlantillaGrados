@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
 import SelectorPresidente from "@/components/SelectorPresidente";
+import SelectorPersona from "@/components/SelectorPersona";
 import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
@@ -164,14 +165,8 @@ export default function FormularioTrabajoDirigido({ docentes, presidentes, presi
       <label className="mb-2 block text-sm font-medium text-slate-700">
         {label} {obligatorio ? "(obligatorio)" : "(opcional)"}
       </label>
-      <select
-        value={formulario[campo]}
-        onChange={(e) => cambiar(campo, e.target.value)}
-        className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500"
-      >
-        <option value="">Seleccione un docente</option>
-        {docentes.map((docente) => <option key={docente.id} value={docente.nombre}>{docente.nombre}</option>)}
-      </select>
+      <SelectorPersona personas={docentes} label={label} value={formulario[campo]}
+        onChange={valor => cambiar(campo, valor)} />
     </div>
   );
 

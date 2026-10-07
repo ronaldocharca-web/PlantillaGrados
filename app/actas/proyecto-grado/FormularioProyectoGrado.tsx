@@ -8,6 +8,7 @@ import {
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
 import SelectorPresidente from "@/components/SelectorPresidente";
+import SelectorPersona from "@/components/SelectorPersona";
 import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
@@ -435,26 +436,7 @@ async function generarActa() {
                 Primer miembro del tribunal
               </label>
 
-              <select
-                value={formulario.tribunal1}
-                onChange={(e) =>
-                  cambiarCampo("tribunal1", e.target.value)
-                }
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
-              >
-                <option value="">
-                  Seleccione un docente
-                </option>
-
-                {docentes.map((docente) => (
-                  <option
-                    key={docente.id}
-                    value={docente.nombre}
-                  >
-                    {docente.nombre}
-                  </option>
-                ))}
-              </select>
+              <SelectorPersona personas={docentes} label="Primer miembro del tribunal" value={formulario.tribunal1} onChange={valor => cambiarCampo("tribunal1", valor)} />
             </div>
 
             <div>
@@ -462,26 +444,7 @@ async function generarActa() {
                 Segundo miembro del tribunal
               </label>
 
-              <select
-                value={formulario.tribunal2}
-                onChange={(e) =>
-                  cambiarCampo("tribunal2", e.target.value)
-                }
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
-              >
-                <option value="">
-                  Seleccione un docente
-                </option>
-
-                {docentes.map((docente) => (
-                  <option
-                    key={docente.id}
-                    value={docente.nombre}
-                  >
-                    {docente.nombre}
-                  </option>
-                ))}
-              </select>
+              <SelectorPersona personas={docentes} label="Segundo miembro del tribunal" value={formulario.tribunal2} onChange={valor => cambiarCampo("tribunal2", valor)} />
             </div>
 
             <div>
@@ -489,26 +452,7 @@ async function generarActa() {
                 Docente tutor
               </label>
 
-              <select
-                value={formulario.tutor}
-                onChange={(e) =>
-                  cambiarCampo("tutor", e.target.value)
-                }
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5"
-              >
-                <option value="">
-                  Seleccione un docente
-                </option>
-
-                {docentes.map((docente) => (
-                  <option
-                    key={docente.id}
-                    value={docente.nombre}
-                  >
-                    {docente.nombre}
-                  </option>
-                ))}
-              </select>
+              <SelectorPersona personas={docentes} label="Docente tutor" value={formulario.tutor} onChange={valor => cambiarCampo("tutor", valor)} />
             </div>
 
             <div>

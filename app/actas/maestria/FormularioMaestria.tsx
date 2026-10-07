@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
 import ActivarGeneradorPdf from "@/components/ActivarGeneradorPdf";
 import ManualUsuario from "@/components/ManualUsuario";
 import SelectorPresidente from "@/components/SelectorPresidente";
+import SelectorPersona from "@/components/SelectorPersona";
 import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 import { camposMaestria, notaEnLetras, resultadoMaestria, validarMaestria, type FormularioMaestria as Datos } from "@/lib/maestria-data";
@@ -115,10 +116,8 @@ export default function FormularioMaestria({ docentes, presidentes, presidente }
             {campo("siglasGrado", { placeholder: "Ej. M. Sc." })}
             {(["tribunal1", "tribunal2", "revisor"] as const).map(nombre => <div key={nombre}>
               <label htmlFor={`maestria-${nombre}`} className="mb-2 block font-medium text-slate-700">{camposMaestria[nombre]} *</label>
-              <select id={`maestria-${nombre}`} required value={datos[nombre]} onChange={e => cambiar(nombre, e.target.value)} aria-invalid={Boolean(errores[nombre])} className={control}>
-                <option value="">Seleccione un docente</option>
-                {docentes.map(docente => <option key={docente.id} value={docente.nombre}>{docente.nombre}</option>)}
-              </select>
+              <SelectorPersona id={`maestria-${nombre}`} personas={docentes} label={camposMaestria[nombre]} required
+                value={datos[nombre]} onChange={valor => cambiar(nombre, valor)} invalid={Boolean(errores[nombre])} />
             </div>)}
             <div><p className="mb-2 font-medium text-slate-700">Presidente del tribunal *</p>
               <SelectorPresidente presidentes={presidentes} value={datos.presidente} onChange={valor => cambiar("presidente", valor)} />
