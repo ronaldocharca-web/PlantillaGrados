@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function ExamenGradoPage() {
   const { data: docentes, error } = await supabase
     .from("docentes")
-    .select("id, nombre")
+    .select("id, nombre, area")
     .eq("activo", true)
     .order("nombre");
 

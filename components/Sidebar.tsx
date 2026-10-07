@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type IconName = "home" | "document" | "thesis" | "exam" | "sparkles" | "work" | "settings";
+type IconName = "home" | "document" | "thesis" | "exam" | "sparkles" | "work" | "raffle" | "settings";
 
 function SidebarIcon({ name }: { name: IconName }) {
   const paths: Record<IconName, React.ReactNode> = {
@@ -13,6 +13,7 @@ function SidebarIcon({ name }: { name: IconName }) {
     exam: <><rect x="3" y="3" width="10" height="10" rx="2" /><path d="M6 6h4v4H6zM8 4v2M8 10v2" /></>,
     sparkles: <><path d="m8 2 .7 3.3L12 6l-3.3.7L8 10l-.7-3.3L4 6l3.3-.7z" /><path d="m12 10 .4 1.6L14 12l-1.6.4L12 14l-.4-1.6L10 12l1.6-.4z" /></>,
     work: <><path d="M2.5 7.5 5 5l3 3 3-3 2.5 2.5" /><path d="M3 8v4h10V8M6 10h4" /></>,
+    raffle: <><rect x="2.5" y="2.5" width="11" height="11" rx="2" /><circle cx="5.5" cy="5.5" r=".7" fill="currentColor" stroke="none" /><circle cx="10.5" cy="5.5" r=".7" fill="currentColor" stroke="none" /><circle cx="8" cy="8" r=".7" fill="currentColor" stroke="none" /><circle cx="5.5" cy="10.5" r=".7" fill="currentColor" stroke="none" /><circle cx="10.5" cy="10.5" r=".7" fill="currentColor" stroke="none" /></>,
     settings: <><circle cx="8" cy="8" r="2.2" /><path d="M8 2v2M8 12v2M2 8h2M12 8h2M3.8 3.8l1.4 1.4M10.8 10.8l1.4 1.4M12.2 3.8l-1.4 1.4M5.2 10.8l-1.4 1.4" /></>,
   };
 
@@ -55,6 +56,7 @@ const opciones: Array<{ nombre: string; ruta: string; icono: IconName }> = [
     icono: "work",
   },
   { nombre: "Maestría", ruta: "/actas/maestria", icono: "thesis" },
+  { nombre: "Sorteo de docentes", ruta: "/sorteo-docentes", icono: "raffle" },
 ];
 
 export default function Sidebar() {

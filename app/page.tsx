@@ -97,6 +97,12 @@ export default function Home() {
           <p className="mt-2 text-sm text-slate-500">Generar actas de defensa de tesis de postgrado de Maestría.</p>
         </Link>
 
+        <Link href="/sorteo-docentes" className="acta-card acta-blue group rounded-2xl p-6 transition">
+          <span className="card-code">SO</span>
+          <h2 className="text-lg font-semibold text-slate-800">Sorteo de docentes</h2>
+          <p className="mt-2 text-sm text-slate-500">Asignar números al azar por área y descargar el resultado en PDF.</p>
+        </Link>
+
         <Link
           href="/admin"
           className="acta-card admin-card rounded-2xl p-6 text-white transition"

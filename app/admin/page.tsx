@@ -7,6 +7,8 @@ import GestionPresidentes from "@/components/GestionPresidentes";
 type Docente = {
   id: number;
   nombre: string;
+  area: string | null;
+  asignatura: string | null;
   activo: boolean;
   created_at: string;
 };
@@ -14,6 +16,8 @@ type Docente = {
 export default function AdminPage() {
   const [docentes, setDocentes] = useState<Docente[]>([]);
   const [nuevoNombre, setNuevoNombre] = useState("");
+  const [nuevaArea, setNuevaArea] = useState("");
+  const [nuevaAsignatura, setNuevaAsignatura] = useState("");
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [editandoId, setEditandoId] =
@@ -21,15 +25,21 @@ export default function AdminPage() {
 
 const [nombreEditado, setNombreEditado] =
   useState("");
+const [areaEditada, setAreaEditada] = useState("");
+const [asignaturaEditada, setAsignaturaEditada] = useState("");
 
   function comenzarEdicion(docente: Docente) {
   setEditandoId(docente.id);
   setNombreEditado(docente.nombre);
+  setAreaEditada(docente.area ?? "");
+  setAsignaturaEditada(docente.asignatura ?? "");
 }
 
 function cancelarEdicion() {
   setEditandoId(null);
   setNombreEditado("");
+  setAreaEditada("");
+  setAsignaturaEditada("");
 }
 
 async function guardarEdicion(id: number) {
@@ -50,6 +60,8 @@ async function guardarEdicion(id: number) {
 
         body: JSON.stringify({
           nombre: nombreEditado,
+          area: areaEditada,
+          asignatura: asignaturaEditada,
         }),
       }
     );
@@ -65,6 +77,8 @@ async function guardarEdicion(id: number) {
 
     setEditandoId(null);
     setNombreEditado("");
+    setAreaEditada("");
+    setAsignaturaEditada("");
 
     await cargarDocentes();
   } catch (error) {
@@ -161,6 +175,8 @@ async function cambiarEstado(
 
           body: JSON.stringify({
             nombre: nuevoNombre,
+            area: nuevaArea,
+            asignatura: nuevaAsignatura,
           }),
         }
       );
@@ -175,6 +191,8 @@ async function cambiarEstado(
       }
 
       setNuevoNombre("");
+      setNuevaArea("");
+      setNuevaAsignatura("");
 
       await cargarDocentes();
     } catch (error) {
@@ -217,7 +235,7 @@ async function cambiarEstado(
 
         
 
-        <div className="mb-8 flex gap-3">
+        <div className="mb-8 grid gap-3 lg:grid-cols-[2fr_1fr_1fr_auto]">
           <input
             type="text"
             value={nuevoNombre}
@@ -231,6 +249,24 @@ async function cambiarEstado(
             }}
             placeholder="Ej. M. Sc. Ana María Pérez"
             className="flex-1 rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+          />
+
+          <input
+            type="text"
+            value={nuevaArea}
+            onChange={(e) => setNuevaArea(e.target.value)}
+            placeholder="Área"
+            aria-label="Área del docente"
+            className="rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+          />
+
+          <input
+            type="text"
+            value={nuevaAsignatura}
+            onChange={(e) => setNuevaAsignatura(e.target.value)}
+            placeholder="Asignatura"
+            aria-label="Asignatura del docente"
+            className="rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
           />
 
           <button
@@ -254,13 +290,21 @@ async function cambiarEstado(
             No hay docentes registrados.
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-slate-200">
+          <div className="overflow-x-auto rounded-lg border border-slate-200">
 
-            <table className="w-full">
+            <table className="w-full min-w-[850px]">
               <thead className="bg-slate-100">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
                     Docente
+                  </th>
+
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                    Área
+                  </th>
+
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                    Asignatura
                   </th>
 
                   <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
@@ -293,6 +337,34 @@ async function cambiarEstado(
           <span className="text-slate-700">
             {docente.nombre}
           </span>
+        )}
+      </td>
+
+      <td className="px-4 py-3">
+        {editandoId === docente.id ? (
+          <input
+            type="text"
+            value={areaEditada}
+            onChange={(e) => setAreaEditada(e.target.value)}
+            aria-label={`Área de ${docente.nombre}`}
+            className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
+          />
+        ) : (
+          <span className="text-slate-700">{docente.area || "—"}</span>
+        )}
+      </td>
+
+      <td className="px-4 py-3">
+        {editandoId === docente.id ? (
+          <input
+            type="text"
+            value={asignaturaEditada}
+            onChange={(e) => setAsignaturaEditada(e.target.value)}
+            aria-label={`Asignatura de ${docente.nombre}`}
+            className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
+          />
+        ) : (
+          <span className="text-slate-700">{docente.asignatura || "—"}</span>
         )}
       </td>
 

@@ -15,7 +15,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await contexto.params;
-    const { nombre } = await request.json();
+    const { nombre, area, asignatura } = await request.json();
 
     if (!nombre || !nombre.trim()) {
       return NextResponse.json(
@@ -32,6 +32,8 @@ export async function PUT(
       .from("docentes")
       .update({
         nombre: nombre.trim(),
+        area: typeof area === "string" && area.trim() ? area.trim() : null,
+        asignatura: typeof asignatura === "string" && asignatura.trim() ? asignatura.trim() : null,
       })
       .eq("id", id)
       .select()

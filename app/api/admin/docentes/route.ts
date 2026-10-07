@@ -33,7 +33,7 @@ export async function POST(
   request: NextRequest
 ) {
   try {
-    const { nombre } = await request.json();
+    const { nombre, area, asignatura } = await request.json();
 
     if (!nombre || !nombre.trim()) {
       return NextResponse.json(
@@ -50,6 +50,8 @@ export async function POST(
       .from("docentes")
       .insert({
         nombre: nombre.trim(),
+        area: typeof area === "string" && area.trim() ? area.trim() : null,
+        asignatura: typeof asignatura === "string" && asignatura.trim() ? asignatura.trim() : null,
         activo: true,
       })
       .select()

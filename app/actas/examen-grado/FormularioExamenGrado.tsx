@@ -8,7 +8,7 @@ import SelectorPersona from "@/components/SelectorPersona";
 import type { Presidente } from "@/lib/presidentes";
 import { nombreArchivoActa, SIGLAS_MODALIDAD } from "@/lib/ci";
 
-type Docente = { id: number; nombre: string };
+type Docente = { id: number; nombre: string; area: string | null };
 
 type Props = { docentes: Docente[]; presidentes: Presidente[]; presidente: string };
 
@@ -55,6 +55,7 @@ const inicial: Formulario = {
 export default function FormularioExamenGrado({ docentes, presidentes, presidente: presidenteInicial }: Props) {
   const [presidente, setPresidente] = useState(presidenteInicial);
   const [formulario, setFormulario] = useState<Formulario>(inicial);
+  const [filtroArea, setFiltroArea] = useState("");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [generando, setGenerando] = useState(false);
   const [errores, setErrores] = useState<Record<string, string>>({});
@@ -62,6 +63,32 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
 
   function cambiar(campo: keyof Formulario, valor: string) {
     setFormulario((actual) => ({ ...actual, [campo]: valor }));
+  }
+
+  const areasDisponibles = [...new Set(
+    docentes.flatMap((docente) =>
+      (docente.area ?? "")
+        .split(";")
+        .map((area) => area.trim())
+        .filter((area) => area && area !== "Sin asignación en el Plan 2026"),
+    ),
+  )].sort((a, b) => a.localeCompare(b, "es"));
+
+  const perteneceAlArea = (docente: Docente, area: string) =>
+    !area || (docente.area ?? "").split(";").map((valor) => valor.trim()).includes(area);
+
+  const docentesFiltrados = docentes.filter((docente) => perteneceAlArea(docente, filtroArea));
+
+  function cambiarFiltroArea(area: string) {
+    setFiltroArea(area);
+    const permitidos = new Set(
+      docentes.filter((docente) => perteneceAlArea(docente, area)).map((docente) => docente.nombre),
+    );
+    setFormulario((actual) => ({
+      ...actual,
+      tribunal1: actual.tribunal1 && !permitidos.has(actual.tribunal1) ? "" : actual.tribunal1,
+      tribunal2: actual.tribunal2 && !permitidos.has(actual.tribunal2) ? "" : actual.tribunal2,
+    }));
   }
 
   function fechaTexto(fecha: string) {
@@ -210,8 +237,20 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
             </div>
             {campo("Nota", "nota", "Ej. 90")}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Texto de aprobado", "aprobado", "Ej. X")}{campo("Texto de reprobado", "reprobado", "Dejar vacío si no corresponde")}</div>
-            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 1</label><SelectorPersona personas={docentes} label="Tribunal evaluador 1" value={formulario.tribunal1} onChange={valor => cambiar("tribunal1", valor)} /></div>
-            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 2</label><SelectorPersona personas={docentes} label="Tribunal evaluador 2" value={formulario.tribunal2} onChange={valor => cambiar("tribunal2", valor)} /></div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <label htmlFor="filtro-area-tribunales" className="mb-2 block text-sm font-medium text-slate-700">Filtrar tribunales por área</label>
+              <select id="filtro-area-tribunales" value={filtroArea} onChange={(e) => cambiarFiltroArea(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none focus:border-blue-500">
+                <option value="">Ninguno — mostrar todos los docentes</option>
+                {areasDisponibles.map((area) => <option key={area} value={area}>{area}</option>)}
+              </select>
+              <p className="mt-2 text-xs text-slate-500">
+                {filtroArea
+                  ? `${docentesFiltrados.length} docente${docentesFiltrados.length === 1 ? "" : "s"} disponible${docentesFiltrados.length === 1 ? "" : "s"} en ${filtroArea}.`
+                  : `Se muestran todos los docentes activos (${docentes.length}).`}
+              </p>
+            </div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 1</label><SelectorPersona personas={docentesFiltrados} label="Tribunal evaluador 1" value={formulario.tribunal1} onChange={valor => cambiar("tribunal1", valor)} /></div>
+            <div><label className="mb-2 block text-sm font-medium text-slate-700">Tribunal evaluador 2</label><SelectorPersona personas={docentesFiltrados} label="Tribunal evaluador 2" value={formulario.tribunal2} onChange={valor => cambiar("tribunal2", valor)} /></div>
             <div><label className="mb-2 block text-sm font-medium text-slate-700">Presidente del tribunal</label><SelectorPresidente presidentes={presidentes} value={presidente} onChange={setPresidente} /></div>
             <button type="button" onClick={generarPdf} disabled={generando} className="w-full rounded-lg bg-slate-800 px-5 py-3 font-medium text-white hover:bg-slate-900 disabled:opacity-50">{generando ? "Generando PDF..." : "Generar vista previa PDF"}</button>
             <button type="button" onClick={descargarWord} className="w-full rounded-lg border border-slate-800 px-5 py-3 font-medium text-slate-900 hover:bg-slate-100">Descargar Word</button>

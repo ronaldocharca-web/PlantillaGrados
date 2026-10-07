@@ -6,6 +6,7 @@ export type PantallaManual =
   | "excelencia"
   | "trab-dirigido"
   | "maestria"
+  | "sorteo-docentes"
   | "admin";
 
 type Detalle = { titulo: string; texto: string };
@@ -115,6 +116,7 @@ export const manuales: Record<PantallaManual, Manual> = {
         { titulo: "Excelencia", texto: "Genera un acta de graduación por excelencia con uno, dos o tres tribunales evaluadores." },
         { titulo: "Trabajo Dirigido", texto: "Genera el acta de defensa de Trabajo Dirigido, con tutor y uno o dos miembros del tribunal." },
         { titulo: "Maestría", texto: "Prepara el acta de tesis de postgrado, con dos tribunales docentes, un revisor, presidente y valoración automática de la nota." },
+        { titulo: "Sorteo de docentes", texto: "Asigna números aleatorios a los docentes de un área, controla cuántas áreas puede ocupar cada docente y descarga el resultado en PDF." },
         { titulo: "Administración", texto: "Permite agregar, editar, activar o desactivar docentes, y configurar al presidente del tribunal." },
       ],
     }, {
@@ -155,7 +157,8 @@ export const manuales: Record<PantallaManual, Manual> = {
     ...fechaPresidente,
     nota,
     { titulo: "Aprobado o reprobado", texto: "Coloca una X en «Texto de aprobado» o en «Texto de reprobado», y deja vacío el otro. El formulario empieza con aprobado marcado; verifica que corresponda al resultado. La nota no cambia estas marcas automáticamente." },
-    { titulo: "Tribunales", texto: "Selecciona los evaluadores que correspondan. Si eliges los dos, deben ser distintos. Los campos pueden quedar vacíos para preparar un borrador." },
+    { titulo: "Filtra los tribunales por área", texto: "Elige «Ninguno» para ver a todos los docentes o selecciona un área para mostrar únicamente los evaluadores asignados a ella. Los docentes multidisciplinarios aparecen en cada una de sus áreas." },
+    { titulo: "Tribunales", texto: "Selecciona los evaluadores que correspondan. Si eliges los dos, deben ser distintos. Al cambiar de área se limpia cualquier tribunal que no pertenezca al nuevo filtro." },
   ], "Pulsa «Descargar Word». El CI es obligatorio; los demás campos pueden quedar vacíos o incompletos. También se comprueba que la nota ingresada esté entre 0 y 100 y que los dos tribunales no estén repetidos."),
   excelencia: acta("Excelencia", "excelencia", [
     { titulo: "Postulante y género", texto: "Ingresa el nombre y selecciona el género del postulante." },
@@ -176,6 +179,44 @@ export const manuales: Record<PantallaManual, Manual> = {
     nota,
     { titulo: "Borrador", texto: "Puedes generar la vista previa y descargar Word sin completar los demás datos, pero el CI siempre es obligatorio. Comprueba el documento antes de usar el acta final." },
   ], "Pulsa «Descargar Word». El sistema elige la plantilla de uno o dos tribunales. El CI es obligatorio; los demás campos pueden quedar vacíos."),
+  "sorteo-docentes": {
+    titulo: "Sorteo de docentes",
+    resumen: "Asigna números al azar por área y conserva un límite de participación entre sorteos.",
+    pasos: [{
+      titulo: "Selecciona el área",
+      descripcion: "El módulo toma de Supabase los docentes activos y las áreas registradas en Administración.",
+      detalles: [
+        { titulo: "Docentes de varias áreas", texto: "Un docente asignado a dos o más áreas aparecerá en cada una de ellas. El sistema unifica registros con el mismo nombre para evitar que la misma persona reciba dos números dentro de un área." },
+        { titulo: "Docentes disponibles", texto: "Después de seleccionar el área verás quiénes participarán y quiénes alcanzaron el límite configurado." },
+      ],
+    }, {
+      titulo: "Configura intervalo y límite",
+      descripcion: "Indica qué números pueden salir y en cuántas áreas diferentes puede participar cada docente.",
+      detalles: [
+        { titulo: "Intervalo", texto: "El valor inicial es 1 a 9. Puedes cambiarlo, por ejemplo a 1 a 4 o 10 a 25. Cada número se entrega una sola vez dentro del área." },
+        { titulo: "Cantidad exacta", texto: "Con el interruptor activado, la cantidad de números debe ser exactamente igual a la cantidad de docentes. Si lo desactivas, un intervalo 1 a 4 puede sortearse entre cinco docentes: cuatro recibirán un número y uno quedará sin asignación; si sobran números, los adicionales no se utilizan." },
+        { titulo: "Orden de resultados", texto: "Activa «Ordenar resultados por número» para presentar del menor al mayor. Desactívalo para conservar el orden exacto en que los docentes fueron seleccionados. La misma elección se utiliza en la pantalla y en el PDF." },
+        { titulo: "Máximo de áreas", texto: "Con límite 2, un docente puede recibir número en dos áreas diferentes. Al llegar al límite quedará bloqueado en los siguientes sorteos." },
+        { titulo: "Números únicos", texto: "Dentro de cada área, un número se entrega a una sola persona. El mismo número sí puede aparecer en otra área independiente." },
+      ],
+    }, {
+      titulo: "Realiza y revisa el sorteo",
+      descripcion: "Pulsa «Realizar sorteo» para mezclar docentes y números de manera aleatoria.",
+      detalles: [
+        { titulo: "Animación uno por uno", texto: "El sistema toma un número disponible y mueve un aura por las tarjetas de los docentes. El número actual también aparece junto al título de participantes. Al detenerse, ese docente recibe el número, su tarjeta queda gris, el número desaparece de los disponibles y comienza el siguiente turno." },
+        { titulo: "Volver a sortear", texto: "Reemplaza únicamente el resultado del área seleccionada. Los resultados de otras áreas se conservan." },
+        { titulo: "Limpiar", texto: "«Limpiar esta área» elimina solo el área visible. «Limpiar todo» reinicia todos los resultados de la sesión." },
+      ],
+    }, {
+      titulo: "Descarga el PDF",
+      descripcion: "Activa primero el generador PDF y descarga todos los resultados acumulados.",
+      detalles: [
+        { titulo: "Activar generador", texto: "Pulsa «Activar generador PDF» y espera la confirmación antes de descargar." },
+        { titulo: "Contenido", texto: "El reporte incluye fecha, intervalo, límite, área, nombre del docente y número asignado." },
+        { titulo: "Datos temporales", texto: "Descarga el PDF antes de recargar o salir de la página. Los resultados no se guardan permanentemente en la base de datos." },
+      ],
+    }],
+  },
   admin: {
     titulo: "Administración",
     resumen: "Gestiona los docentes de los formularios y al presidente del tribunal.",

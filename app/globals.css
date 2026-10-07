@@ -161,6 +161,148 @@ body {
 .acta-violet { border-color: #8b6cff; background: linear-gradient(135deg, rgba(59, 39, 111, 0.78), rgba(24, 25, 48, 0.9)); }
 .acta-rose { border-color: #e45d9c; background: linear-gradient(135deg, rgba(104, 35, 75, 0.78), rgba(34, 25, 42, 0.9)); }
 
+.sorteo-page {
+  background:
+    radial-gradient(circle at 78% 10%, rgba(37, 99, 235, 0.2), transparent 32%),
+    radial-gradient(circle at 22% 30%, rgba(139, 92, 246, 0.12), transparent 28%);
+}
+
+.sorteo-orbe {
+  position: relative;
+  display: grid;
+  width: 190px;
+  height: 190px;
+  place-items: center;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.3), transparent 18%),
+    linear-gradient(145deg, #2563eb, #6d28d9 65%, #111827);
+  box-shadow: 0 0 0 12px rgba(59, 130, 246, 0.08), 0 25px 60px rgba(37, 99, 235, 0.35);
+}
+
+.sorteo-orbe::after {
+  position: absolute;
+  inset: -13px;
+  border: 2px dashed rgba(103, 232, 249, 0.42);
+  border-radius: inherit;
+  content: "";
+}
+
+.sorteo-orbe span {
+  font-size: 4.5rem;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sorteo-orbe-activo { animation: sorteo-pulso 650ms ease-in-out infinite alternate; }
+.sorteo-orbe-activo::after { animation: sorteo-giro 2.2s linear infinite; }
+.sorteo-resultado { animation: sorteo-entrada 420ms ease both; }
+
+.sorteo-docente {
+  transition: border-color 100ms ease, background-color 100ms ease, box-shadow 100ms ease, transform 100ms ease;
+}
+
+.sorteo-docente-asignado {
+  border-color: #cbd5e1 !important;
+  background: #e2e8f0 !important;
+  box-shadow: inset 0 0 0 1px rgba(100, 116, 139, 0.08);
+  filter: grayscale(0.35);
+}
+
+.sorteo-docente-activo {
+  z-index: 1;
+  border-color: #60a5fa !important;
+  background: #eff6ff !important;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22), 0 0 24px rgba(37, 99, 235, 0.48);
+  transform: scale(1.025);
+}
+
+.sorteo-docente-ganador {
+  border-color: #fbbf24 !important;
+  background: #fffbeb !important;
+  box-shadow: 0 0 0 5px rgba(251, 191, 36, 0.28), 0 0 34px rgba(245, 158, 11, 0.65);
+  transform: scale(1.045);
+}
+
+.sorteo-numero-disponible {
+  display: inline-grid;
+  min-width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0 8px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.9);
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  font-weight: 800;
+  transition: 150ms ease;
+}
+
+.sorteo-numero-actual {
+  border-color: #67e8f9;
+  background: #0e7490;
+  color: #fff;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.65);
+  transform: translateY(-3px) scale(1.08);
+}
+
+.sorteo-numero-resumen {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 38px;
+  padding: 5px 7px 5px 12px;
+  border: 1px solid #a5b4fc;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  color: #4338ca;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.2);
+}
+
+.sorteo-numero-resumen span {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sorteo-numero-resumen strong {
+  display: grid;
+  min-width: 29px;
+  height: 29px;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 1rem;
+}
+
+@keyframes sorteo-pulso {
+  to { transform: scale(1.055); filter: saturate(1.3) brightness(1.08); }
+}
+
+@keyframes sorteo-giro {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sorteo-entrada {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sorteo-orbe-activo,
+  .sorteo-orbe-activo::after,
+  .sorteo-resultado { animation: none; }
+  .sorteo-docente-activo,
+  .sorteo-docente-ganador,
+  .sorteo-numero-actual { transform: none; }
+}
+
 .card-code {
   display: inline-flex;
   min-width: 34px;
