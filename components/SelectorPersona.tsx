@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 
 type Props = {
   personas: { nombre: string }[];
@@ -28,8 +28,17 @@ export default function SelectorPersona({ personas, label, value, onChange, plac
   const estadoId = `${identificador}-resultados`;
   const listaId = `${identificador}-opciones`;
   const palabras = normalizar(busqueda).split(/\s+/).filter(Boolean);
-  const nombres = [...new Set(personas.map(persona => persona.nombre))];
-  const coincidencias = nombres.filter(nombre => palabras.every(palabra => normalizar(nombre).includes(palabra)));
+  // Normaliza cada nombre una vez; la búsqueda cambia con cada tecla.
+  const nombresBuscables = useMemo(
+    () => [...new Set(personas.map(persona => persona.nombre))].map(nombre => ({
+      nombre,
+      buscable: normalizar(nombre),
+    })),
+    [personas],
+  );
+  const coincidencias = nombresBuscables
+    .filter(persona => palabras.every(palabra => persona.buscable.includes(palabra)))
+    .map(persona => persona.nombre);
   const conservarSeleccion = value !== "" && !coincidencias.includes(value);
 
   function elegir(nombre: string) {

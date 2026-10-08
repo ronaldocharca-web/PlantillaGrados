@@ -23,6 +23,7 @@ export type ReporteSorteo = {
 
 export const AREA_SIN_ASIGNACION = "Sin asignación en el Plan 2026";
 
+/** Las áreas de un docente se guardan separadas por punto y coma. */
 export function areasDeDocente(area: string | null) {
   return (area ?? "")
     .split(";")
@@ -30,6 +31,7 @@ export function areasDeDocente(area: string | null) {
     .filter((valor) => valor && valor !== AREA_SIN_ASIGNACION);
 }
 
+/** Revalida el resultado recibido antes de construir el PDF. */
 export function validarReporteSorteo(valor: unknown): ReporteSorteo {
   if (!valor || typeof valor !== "object") throw new Error("No se recibieron los resultados del sorteo.");
   const entrada = valor as Partial<ReporteSorteo>;

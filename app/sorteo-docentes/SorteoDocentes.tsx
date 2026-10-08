@@ -12,6 +12,7 @@ function normalizarNombre(nombre: string) {
 }
 
 function indiceAleatorio(maximoExclusivo: number) {
+  // Descarta valores fuera del rango uniforme para evitar sesgo al repartir números.
   const limite = Math.floor(0x100000000 / maximoExclusivo) * maximoExclusivo;
   const valor = new Uint32Array(1);
   do crypto.getRandomValues(valor); while (valor[0] >= limite);
@@ -43,6 +44,7 @@ function descargarBlob(blob: Blob, nombre: string) {
 }
 
 export default function SorteoDocentes({ docentes }: Props) {
+  // Un mismo nombre puede llegar en varias filas, una por cada área asignada.
   const docentesUnicos = useMemo(() => {
     const unicos = new Map<string, DocenteSorteo>();
     for (const docente of docentes) {
@@ -86,6 +88,7 @@ export default function SorteoDocentes({ docentes }: Props) {
   );
 
   const participaciones = useMemo(() => {
+    // Cuenta áreas diferentes ya sorteadas, no la cantidad de números recibidos.
     const conteo = new Map<string, Set<string>>();
     for (const resultado of resultados) {
       const clave = normalizarNombre(resultado.docente);
@@ -102,14 +105,25 @@ export default function SorteoDocentes({ docentes }: Props) {
     return otrasAreas.size < maximoAreas;
   }), [area, docentesDelArea, maximoAreas, participaciones]);
 
-  const bloqueados = useMemo(() => docentesDelArea.filter(
-    (docente) => !elegibles.some((elegible) => elegible.id === docente.id),
-  ), [docentesDelArea, elegibles]);
+  const bloqueados = useMemo(() => {
+    const idsElegibles = new Set(elegibles.map((docente) => docente.id));
+    return docentesDelArea.filter((docente) => !idsElegibles.has(docente.id));
+  }, [docentesDelArea, elegibles]);
+
+  const idsBloqueados = useMemo(
+    () => new Set(bloqueados.map((docente) => docente.id)),
+    [bloqueados],
+  );
 
   const resultadoArea = useMemo(() => {
     const resultadosDelArea = resultados.filter((resultado) => resultado.area === area);
     return ordenarResultados ? resultadosDelArea.sort((a, b) => a.numero - b.numero) : resultadosDelArea;
   }, [area, ordenarResultados, resultados]);
+
+  const asignacionPorDocente = useMemo(
+    () => new Map(resultadoArea.map((resultado) => [resultado.docenteId, resultado])),
+    [resultadoArea],
+  );
 
   function validarConfiguracion() {
     if (!area) return "Selecciona un área antes de realizar el sorteo.";
@@ -164,7 +178,7 @@ export default function SorteoDocentes({ docentes }: Props) {
         await esperar(cantidadAsignaciones <= 10 ? 450 : cantidadAsignaciones <= 25 ? 220 : 140);
 
         const resultado: ResultadoSorteo = {
-        area,
+          area,
           docenteId: ganador.id,
           docente: ganador.nombre,
           numero,
@@ -353,8 +367,8 @@ export default function SorteoDocentes({ docentes }: Props) {
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {docentesDelArea.map((docente) => {
                   const cantidadAreas = participaciones.get(normalizarNombre(docente.nombre))?.size ?? 0;
-                  const bloqueado = bloqueados.some((item) => item.id === docente.id);
-                  const asignacion = resultadoArea.find((resultado) => resultado.docenteId === docente.id);
+                  const bloqueado = idsBloqueados.has(docente.id);
+                  const asignacion = asignacionPorDocente.get(docente.id);
                   return (
                     <div
                       key={docente.id}

@@ -20,129 +20,81 @@ export default function AdminPage() {
   const [nuevaAsignatura, setNuevaAsignatura] = useState("");
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
-  const [editandoId, setEditandoId] =
-  useState<number | null>(null);
+  const [editandoId, setEditandoId] = useState<number | null>(null);
+  const [nombreEditado, setNombreEditado] = useState("");
+  const [areaEditada, setAreaEditada] = useState("");
+  const [asignaturaEditada, setAsignaturaEditada] = useState("");
 
-const [nombreEditado, setNombreEditado] =
-  useState("");
-const [areaEditada, setAreaEditada] = useState("");
-const [asignaturaEditada, setAsignaturaEditada] = useState("");
-
+  // Los campos de edición se mantienen separados de los de alta.
   function comenzarEdicion(docente: Docente) {
-  setEditandoId(docente.id);
-  setNombreEditado(docente.nombre);
-  setAreaEditada(docente.area ?? "");
-  setAsignaturaEditada(docente.asignatura ?? "");
-}
-
-function cancelarEdicion() {
-  setEditandoId(null);
-  setNombreEditado("");
-  setAreaEditada("");
-  setAsignaturaEditada("");
-}
-
-async function guardarEdicion(id: number) {
-  if (!nombreEditado.trim()) {
-    alert("El nombre no puede estar vacío.");
-    return;
+    setEditandoId(docente.id);
+    setNombreEditado(docente.nombre);
+    setAreaEditada(docente.area ?? "");
+    setAsignaturaEditada(docente.asignatura ?? "");
   }
 
-  try {
-    const respuesta = await fetch(
-      `/api/admin/docentes/${id}`,
-      {
+  function cancelarEdicion() {
+    setEditandoId(null);
+    setNombreEditado("");
+    setAreaEditada("");
+    setAsignaturaEditada("");
+  }
+
+  async function guardarEdicion(id: number) {
+    if (!nombreEditado.trim()) {
+      alert("El nombre no puede estar vacío.");
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`/api/admin/docentes/${id}`, {
         method: "PUT",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre: nombreEditado,
           area: areaEditada,
           asignatura: asignaturaEditada,
         }),
+      });
+      const datos = await respuesta.json();
+      if (!respuesta.ok) {
+        throw new Error(datos.error || "No se pudo actualizar el docente");
       }
-    );
 
-    const datos = await respuesta.json();
-
-    if (!respuesta.ok) {
-      throw new Error(
-        datos.error ||
-          "No se pudo actualizar el docente"
-      );
-    }
-
-    setEditandoId(null);
-    setNombreEditado("");
-    setAreaEditada("");
-    setAsignaturaEditada("");
-
-    await cargarDocentes();
-  } catch (error) {
-    console.error(error);
-
-    if (error instanceof Error) {
-      alert(error.message);
+      cancelarEdicion();
+      await cargarDocentes();
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) alert(error.message);
     }
   }
-}
 
-async function cambiarEstado(
-  id: number,
-  estadoActual: boolean
-) {
-  try {
-    const respuesta = await fetch(
-      `/api/admin/docentes/${id}`,
-      {
+  async function cambiarEstado(id: number, estadoActual: boolean) {
+    try {
+      const respuesta = await fetch(`/api/admin/docentes/${id}`, {
         method: "PATCH",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          activo: !estadoActual,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !estadoActual }),
+      });
+      const datos = await respuesta.json();
+      if (!respuesta.ok) {
+        throw new Error(datos.error || "No se pudo cambiar el estado");
       }
-    );
 
-    const datos = await respuesta.json();
-
-    if (!respuesta.ok) {
-      throw new Error(
-        datos.error ||
-          "No se pudo cambiar el estado"
-      );
-    }
-
-    await cargarDocentes();
-  } catch (error) {
-    console.error(error);
-
-    if (error instanceof Error) {
-      alert(error.message);
+      await cargarDocentes();
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) alert(error.message);
     }
   }
-}
 
   async function cargarDocentes() {
     try {
-      const respuesta = await fetch(
-        "/api/admin/docentes"
-      );
-
+      const respuesta = await fetch("/api/admin/docentes");
       if (!respuesta.ok) {
-        throw new Error(
-          "No se pudieron cargar los docentes"
-        );
+        throw new Error("No se pudieron cargar los docentes");
       }
-
       const datos = await respuesta.json();
-
       setDocentes(datos);
     } catch (error) {
       console.error(error);
@@ -152,8 +104,8 @@ async function cambiarEstado(
   }
 
   useEffect(() => {
-  cargarDocentes();
-}, []);
+    cargarDocentes();
+  }, []);
 
   async function agregarDocente() {
     if (!nuevoNombre.trim()) {
@@ -164,30 +116,18 @@ async function cambiarEstado(
     try {
       setGuardando(true);
 
-      const respuesta = await fetch(
-        "/api/admin/docentes",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            nombre: nuevoNombre,
-            area: nuevaArea,
-            asignatura: nuevaAsignatura,
-          }),
-        }
-      );
-
+      const respuesta = await fetch("/api/admin/docentes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: nuevoNombre,
+          area: nuevaArea,
+          asignatura: nuevaAsignatura,
+        }),
+      });
       const datos = await respuesta.json();
-
       if (!respuesta.ok) {
-        throw new Error(
-          datos.error ||
-            "No se pudo agregar el docente"
-        );
+        throw new Error(datos.error || "No se pudo agregar el docente");
       }
 
       setNuevoNombre("");
@@ -198,9 +138,7 @@ async function cambiarEstado(
     } catch (error) {
       console.error(error);
 
-      if (error instanceof Error) {
-        alert(error.message);
-      }
+      if (error instanceof Error) alert(error.message);
     } finally {
       setGuardando(false);
     }
@@ -210,13 +148,8 @@ async function cambiarEstado(
     <div className="p-8">
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-        <h1 className="text-3xl font-bold text-slate-800">
-          Administración
-        </h1>
-
-        <p className="mt-2 text-slate-600">
-          Gestión de docentes y configuración del sistema.
-        </p>
+          <h1 className="text-3xl font-bold text-slate-800">Administración</h1>
+          <p className="mt-2 text-slate-600">Gestión de docentes y configuración del sistema.</p>
         </div>
         <ManualUsuario pantalla="admin" />
       </div>
@@ -227,21 +160,14 @@ async function cambiarEstado(
             Gestión de docentes
           </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Agregue los docentes que podrán seleccionarse
-            en las actas.
-          </p>
+          <p className="mt-1 text-sm text-slate-500">Agregue los docentes que podrán seleccionarse en las actas.</p>
         </div>
-
-        
 
         <div className="mb-8 grid gap-3 lg:grid-cols-[2fr_1fr_1fr_auto]">
           <input
             type="text"
             value={nuevoNombre}
-            onChange={(e) =>
-              setNuevoNombre(e.target.value)
-            }
+            onChange={(e) => setNuevoNombre(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 agregarDocente();
@@ -275,174 +201,126 @@ async function cambiarEstado(
             disabled={guardando}
             className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
           >
-            {guardando
-              ? "Guardando..."
-              : "Agregar docente"}
+            {guardando ? "Guardando..." : "Agregar docente"}
           </button>
         </div>
 
         {cargando ? (
-          <p className="text-slate-500">
-            Cargando docentes...
-          </p>
+          <p className="text-slate-500">Cargando docentes...</p>
         ) : docentes.length === 0 ? (
-          <p className="text-slate-500">
-            No hay docentes registrados.
-          </p>
+          <p className="text-slate-500">No hay docentes registrados.</p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-slate-200">
-
             <table className="w-full min-w-[850px]">
               <thead className="bg-slate-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Docente
-                  </th>
-
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Área
-                  </th>
-
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Asignatura
-                  </th>
-
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Estado
-                  </th>
-
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-slate-700">
-  Acciones
-</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Docente</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Área</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Asignatura</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Estado</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-slate-700">Acciones</th>
                 </tr>
               </thead>
 
               <tbody>
-  {docentes.map((docente) => (
-    <tr
-      key={docente.id}
-      className="border-t border-slate-200"
-    >
-      <td className="px-4 py-3">
-        {editandoId === docente.id ? (
-          <input
-            type="text"
-            value={nombreEditado}
-            onChange={(e) =>
-              setNombreEditado(e.target.value)
-            }
-            className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
-          />
-        ) : (
-          <span className="text-slate-700">
-            {docente.nombre}
-          </span>
-        )}
-      </td>
+                {docentes.map((docente) => (
+                  <tr key={docente.id} className="border-t border-slate-200">
+                    <td className="px-4 py-3">
+                      {editandoId === docente.id ? (
+                        <input
+                          type="text"
+                          value={nombreEditado}
+                          onChange={(e) => setNombreEditado(e.target.value)}
+                          className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
+                        />
+                      ) : (
+                        <span className="text-slate-700">{docente.nombre}</span>
+                      )}
+                    </td>
 
-      <td className="px-4 py-3">
-        {editandoId === docente.id ? (
-          <input
-            type="text"
-            value={areaEditada}
-            onChange={(e) => setAreaEditada(e.target.value)}
-            aria-label={`Área de ${docente.nombre}`}
-            className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
-          />
-        ) : (
-          <span className="text-slate-700">{docente.area || "—"}</span>
-        )}
-      </td>
+                    <td className="px-4 py-3">
+                      {editandoId === docente.id ? (
+                        <input
+                          type="text"
+                          value={areaEditada}
+                          onChange={(e) => setAreaEditada(e.target.value)}
+                          aria-label={`Área de ${docente.nombre}`}
+                          className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
+                        />
+                      ) : (
+                        <span className="text-slate-700">{docente.area || "—"}</span>
+                      )}
+                    </td>
 
-      <td className="px-4 py-3">
-        {editandoId === docente.id ? (
-          <input
-            type="text"
-            value={asignaturaEditada}
-            onChange={(e) => setAsignaturaEditada(e.target.value)}
-            aria-label={`Asignatura de ${docente.nombre}`}
-            className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
-          />
-        ) : (
-          <span className="text-slate-700">{docente.asignatura || "—"}</span>
-        )}
-      </td>
+                    <td className="px-4 py-3">
+                      {editandoId === docente.id ? (
+                        <input
+                          type="text"
+                          value={asignaturaEditada}
+                          onChange={(e) => setAsignaturaEditada(e.target.value)}
+                          aria-label={`Asignatura de ${docente.nombre}`}
+                          className="w-full rounded-lg border border-blue-400 px-3 py-2 outline-none"
+                        />
+                      ) : (
+                        <span className="text-slate-700">{docente.asignatura || "—"}</span>
+                      )}
+                    </td>
 
-      <td className="px-4 py-3">
-        {docente.activo ? (
-          <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-            Activo
-          </span>
-        ) : (
-          <span className="rounded-full bg-slate-200 px-3 py-1 text-sm text-slate-600">
-            Inactivo
-          </span>
-        )}
-      </td>
+                    <td className="px-4 py-3">
+                      {docente.activo ? (
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">Activo</span>
+                      ) : (
+                        <span className="rounded-full bg-slate-200 px-3 py-1 text-sm text-slate-600">Inactivo</span>
+                      )}
+                    </td>
 
-      <td className="px-4 py-3">
-        <div className="flex justify-end gap-2">
-
-          {editandoId === docente.id ? (
-            <>
-              <button
-                type="button"
-                onClick={() =>
-                  guardarEdicion(docente.id)
-                }
-                className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                Guardar
-              </button>
-
-              <button
-                type="button"
-                onClick={cancelarEdicion}
-                className="rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-300"
-              >
-                Cancelar
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() =>
-                  comenzarEdicion(docente)
-                }
-                className="rounded-lg border border-blue-600 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
-              >
-                Editar
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  cambiarEstado(
-                    docente.id,
-                    docente.activo
-                  )
-                }
-                className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                  docente.activo
-                    ? "bg-red-50 text-red-600 hover:bg-red-100"
-                    : "bg-green-50 text-green-700 hover:bg-green-100"
-                }`}
-              >
-                {docente.activo
-                  ? "Desactivar"
-                  : "Activar"}
-              </button>
-            </>
-          )}
-
-        </div>
-      </td>
-    </tr>
-  ))}
-</tbody>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-2">
+                        {editandoId === docente.id ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => guardarEdicion(docente.id)}
+                              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                            >
+                              Guardar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelarEdicion}
+                              className="rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-300"
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => comenzarEdicion(docente)}
+                              className="rounded-lg border border-blue-600 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => cambiarEstado(docente.id, docente.activo)}
+                              className={`rounded-lg px-3 py-2 text-sm font-medium ${
+                                docente.activo
+                                  ? "bg-red-50 text-red-600 hover:bg-red-100"
+                                  : "bg-green-50 text-green-700 hover:bg-green-100"
+                              }`}
+                            >
+                              {docente.activo ? "Desactivar" : "Activar"}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
-
           </div>
         )}
       </section>

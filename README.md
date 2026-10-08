@@ -71,7 +71,7 @@ Menú lateral      components/Sidebar.tsx
 Estilos globales  app/globals.css
 ```
 
-Desde el inicio se accede a Proyecto de Grado, Tesis, Examen de Grado, Excelencia, Trabajo Dirigido y Administración.
+Desde el inicio se accede a las seis actas, Sorteo de docentes y Administración.
 
 ## Pantallas y APIs
 
@@ -141,6 +141,17 @@ Configuración: app/api/admin/configuracion/route.ts
 Supabase:      lib/supabase.ts y lib/supabase-admin.ts
 ```
 
+### Sorteo de docentes
+
+```text
+Pantalla:     app/sorteo-docentes/SorteoDocentes.tsx
+Datos:        lib/sorteo-data.ts
+Documento:    lib/sorteo-documento.ts
+PDF:          app/api/sorteo-docentes/pdf/route.ts
+```
+
+La pantalla reúne los docentes por área, limita cuántas áreas puede sortear cada uno y muestra las asignaciones. El servidor valida el reporte antes de convertirlo a PDF.
+
 ## Plantillas Word
 
 Las plantillas están en `templates/` y usan etiquetas como:
@@ -189,15 +200,17 @@ Ruta de salud desde Next.js: `/api/converter/health`.
 ```text
 app/                 Pantallas, layout y APIs
 components/          Componentes compartidos
-lib/                 Reglas, datos y Supabase
+lib/                 Reglas de actas, sorteo, documentos y Supabase
 templates/           Plantillas Word
 converter-server/    Servicio LibreOffice
 scripts/dev-all.mjs  Arranca Next.js y el conversor
 ```
 
+Los formularios de `app/actas/` manejan la interacción; los archivos `lib/*-data.ts` preparan y validan datos. Las rutas de `app/api/` generan el Word o envían el documento al conversor PDF. Las plantillas conservan el diseño de las actas.
+
 ## Manuales de uso dentro de la aplicación
 
-Inicio, las cinco actas y Administración tienen un botón **Manual** en su encabezado.
+Inicio, las seis actas, Sorteo de docentes y Administración tienen un botón **Manual** en su encabezado.
 Abre una guía propia de la pantalla, con pasos, capturas reales e instrucciones de
 los botones. El usuario puede avanzar, retroceder o elegir un paso, y cerrar con
 la X, la tecla Escape o el botón final **Entendido**. Abrir la guía conserva los
