@@ -27,15 +27,17 @@ function parrafo(contenido: string, opciones: { centro?: boolean; espacioDespues
 }
 
 function celda(contenido: string | number, ancho: number, encabezado = false, centrar = false) {
-  return `<w:tc><w:tcPr><w:tcW w:w="${ancho}" w:type="dxa"/>${encabezado ? '<w:shd w:fill="DCE6F1"/>' : ""}<w:vAlign w:val="center"/></w:tcPr>${parrafo(texto(contenido, { negrita: encabezado, tamano: 19 }), { centro: centrar, espacioDespues: 0 })}</w:tc>`;
+  const margenVertical = encabezado ? 100 : 130;
+  const margenes = `<w:tcMar><w:top w:w="${margenVertical}" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="${margenVertical}" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar>`;
+  return `<w:tc><w:tcPr><w:tcW w:w="${ancho}" w:type="dxa"/>${encabezado ? '<w:shd w:fill="DCE6F1"/>' : ""}${margenes}<w:vAlign w:val="center"/></w:tcPr>${parrafo(texto(contenido, { negrita: encabezado, tamano: 19 }), { centro: centrar, espacioDespues: 0 })}</w:tc>`;
 }
 
 function tabla(resultados: ResultadoSorteo[]) {
-  const filas = resultados.map((resultado) => `<w:tr><w:trPr><w:cantSplit/></w:trPr>${celda(resultado.area, 2400)}${celda(resultado.docente, 5000)}${celda(resultado.numero, 1000, false, true)}</w:tr>`).join("");
+  const filas = resultados.map((resultado) => `<w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="440" w:hRule="atLeast"/></w:trPr>${celda(resultado.area, 2400)}${celda(resultado.docente, 5000)}${celda(resultado.numero, 1000, false, true)}</w:tr>`).join("");
   return `<w:tbl>
     <w:tblPr><w:tblW w:w="8400" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="64748B"/><w:left w:val="single" w:sz="6" w:color="64748B"/><w:bottom w:val="single" w:sz="6" w:color="64748B"/><w:right w:val="single" w:sz="6" w:color="64748B"/><w:insideH w:val="single" w:sz="4" w:color="CBD5E1"/><w:insideV w:val="single" w:sz="4" w:color="CBD5E1"/></w:tblBorders></w:tblPr>
     <w:tblGrid><w:gridCol w:w="2400"/><w:gridCol w:w="5000"/><w:gridCol w:w="1000"/></w:tblGrid>
-    <w:tr><w:trPr><w:tblHeader/></w:trPr>${celda("Área", 2400, true)}${celda("Docente", 5000, true)}${celda("Número", 1000, true, true)}</w:tr>${filas}
+    <w:tr><w:trPr><w:tblHeader/><w:trHeight w:val="400" w:hRule="atLeast"/></w:trPr>${celda("Área", 2400, true)}${celda("Docente", 5000, true)}${celda("Número", 1000, true, true)}</w:tr>${filas}
   </w:tbl>`;
 }
 
