@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 type IconName = "home" | "document" | "thesis" | "exam" | "sparkles" | "work" | "raffle" | "settings";
 
@@ -61,13 +62,27 @@ const opciones: Array<{ nombre: string; ruta: string; icono: IconName }> = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [contraida, setContraida] = useState(false);
 
   return (
-    <aside className="app-sidebar w-64 min-h-screen text-white p-5">
-      <div className="mb-9 px-2">
+    <aside className={`app-sidebar w-64 min-h-screen text-white p-5 ${contraida ? "sidebar-collapsed" : ""}`}>
+      <button
+        type="button"
+        className="sidebar-toggle"
+        onClick={() => setContraida((valor) => !valor)}
+        aria-label={contraida ? "Mostrar menú lateral" : "Ocultar menú lateral"}
+        aria-expanded={!contraida}
+        title={contraida ? "Mostrar menú" : "Ocultar menú"}
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m12.5 4.5-5 5 5 5" />
+        </svg>
+      </button>
+
+      <div className="sidebar-brand-block mb-9 px-2">
         <div className="flex items-center gap-3">
           <div className="brand-mark">A</div>
-          <div>
+          <div className="sidebar-brand-copy">
             <h1 className="text-xl font-bold tracking-tight">
               Sistema de Actas
             </h1>
@@ -75,10 +90,10 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <p className="mt-3 text-sm text-slate-400">Carrera de Turismo</p>
+        <p className="sidebar-career mt-3 text-sm text-slate-400">Carrera de Turismo</p>
       </div>
 
-      <nav className="space-y-1.5">
+      <nav className="sidebar-navigation space-y-1.5" aria-label="Navegación principal">
         {opciones.map((opcion) => {
           const activo = pathname === opcion.ruta;
 
@@ -86,6 +101,8 @@ export default function Sidebar() {
             <Link
               key={opcion.nombre}
               href={opcion.ruta}
+              aria-label={opcion.nombre}
+              title={contraida ? opcion.nombre : undefined}
               className={`sidebar-link block rounded-xl px-4 py-3 transition ${
                 activo
                   ? "bg-blue-600 text-white"
@@ -94,16 +111,18 @@ export default function Sidebar() {
             >
               <span className="sidebar-item-content">
                 <span className="sidebar-icon"><SidebarIcon name={opcion.icono} /></span>
-                <span>{opcion.nombre}</span>
+                <span className="sidebar-label">{opcion.nombre}</span>
               </span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-10 border-t border-slate-700 pt-5">
+      <div className="sidebar-admin-section mt-10 border-t border-slate-700 pt-5">
         <Link
           href="/admin"
+          aria-label="Administración"
+          title={contraida ? "Administración" : undefined}
           className={`sidebar-link block rounded-xl px-4 py-3 ${
             pathname.startsWith("/admin")
               ? "bg-blue-600"
@@ -112,7 +131,7 @@ export default function Sidebar() {
         >
           <span className="sidebar-item-content">
             <span className="sidebar-icon"><SidebarIcon name="settings" /></span>
-            <span>Administración</span>
+            <span className="sidebar-label">Administración</span>
           </span>
         </Link>
       </div>
