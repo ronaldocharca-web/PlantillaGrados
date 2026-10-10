@@ -453,6 +453,894 @@ main button:hover:not(:disabled) {
   }
 }
 
+/* Contraste reforzado: el fondo oscuro permite leer todos los textos del sistema. */
+:root {
+  --background: #0b0c0f;
+  --foreground: #f6f7f8;
+  --glass-text: #f6f7f8;
+  --glass-muted: #c2c6cc;
+}
+
+html,
+body,
+.app-shell,
+.app-shell > main {
+  background: #0b0c0f !important;
+  color: #f6f7f8 !important;
+}
+
+.app-shell > main {
+  background-image:
+    radial-gradient(circle at 78% 4%, rgba(255, 255, 255, 0.055), transparent 30%),
+    linear-gradient(135deg, #111318 0%, #090a0c 62%, #15171b 100%) !important;
+}
+
+main > div.p-6,
+main > div.p-8,
+.dashboard-page,
+.sorteo-page {
+  background: transparent !important;
+  color: #f6f7f8 !important;
+}
+
+main h1,
+main h2,
+main h3,
+main h4,
+main label,
+main p,
+main li,
+main td,
+main th,
+main .text-slate-900,
+main .text-slate-800,
+main .text-slate-700 {
+  color: #f2f3f5 !important;
+  text-shadow: none !important;
+}
+
+main .text-slate-600,
+main .text-slate-500,
+main .text-slate-400,
+main .text-slate-300,
+main .text-gray-600,
+main .text-gray-500 {
+  color: #c2c6cc !important;
+}
+
+main section.rounded-xl.bg-white,
+main section.rounded-xl.bg-slate-200,
+main section.rounded-2xl.bg-white,
+main section.rounded-2xl.bg-slate-200,
+main section.rounded-3xl.bg-white,
+.sorteo-page aside > section,
+.sorteo-page > section,
+main .admin-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 30%), #1b1d21 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #f6f7f8 !important;
+}
+
+main section.rounded-xl.bg-white:hover,
+main section.rounded-xl.bg-slate-200:hover,
+main section.rounded-2xl.bg-white:hover,
+main section.rounded-2xl.bg-slate-200:hover,
+main section.rounded-3xl.bg-white:hover,
+.sorteo-page aside > section:hover,
+.sorteo-page > section:hover,
+main .admin-card:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent 30%), #202329 !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  color: #f6f7f8 !important;
+}
+
+/* Mensajes auxiliares y el botón de manual mantienen contraste en fondo oscuro. */
+.manual-trigger,
+main .text-slate-300 {
+  color: #f2f3f5 !important;
+}
+
+/* Sorteo: el participante que recorre la ruleta se diferencia por todo su cuadro. */
+.sorteo-docente.sorteo-docente-activo {
+  position: relative;
+  z-index: 2;
+  border-color: #b9edff !important;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 52%, #075985 100%) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 3px rgba(186, 235, 255, 0.92),
+    0 0 22px 6px rgba(56, 189, 248, 0.62),
+    0 0 46px rgba(14, 165, 233, 0.4) !important;
+  animation: sorteo-cuadro-activo 520ms ease-in-out infinite alternate !important;
+}
+
+.sorteo-docente.sorteo-docente-activo::after {
+  content: none !important;
+}
+
+.sorteo-docente.sorteo-docente-activo .sorteo-docente-nombre,
+.sorteo-docente.sorteo-docente-activo p,
+.sorteo-docente.sorteo-docente-activo span {
+  color: #ffffff !important;
+}
+
+@keyframes sorteo-cuadro-activo {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sorteo-docente.sorteo-docente-activo {
+    animation: none !important;
+  }
+}
+
+/* Tablas, avisos y controles: mantienen contraste en Administración y Sorteo. */
+main .overflow-x-auto.border-slate-200,
+main .overflow-x-auto.rounded-lg,
+main .overflow-x-auto.rounded-2xl {
+  background: #17191d !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
+}
+
+main .overflow-x-auto table,
+main .overflow-x-auto tbody,
+main .overflow-x-auto tbody tr,
+main .overflow-x-auto td {
+  background: #1b1d21 !important;
+  color: #eef0f3 !important;
+}
+
+main .overflow-x-auto thead,
+main .overflow-x-auto thead.bg-slate-100,
+main .overflow-x-auto th {
+  background: #292c31 !important;
+  color: #ffffff !important;
+}
+
+main .overflow-x-auto tbody tr:hover,
+main .overflow-x-auto tr.border-slate-200:hover {
+  background: #25282e !important;
+}
+
+main .bg-emerald-50,
+main .bg-green-50,
+main .bg-amber-50,
+main .bg-red-50 {
+  background: #25282e !important;
+  color: #f2f3f5 !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
+}
+
+main .bg-green-100,
+main .bg-emerald-100,
+main .bg-amber-100,
+main .bg-red-100,
+main .bg-slate-200 {
+  color: #111317 !important;
+}
+
+/* Control previo: cada ticket decide si el docente participa en la ruleta. */
+.sorteo-participacion {
+  position: relative;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 2px solid #9ca3af;
+  background: #101216;
+  cursor: pointer;
+}
+
+.sorteo-participacion input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.sorteo-participacion span {
+  color: transparent;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sorteo-participacion:has(input:checked) {
+  border-color: #5ee4af;
+  background: #5ee4af;
+}
+
+.sorteo-participacion:has(input:checked) span {
+  color: #101216;
+}
+
+.sorteo-participacion:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.sorteo-docente-excluido {
+  opacity: 0.52;
+  filter: grayscale(1);
+}
+
+.sorteo-recorrido {
+  border: 1px solid #5ee4af;
+  background: #10261e;
+  padding: 10px 12px;
+  color: #dcffee !important;
+}
+
+.sorteo-recorrido strong {
+  color: #ffffff;
+}
+
+.sorteo-docente-activo {
+  animation: sorteo-recorrido-nombre 180ms ease-out both !important;
+  border-color: #5ee4af !important;
+  background: #17362a !important;
+  box-shadow: 0 0 0 3px rgba(94, 228, 175, 0.25), 0 0 28px rgba(94, 228, 175, 0.22) !important;
+}
+
+.sorteo-docente-ganador {
+  border-color: #ffffff !important;
+  background: #244938 !important;
+  box-shadow: 0 0 0 5px rgba(94, 228, 175, 0.28), 0 0 34px rgba(94, 228, 175, 0.3) !important;
+}
+
+@keyframes sorteo-recorrido-nombre {
+  from { transform: translateX(-8px) scale(0.98); }
+  to { transform: translateX(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sorteo-docente-activo { animation: none !important; }
+}
+
+/* Aura inequívoca: muestra el nombre que está recorriendo la ruleta. */
+.sorteo-docente {
+  position: relative;
+}
+
+.sorteo-docente-activo {
+  z-index: 2;
+  border-color: #7dffd0 !important;
+  background: linear-gradient(135deg, #1a4b38, #163126) !important;
+  box-shadow: 0 0 0 4px #7dffd0, 0 0 18px 7px rgba(94, 228, 175, 0.72), 0 0 48px rgba(94, 228, 175, 0.5) !important;
+  animation: sorteo-aura-docente 620ms ease-in-out infinite alternate !important;
+}
+
+.sorteo-docente-activo::after {
+  position: absolute;
+  top: -14px;
+  right: 12px;
+  z-index: 3;
+  padding: 3px 8px;
+  border: 2px solid #101216;
+  background: #7dffd0;
+  color: #101216;
+  content: "EN SORTEO";
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+@keyframes sorteo-aura-docente {
+  from { transform: scale(1); }
+  to { transform: scale(1.018); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sorteo-docente-activo { animation: none !important; }
+}
+
+/* Estado inactivo: contraste suficiente sobre la etiqueta gris. */
+main span.bg-slate-200.text-slate-600 {
+  background: #cbd2dc !important;
+  color: #111317 !important;
+  border: 1px solid #87909b;
+}
+
+/* Los enlaces del menú no cambian de tamaño ni de fondo al pasar el cursor. */
+.app-sidebar .sidebar-link:not(.bg-blue-600):hover {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #f2f3f5 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Cada opción ocupa siempre una línea: el hover no puede modificar su altura. */
+.app-sidebar .sidebar-link,
+.app-sidebar .sidebar-item-content,
+.app-sidebar .sidebar-label {
+  white-space: nowrap;
+}
+
+.app-sidebar .sidebar-item-content {
+  flex-wrap: nowrap;
+}
+
+/* Mensajes auxiliares y el botón de manual mantienen contraste en fondo oscuro. */
+.manual-trigger,
+main .text-slate-300 {
+  color: #f2f3f5 !important;
+}
+
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
+  background: #101216 !important;
+  color: #f6f7f8 !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+  color: #aeb4bd !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Neo brutalismo académico: capa visual común para todas las pantallas.      */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --nb-ink: #111111;
+  --nb-paper: #fffdf4;
+  --nb-yellow: #f8d54b;
+  --nb-blue: #4a72ff;
+  --nb-pink: #ff7db8;
+  --nb-mint: #75e6b5;
+  --nb-shadow: 7px 7px 0 var(--nb-ink);
+}
+
+body {
+  background: var(--nb-yellow);
+  color: var(--nb-ink);
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: -0.015em;
+}
+
+.app-shell {
+  gap: 0 !important;
+  padding: 0 !important;
+  background-color: var(--nb-yellow) !important;
+  background-image:
+    linear-gradient(rgba(17, 17, 17, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.08) 1px, transparent 1px) !important;
+  background-size: 22px 22px !important;
+}
+
+.app-shell > main {
+  min-height: 100vh !important;
+  border-radius: 0 !important;
+  background: var(--nb-paper) !important;
+}
+
+/* Menú lateral */
+.app-sidebar,
+.app-sidebar.app-sidebar {
+  top: 0 !important;
+  width: 280px;
+  height: 100vh !important;
+  padding: 24px 16px !important;
+  border: 0 !important;
+  border-right: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: var(--nb-ink) !important;
+  box-shadow: none !important;
+}
+
+.app-sidebar .brand-mark,
+.app-sidebar .card-code {
+  border: 3px solid var(--nb-paper);
+  border-radius: 0;
+  background: var(--nb-yellow);
+  color: var(--nb-ink);
+  box-shadow: 4px 4px 0 var(--nb-paper);
+}
+
+.app-sidebar .sidebar-brand-copy h1,
+.app-sidebar .sidebar-brand-copy p,
+.app-sidebar .sidebar-career {
+  color: var(--nb-paper) !important;
+}
+
+.sidebar-toggle {
+  border: 2px solid var(--nb-paper);
+  border-radius: 0;
+  background: var(--nb-blue);
+  color: var(--nb-paper);
+  box-shadow: 3px 3px 0 var(--nb-paper);
+}
+
+.sidebar-toggle:hover {
+  background: var(--nb-pink);
+  color: var(--nb-ink);
+}
+
+.sidebar-link,
+.sidebar-link:hover {
+  border: 2px solid transparent;
+  border-radius: 0 !important;
+  color: var(--nb-paper) !important;
+  font-weight: 700;
+}
+
+.sidebar-link:hover {
+  border-color: var(--nb-paper);
+  background: #292929 !important;
+}
+
+.sidebar-link.bg-blue-600,
+.sidebar-link.bg-blue-600:hover {
+  border: 3px solid var(--nb-paper) !important;
+  background: var(--nb-yellow) !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 4px 4px 0 var(--nb-paper) !important;
+}
+
+.sidebar-link.bg-blue-600 .sidebar-icon,
+.sidebar-link.bg-blue-600 .sidebar-svg {
+  color: var(--nb-ink) !important;
+}
+
+.sidebar-admin-section {
+  border-color: var(--nb-paper) !important;
+}
+
+/* Tipografía y bloques principales */
+main h1,
+main h2,
+main h3,
+.home-dashboard h1,
+.home-dashboard h2 {
+  color: var(--nb-ink) !important;
+  font-family: Impact, "Arial Black", Arial, sans-serif;
+  font-weight: 800 !important;
+  letter-spacing: 0.015em !important;
+}
+
+.eyebrow,
+.home-dashboard .eyebrow,
+.sorteo-page .eyebrow {
+  color: var(--nb-ink) !important;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+main .text-slate-300,
+main .text-slate-400,
+main .text-slate-500,
+main .text-slate-600,
+main .text-slate-700,
+main .text-slate-800,
+main .text-slate-900,
+.home-dashboard .text-slate-500 {
+  color: var(--nb-ink) !important;
+}
+
+.dashboard-page,
+.sorteo-page,
+main > div.p-6,
+main > div.p-8 {
+  max-width: 1600px;
+}
+
+.dashboard-page,
+.sorteo-page {
+  background: transparent !important;
+}
+
+.status-pill {
+  border: 3px solid var(--nb-ink);
+  border-radius: 0;
+  background: var(--nb-mint);
+  color: var(--nb-ink);
+  box-shadow: 4px 4px 0 var(--nb-ink);
+}
+
+.status-pill span {
+  border-radius: 0;
+  background: var(--nb-ink);
+}
+
+/* Tarjetas de Inicio */
+.acta-card,
+.acta-card:hover,
+.admin-card {
+  min-height: 200px;
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  color: var(--nb-ink) !important;
+  background: var(--nb-paper) !important;
+  box-shadow: var(--nb-shadow) !important;
+  transform: none !important;
+}
+
+.acta-card:hover {
+  box-shadow: 3px 3px 0 var(--nb-ink) !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.acta-blue { background: #b5c8ff !important; }
+.acta-mint { background: var(--nb-mint) !important; }
+.acta-amber { background: var(--nb-yellow) !important; }
+.acta-violet { background: #d0c3ff !important; }
+.acta-rose { background: var(--nb-pink) !important; }
+.admin-card { background: #d7d7d7 !important; }
+
+.acta-card .card-code,
+.card-code {
+  border: 2px solid var(--nb-ink);
+  border-radius: 0;
+  background: var(--nb-paper);
+  color: var(--nb-ink);
+  box-shadow: 3px 3px 0 var(--nb-ink);
+}
+
+/* Formularios, paneles, tablas y vista previa */
+main section.rounded-xl.bg-white,
+main section.rounded-xl.bg-slate-200,
+main section.rounded-2xl.bg-white,
+main section.rounded-2xl.bg-slate-200,
+main section.rounded-3xl.bg-white,
+.sorteo-page aside > section,
+.sorteo-page > section,
+main section.rounded-xl.bg-white:hover,
+main section.rounded-xl.bg-slate-200:hover {
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: var(--nb-paper) !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+
+main section.rounded-xl.bg-slate-200 {
+  background: #dce6ff !important;
+}
+
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
+  min-height: 52px;
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 3px 3px 0 var(--nb-ink) !important;
+}
+
+main textarea {
+  min-height: 120px;
+}
+
+main input:focus,
+main select:focus,
+main textarea:focus {
+  outline: 3px solid var(--nb-yellow);
+  outline-offset: 2px;
+  border-color: var(--nb-ink) !important;
+  box-shadow: 5px 5px 0 var(--nb-blue) !important;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+  color: #5a5a5a !important;
+}
+
+main button,
+.manual-trigger,
+.manual-primary,
+.manual-secondary,
+.manual-close,
+.converter-status-window button {
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 4px 4px 0 var(--nb-ink) !important;
+  font-weight: 800 !important;
+}
+
+main button:hover:not(:disabled),
+.manual-trigger:hover,
+.manual-primary:hover,
+.manual-secondary:hover,
+.manual-close:hover,
+.converter-status-window button:hover {
+  background: var(--nb-yellow) !important;
+  box-shadow: 1px 1px 0 var(--nb-ink) !important;
+  transform: translate(3px, 3px);
+}
+
+main button:disabled,
+.converter-status-window button:disabled {
+  opacity: 0.55;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+main button[class*="bg-blue-"],
+main button[class*="bg-violet-"],
+main button[class*="bg-slate-7"],
+main button[class*="bg-slate-8"] {
+  background: var(--nb-blue) !important;
+  color: #ffffff !important;
+}
+
+main button[class*="bg-emerald-"] {
+  background: var(--nb-mint) !important;
+}
+
+main button[class*="bg-red-"] {
+  background: var(--nb-pink) !important;
+}
+
+main .overflow-x-auto,
+main .overflow-x-auto.rounded-lg,
+main .overflow-x-auto.rounded-2xl {
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+}
+
+main table {
+  background: #ffffff;
+  color: var(--nb-ink) !important;
+}
+
+main thead,
+main thead.bg-slate-100 {
+  background: var(--nb-yellow) !important;
+}
+
+main th,
+main td {
+  color: var(--nb-ink) !important;
+}
+
+main tbody tr,
+main tr.border-slate-200 {
+  border-color: var(--nb-ink) !important;
+}
+
+main tbody tr:hover {
+  background: #fff6c7 !important;
+}
+
+main .rounded-full {
+  border: 2px solid var(--nb-ink);
+  border-radius: 0;
+  color: var(--nb-ink) !important;
+}
+
+main .bg-green-100,
+main .bg-emerald-100 {
+  background: var(--nb-mint) !important;
+}
+
+main .bg-blue-100,
+main .bg-blue-50,
+main .bg-violet-100,
+main .bg-violet-50 {
+  background: #c3d1ff !important;
+}
+
+main .bg-amber-50,
+main .bg-amber-100 {
+  background: var(--nb-yellow) !important;
+}
+
+main .bg-red-50,
+main .bg-red-100 {
+  background: #ffc3dc !important;
+}
+
+/* Búsquedas y resultados emergentes */
+main .absolute.bg-white {
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 5px 5px 0 var(--nb-ink) !important;
+}
+
+main .absolute.bg-white button,
+main .absolute.bg-white button.bg-white,
+main .absolute.bg-white button.bg-violet-100 {
+  border: 0 !important;
+  border-bottom: 2px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--nb-ink) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+main .absolute.bg-white button:hover,
+main .absolute.bg-white button.bg-violet-100 {
+  background: var(--nb-yellow) !important;
+}
+
+/* Sorteo */
+.sorteo-page .rounded-3xl,
+.sorteo-page .rounded-2xl,
+.sorteo-page .rounded-xl {
+  border-radius: 0 !important;
+}
+
+.sorteo-orbe {
+  border: 4px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: var(--nb-blue) !important;
+  box-shadow: 10px 10px 0 var(--nb-ink) !important;
+}
+
+.sorteo-orbe::after {
+  inset: -16px;
+  border: 3px dashed var(--nb-ink) !important;
+  border-radius: 0 !important;
+}
+
+.sorteo-orbe span {
+  color: #ffffff;
+  text-shadow: 4px 4px 0 var(--nb-ink);
+}
+
+.sorteo-numero-disponible,
+.sorteo-numero-resumen,
+.sorteo-numero-resumen strong {
+  border: 2px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 2px 2px 0 var(--nb-ink) !important;
+}
+
+.sorteo-numero-actual {
+  background: var(--nb-yellow) !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 4px 4px 0 var(--nb-ink) !important;
+}
+
+.sorteo-docente,
+.sorteo-docente-asignado,
+.sorteo-docente-activo,
+.sorteo-docente-ganador {
+  border: 3px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  box-shadow: 3px 3px 0 var(--nb-ink) !important;
+  filter: none !important;
+}
+
+.sorteo-docente-activo {
+  background: var(--nb-yellow) !important;
+  transform: translate(-2px, -2px) !important;
+}
+
+.sorteo-docente-ganador {
+  background: var(--nb-mint) !important;
+  transform: translate(-3px, -3px) !important;
+}
+
+.sorteo-docente-asignado {
+  background: #d8d8d8 !important;
+}
+
+/* Manual y estado del conversor */
+.manual-dialog,
+.converter-status-window {
+  border: 4px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: var(--nb-paper) !important;
+  color: var(--nb-ink) !important;
+  box-shadow: 12px 12px 0 var(--nb-ink) !important;
+  backdrop-filter: none !important;
+}
+
+.manual-dialog::backdrop {
+  background: rgba(17, 17, 17, 0.68) !important;
+  backdrop-filter: none !important;
+}
+
+.manual-header,
+.manual-footer,
+.converter-status-header,
+.converter-status-details,
+.manual-nav {
+  border-color: var(--nb-ink) !important;
+  background: var(--nb-yellow) !important;
+}
+
+.manual-header h2,
+.manual-content h3,
+.manual-details dt,
+.manual-summary,
+.manual-description,
+.manual-details dd,
+.manual-footer > span,
+.manual-eyebrow,
+.manual-step-label,
+.converter-status-window,
+.converter-status-window a {
+  color: var(--nb-ink) !important;
+}
+
+.manual-nav button[aria-current="step"] {
+  border: 2px solid var(--nb-ink) !important;
+  border-radius: 0 !important;
+  background: var(--nb-blue) !important;
+  color: #ffffff !important;
+  box-shadow: 3px 3px 0 var(--nb-ink) !important;
+}
+
+/* El lienzo del PDF se conserva blanco para leer los documentos. */
+main section.bg-slate-200 iframe.bg-white,
+main section.bg-slate-200 > div.bg-white,
+main section.bg-slate-200 .bg-white:has(> .text-center) {
+  border: 3px solid var(--nb-ink);
+  border-radius: 0;
+  background: #ffffff !important;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+}
+
+@media (min-width: 801px) {
+  .app-sidebar.sidebar-collapsed {
+    width: 86px;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+
+  .app-sidebar.sidebar-collapsed .sidebar-link {
+    width: 52px;
+    border: 2px solid transparent;
+  }
+
+  .app-sidebar.sidebar-collapsed .sidebar-link.bg-blue-600 {
+    border-color: var(--nb-paper) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .app-shell {
+    display: block;
+  }
+
+  .app-sidebar,
+  .app-sidebar.sidebar-collapsed {
+    width: 100%;
+    height: auto !important;
+    min-height: 82px;
+    border-right: 0 !important;
+    border-bottom: 3px solid var(--nb-ink) !important;
+  }
+
+  .dashboard-page,
+  .sorteo-page,
+  main > div.p-6,
+  main > div.p-8 {
+    padding: 1.25rem !important;
+  }
+
+  main section.rounded-xl.bg-white,
+  main section.rounded-xl.bg-slate-200,
+  main section.rounded-2xl.bg-white,
+  main section.rounded-2xl.bg-slate-200,
+  main section.rounded-3xl.bg-white,
+  .sorteo-page aside > section,
+  .sorteo-page > section {
+    box-shadow: 4px 4px 0 var(--nb-ink) !important;
+  }
+}
+
 /* Ajuste visual para reproducir el vidrio negro del diseño aprobado. */
 @media (min-width: 801px) {
   .app-shell {
@@ -1394,4 +2282,145 @@ main section.bg-slate-200 .bg-white:has(> .text-center) {
   .app-shell > main {
     width: 100%;
   }
+}
+
+/* Contraste reforzado: fondo oscuro y tipografía legible en todas las páginas. */
+
+/* Sorteo: el cuadro activo se vuelve verde y el aura intensa lo distingue. */
+.sorteo-docente.sorteo-docente-activo {
+  position: relative;
+  z-index: 2;
+  border-color: #d7ffe8 !important;
+  background: linear-gradient(135deg, #20b66b 0%, #078c4d 52%, #075936 100%) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 4px rgba(215, 255, 232, 0.98),
+    0 0 28px 10px rgba(52, 235, 139, 0.94),
+    0 0 72px rgba(16, 185, 94, 0.88) !important;
+  animation: sorteo-cuadro-activo-final 520ms ease-in-out infinite alternate !important;
+}
+
+.sorteo-docente.sorteo-docente-activo::after {
+  content: none !important;
+}
+
+.sorteo-docente.sorteo-docente-activo .sorteo-docente-nombre,
+.sorteo-docente.sorteo-docente-activo p,
+.sorteo-docente.sorteo-docente-activo span {
+  color: #ffffff !important;
+}
+
+@keyframes sorteo-cuadro-activo-final {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.34) saturate(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sorteo-docente.sorteo-docente-activo {
+    animation: none !important;
+  }
+}
+
+:root {
+  --background: #0b0c0f;
+  --foreground: #f6f7f8;
+  --glass-text: #f6f7f8;
+  --glass-muted: #c2c6cc;
+}
+
+html,
+body,
+.app-shell,
+.app-shell > main {
+  background: #0b0c0f !important;
+  color: #f6f7f8 !important;
+}
+
+.app-shell > main {
+  background-image:
+    radial-gradient(circle at 78% 4%, rgba(255, 255, 255, 0.055), transparent 30%),
+    linear-gradient(135deg, #111318 0%, #090a0c 62%, #15171b 100%) !important;
+}
+
+main > div.p-6,
+main > div.p-8,
+.dashboard-page,
+.sorteo-page {
+  background: transparent !important;
+  color: #f6f7f8 !important;
+}
+
+main h1,
+main h2,
+main h3,
+main h4,
+main label,
+main p,
+main li,
+main td,
+main th,
+main .text-slate-900,
+main .text-slate-800,
+main .text-slate-700 {
+  color: #f2f3f5 !important;
+  text-shadow: none !important;
+}
+
+main .text-slate-600,
+main .text-slate-500,
+main .text-slate-400,
+main .text-gray-600,
+main .text-gray-500 {
+  color: #c2c6cc !important;
+}
+
+main section.rounded-xl.bg-white,
+main section.rounded-xl.bg-slate-200,
+main section.rounded-2xl.bg-white,
+main section.rounded-2xl.bg-slate-200,
+main section.rounded-3xl.bg-white,
+.sorteo-page aside > section,
+.sorteo-page > section,
+main .admin-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 30%), #1b1d21 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #f6f7f8 !important;
+}
+
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
+  background: #101216 !important;
+  color: #f6f7f8 !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+  color: #aeb4bd !important;
+}
+
+.sidebar-link.bg-blue-600 {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.035)), #303237 !important;
+  color: #ffffff !important;
+}
+
+/* El formulario no cambia a blanco al pasar el cursor. */
+main section.rounded-xl.bg-white:hover,
+main section.rounded-xl.bg-slate-200:hover,
+main section.rounded-2xl.bg-white:hover,
+main section.rounded-2xl.bg-slate-200:hover,
+main section.rounded-3xl.bg-white:hover,
+.sorteo-page aside > section:hover,
+.sorteo-page > section:hover,
+main .admin-card:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent 30%), #202329 !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  color: #f6f7f8 !important;
+}
+
+/* Mensajes auxiliares y el botón de manual mantienen contraste en fondo oscuro. */
+.manual-trigger,
+main .text-slate-300 {
+  color: #f2f3f5 !important;
 }

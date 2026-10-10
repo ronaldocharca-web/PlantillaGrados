@@ -32,31 +32,31 @@ const opciones: Array<{ nombre: string; ruta: string; icono: IconName }> = [
     icono: "home",
   },
   {
-    nombre: "Proyecto de Grado",
+    nombre: "Acta de Proyecto de Grado",
     ruta: "/actas/proyecto-grado",
     icono: "document",
   },
   {
-    nombre: "Tesis",
+    nombre: "Acta de Tesis",
     ruta: "/actas/tesis",
     icono: "thesis",
   },
   {
-    nombre: "Examen de Grado",
+    nombre: "Acta de Examen de Grado",
     ruta: "/actas/examen-grado",
     icono: "exam",
   },
   {
-    nombre: "Excelencia",
+    nombre: "Acta de Excelencia",
     ruta: "/actas/excelencia",
     icono: "sparkles",
   },
   {
-    nombre: "Trabajo Dirigido",
+    nombre: "Acta de Trabajo Dirigido",
     ruta: "/actas/trab-dirigido",
     icono: "work",
   },
-  { nombre: "Maestría", ruta: "/actas/maestria", icono: "thesis" },
+  { nombre: "Acta de Maestría", ruta: "/actas/maestria", icono: "thesis" },
   { nombre: "Sorteo de docentes", ruta: "/sorteo-docentes", icono: "raffle" },
 ];
 

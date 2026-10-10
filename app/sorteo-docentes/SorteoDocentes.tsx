@@ -71,6 +71,7 @@ export default function SorteoDocentes({ docentes }: Props) {
   const [maximoAreas, setMaximoAreas] = useState(2);
   const [exigirCantidadExacta, setExigirCantidadExacta] = useState(true);
   const [ordenarResultados, setOrdenarResultados] = useState(true);
+  const [docentesExcluidosPorArea, setDocentesExcluidosPorArea] = useState<Record<string, number[]>>({});
   const [resultados, setResultados] = useState<ResultadoSorteo[]>([]);
   const [sorteando, setSorteando] = useState(false);
   const [numeroAnimado, setNumeroAnimado] = useState<number | null>(null);
@@ -99,16 +100,27 @@ export default function SorteoDocentes({ docentes }: Props) {
     return conteo;
   }, [resultados]);
 
-  const elegibles = useMemo(() => docentesDelArea.filter((docente) => {
+  const elegiblesPorLimite = useMemo(() => docentesDelArea.filter((docente) => {
     const otrasAreas = new Set(participaciones.get(normalizarNombre(docente.nombre)) ?? []);
     otrasAreas.delete(area);
     return otrasAreas.size < maximoAreas;
   }), [area, docentesDelArea, maximoAreas, participaciones]);
 
+  // La exclusión solo afecta el sorteo actual en el navegador; no desactiva al docente en la base de datos.
+  const idsExcluidos = useMemo(
+    () => new Set(docentesExcluidosPorArea[area] ?? []),
+    [area, docentesExcluidosPorArea],
+  );
+
+  const elegibles = useMemo(
+    () => elegiblesPorLimite.filter((docente) => !idsExcluidos.has(docente.id)),
+    [elegiblesPorLimite, idsExcluidos],
+  );
+
   const bloqueados = useMemo(() => {
-    const idsElegibles = new Set(elegibles.map((docente) => docente.id));
+    const idsElegibles = new Set(elegiblesPorLimite.map((docente) => docente.id));
     return docentesDelArea.filter((docente) => !idsElegibles.has(docente.id));
-  }, [docentesDelArea, elegibles]);
+  }, [docentesDelArea, elegiblesPorLimite]);
 
   const idsBloqueados = useMemo(
     () => new Set(bloqueados.map((docente) => docente.id)),
@@ -123,6 +135,16 @@ export default function SorteoDocentes({ docentes }: Props) {
   const asignacionPorDocente = useMemo(
     () => new Map(resultadoArea.map((resultado) => [resultado.docenteId, resultado])),
     [resultadoArea],
+  );
+
+  const docenteIluminado = useMemo(
+    () => docentesDelArea.find((docente) => docente.id === docenteIluminadoId) ?? null,
+    [docenteIluminadoId, docentesDelArea],
+  );
+
+  const cantidadExcluidos = useMemo(
+    () => elegiblesPorLimite.filter((docente) => idsExcluidos.has(docente.id)).length,
+    [elegiblesPorLimite, idsExcluidos],
   );
 
   function validarConfiguracion() {
@@ -154,8 +176,9 @@ export default function SorteoDocentes({ docentes }: Props) {
     const docentesSorteados = mezclar(elegibles).slice(0, cantidadAsignaciones);
     const nuevos: ResultadoSorteo[] = [];
     let candidatos = mezclar(elegibles);
-    const duracionPaso = cantidadAsignaciones <= 10 ? 70 : cantidadAsignaciones <= 25 ? 45 : 25;
-    const vueltas = cantidadAsignaciones <= 10 ? 14 : cantidadAsignaciones <= 25 ? 8 : 4;
+    // Una vuelta visible por nombre: el resaltado avanza antes de detenerse en el docente elegido.
+    const duracionPaso = cantidadAsignaciones <= 10 ? 115 : cantidadAsignaciones <= 25 ? 70 : 40;
+    const vueltas = cantidadAsignaciones <= 10 ? 10 : cantidadAsignaciones <= 25 ? 7 : 5;
 
     setResultados((anteriores) => anteriores.filter((resultado) => resultado.area !== area));
     setNumerosDisponibles(todosLosNumeros);
@@ -228,6 +251,18 @@ export default function SorteoDocentes({ docentes }: Props) {
     setNumerosDisponibles([]);
     setMensaje("Se limpiaron todos los resultados.");
     setError("");
+  }
+
+  function cambiarParticipacion(docenteId: number, incluir: boolean) {
+    if (!area || sorteando) return;
+    setDocentesExcluidosPorArea((anteriores) => {
+      const excluidos = new Set(anteriores[area] ?? []);
+      if (incluir) excluidos.delete(docenteId);
+      else excluidos.add(docenteId);
+      return { ...anteriores, [area]: [...excluidos] };
+    });
+    setError("");
+    setMensaje("");
   }
 
   async function descargarPdf() {
@@ -355,9 +390,16 @@ export default function SorteoDocentes({ docentes }: Props) {
                   </span>
                 )}
                 <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-800">{elegibles.length} disponibles</span>
+                {cantidadExcluidos > 0 && <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-600">{cantidadExcluidos} excluidos</span>}
                 {bloqueados.length > 0 && <span className="rounded-full bg-amber-100 px-3 py-1 text-amber-800">{bloqueados.length} con límite</span>}
               </div>
             </div>
+
+            {sorteando && docenteIluminado && (
+              <p className="sorteo-recorrido mt-4" role="status" aria-live="polite">
+                La ruleta está recorriendo: <strong>{docenteIluminado.nombre}</strong>
+              </p>
+            )}
 
             {!area ? (
               <p className="mt-5 rounded-xl border border-dashed border-slate-300 bg-white p-5 text-center text-slate-500">Elige un área para mostrar sus docentes.</p>
@@ -368,17 +410,28 @@ export default function SorteoDocentes({ docentes }: Props) {
                 {docentesDelArea.map((docente) => {
                   const cantidadAreas = participaciones.get(normalizarNombre(docente.nombre))?.size ?? 0;
                   const bloqueado = idsBloqueados.has(docente.id);
+                  const excluido = idsExcluidos.has(docente.id);
                   const asignacion = asignacionPorDocente.get(docente.id);
                   return (
                     <div
                       key={docente.id}
                       aria-current={docenteIluminadoId === docente.id ? "true" : undefined}
-                      className={`sorteo-docente flex items-center gap-3 rounded-xl border p-3 ${bloqueado ? "border-amber-200 bg-amber-50 opacity-70" : "border-slate-200 bg-white"} ${asignacion ? "sorteo-docente-asignado" : ""} ${docenteIluminadoId === docente.id ? "sorteo-docente-activo" : ""} ${docenteGanadorId === docente.id ? "sorteo-docente-ganador" : ""}`}
+                      className={`sorteo-docente flex items-center gap-3 rounded-xl border p-3 ${bloqueado ? "border-amber-200 bg-amber-50 opacity-70" : "border-slate-200 bg-white"} ${excluido ? "sorteo-docente-excluido" : ""} ${asignacion ? "sorteo-docente-asignado" : ""} ${docenteIluminadoId === docente.id ? "sorteo-docente-activo" : ""} ${docenteGanadorId === docente.id ? "sorteo-docente-ganador" : ""}`}
                     >
+                      <label className="sorteo-participacion" title={bloqueado ? "Este docente alcanzó el límite de áreas" : "Incluir o excluir de la ruleta"}>
+                        <input
+                          type="checkbox"
+                          checked={!excluido && !bloqueado}
+                          disabled={sorteando || bloqueado || Boolean(asignacion)}
+                          onChange={(evento) => cambiarParticipacion(docente.id, evento.target.checked)}
+                          aria-label={`Incluir a ${docente.nombre} en la ruleta`}
+                        />
+                        <span aria-hidden="true">✓</span>
+                      </label>
                       <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-black ${asignacion ? "bg-slate-300 text-slate-600" : bloqueado ? "bg-amber-200 text-amber-900" : "bg-blue-100 text-blue-700"}`}>{docente.nombre.charAt(0)}</span>
                       <div className="min-w-0">
                         <p className={`truncate font-semibold ${asignacion ? "text-slate-500" : "text-slate-800"}`}>{docente.nombre}</p>
-                        <p className="text-xs text-slate-500">{asignacion ? `Ya recibió el número ${asignacion.numero}` : bloqueado ? "Límite alcanzado" : `${cantidadAreas} de ${maximoAreas} áreas utilizadas`}</p>
+                        <p className="text-xs text-slate-500">{asignacion ? `Ya recibió el número ${asignacion.numero}` : bloqueado ? "Límite alcanzado" : excluido ? "Excluido de la ruleta" : `${cantidadAreas} de ${maximoAreas} áreas utilizadas`}</p>
                       </div>
                     </div>
                   );
