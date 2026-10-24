@@ -470,9 +470,13 @@ body,
 }
 
 .app-shell > main {
-  background-image:
-    radial-gradient(circle at 78% 4%, rgba(255, 255, 255, 0.055), transparent 30%),
-    linear-gradient(135deg, #111318 0%, #090a0c 62%, #15171b 100%) !important;
+  background-image: url("/fondos/textura-geometrica-hd.png") !important;
+  background-color: #17191d !important;
+  background-blend-mode: multiply;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 main > div.p-6,
@@ -538,6 +542,131 @@ main .admin-card:hover {
 .manual-trigger,
 main .text-slate-300 {
   color: #f2f3f5 !important;
+}
+
+/* Portada: color individual y suave para cada módulo. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  border-top-color: var(--home-accent) !important;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--home-accent) 14%, #1c2127),
+    rgba(10, 13, 17, 0.97)
+  ) !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  border-top-color: color-mix(in srgb, var(--home-accent) 38%, transparent);
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .acta-card:focus-visible,
+.home-dashboard .admin-card:hover,
+.home-dashboard .admin-card:focus-visible {
+  border-color: color-mix(in srgb, var(--home-accent) 62%, #e0e8ef) !important;
+  border-top-color: color-mix(in srgb, var(--home-accent) 82%, white) !important;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--home-accent) 24%, #252c33),
+    rgba(17, 22, 28, 0.99)
+  ) !important;
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.52), 0 0 0 1px color-mix(in srgb, var(--home-accent) 58%, transparent) !important;
+}
+
+/* Portada: paleta oscura diferenciada por tipo de acta. */
+.home-dashboard .acta-blue {
+  background: linear-gradient(145deg, rgba(25, 39, 63, 0.97), rgba(9, 14, 21, 0.98)) !important;
+}
+
+.home-dashboard .acta-mint {
+  background: linear-gradient(145deg, rgba(20, 52, 52, 0.97), rgba(8, 17, 19, 0.98)) !important;
+}
+
+.home-dashboard .acta-amber {
+  background: linear-gradient(145deg, rgba(58, 47, 27, 0.97), rgba(18, 16, 11, 0.98)) !important;
+}
+
+.home-dashboard .acta-violet {
+  background: linear-gradient(145deg, rgba(48, 36, 67, 0.97), rgba(16, 12, 24, 0.98)) !important;
+}
+
+.home-dashboard .acta-rose {
+  background: linear-gradient(145deg, rgba(57, 31, 46, 0.97), rgba(20, 11, 17, 0.98)) !important;
+}
+
+.home-dashboard .admin-card {
+  background: linear-gradient(145deg, rgba(39, 47, 58, 0.97), rgba(12, 16, 21, 0.98)) !important;
+}
+
+/* Refuerzo visual: colores diferenciados y visibles en cada tarjeta. */
+.home-dashboard .acta-card.acta-blue {
+  border-color: #314356 !important;
+  border-left: 3px solid #4a637b !important;
+  background: linear-gradient(145deg, rgba(23, 35, 47, 0.68), rgba(11, 17, 24, 0.5)) !important;
+}
+
+.home-dashboard .acta-card.acta-mint {
+  border-color: #2f4d4d !important;
+  border-left: 3px solid #4a7070 !important;
+  background: linear-gradient(145deg, rgba(21, 40, 41, 0.68), rgba(11, 20, 24, 0.5)) !important;
+}
+
+.home-dashboard .acta-card.acta-amber {
+  border-color: #4c4a3d !important;
+  border-left: 3px solid #72705a !important;
+  background: linear-gradient(145deg, rgba(37, 40, 34, 0.68), rgba(18, 22, 22, 0.5)) !important;
+}
+
+.home-dashboard .acta-card.acta-violet {
+  border-color: #40465a !important;
+  border-left: 3px solid #616b82 !important;
+  background: linear-gradient(145deg, rgba(32, 37, 49, 0.68), rgba(16, 21, 28, 0.5)) !important;
+}
+
+.home-dashboard .acta-card.acta-rose {
+  border-color: #4c3e4a !important;
+  border-left: 3px solid #705c6c !important;
+  background: linear-gradient(145deg, rgba(37, 30, 40, 0.68), rgba(19, 21, 25, 0.5)) !important;
+}
+
+.home-dashboard .acta-card.admin-card {
+  border-color: #3a4654 !important;
+  border-left: 3px solid #607185 !important;
+  background: linear-gradient(145deg, rgba(27, 36, 45, 0.68), rgba(13, 20, 27, 0.5)) !important;
+}
+
+/* Sorteo: el rótulo superior mantiene contraste sobre la textura. */
+.sorteo-page .sorteo-eyebrow {
+  color: #f5f7fa !important;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Portada: tarjetas pequeñas, sin códigos abreviados. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  display: block !important;
+  min-height: 0;
+  padding: 1.05rem 1.2rem !important;
+}
+
+.home-dashboard .card-code {
+  display: none !important;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  margin: 0 !important;
+  font-size: 1.05rem !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  margin: 0.32rem 0 0 !important;
+  font-size: 0.84rem !important;
 }
 
 /* Sorteo: el participante que recorre la ruleta se diferencia por todo su cuadro. */
@@ -2337,9 +2466,13 @@ body,
 }
 
 .app-shell > main {
-  background-image:
-    radial-gradient(circle at 78% 4%, rgba(255, 255, 255, 0.055), transparent 30%),
-    linear-gradient(135deg, #111318 0%, #090a0c 62%, #15171b 100%) !important;
+  background-image: url("/fondos/textura-geometrica-hd.png") !important;
+  background-color: #17191d !important;
+  background-blend-mode: multiply;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 main > div.p-6,
@@ -2403,6 +2536,456 @@ main textarea::placeholder {
 .sidebar-link.bg-blue-600 {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.035)), #303237 !important;
   color: #ffffff !important;
+}
+
+/* Inicio: paneles sobrios que dejan apreciar el fondo sin perder contraste. */
+.app-shell > main {
+  background-color: rgba(9, 11, 14, 0.18) !important;
+  background-blend-mode: multiply !important;
+}
+
+.home-dashboard .dashboard-header {
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.25rem;
+  background: linear-gradient(110deg, rgba(12, 15, 18, 0.38), rgba(10, 12, 15, 0.16)) !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(3px);
+}
+
+.home-dashboard .dashboard-header h1,
+.home-dashboard .dashboard-header h2 {
+  color: #ffffff !important;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.88);
+}
+
+.home-dashboard .dashboard-header p,
+.home-dashboard .eyebrow {
+  color: #e1e5e9 !important;
+}
+
+.home-dashboard .acta-card,
+.home-dashboard .acta-blue,
+.home-dashboard .acta-mint,
+.home-dashboard .acta-amber,
+.home-dashboard .acta-violet,
+.home-dashboard .acta-rose,
+.home-dashboard .admin-card {
+  --home-accent: #aab5c8;
+  position: relative;
+  min-height: 11rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.26) !important;
+  border-left: 4px solid var(--home-accent) !important;
+  border-radius: 1rem !important;
+  background: linear-gradient(135deg, rgba(29, 34, 40, 0.88), rgba(12, 15, 18, 0.76)) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38) !important;
+  backdrop-filter: blur(12px);
+  transform: none !important;
+}
+
+.home-dashboard .acta-blue { --home-accent: #90aaf1; }
+.home-dashboard .acta-mint { --home-accent: #77cbb0; }
+.home-dashboard .acta-amber { --home-accent: #d7b65b; }
+.home-dashboard .acta-violet { --home-accent: #b59be5; }
+.home-dashboard .acta-rose { --home-accent: #d59ab5; }
+
+.home-dashboard .acta-card::after,
+.home-dashboard .admin-card::after {
+  display: none !important;
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .admin-card:hover {
+  border-color: rgba(255, 255, 255, 0.62) !important;
+  background: linear-gradient(135deg, rgba(43, 50, 58, 0.92), rgba(16, 19, 23, 0.84)) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.54) !important;
+  transform: translateY(-4px) !important;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  color: #d4d9df !important;
+}
+
+.home-dashboard .card-code {
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 0.55rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.home-dashboard .status-pill {
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  background: rgba(9, 11, 14, 0.3) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.home-dashboard .manual-trigger {
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  background: rgba(16, 20, 24, 0.32) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(4px);
+}
+
+.home-dashboard .manual-trigger:hover {
+  background: rgba(38, 45, 52, 0.5) !important;
+}
+
+/* Inicio: módulos legibles y ordenados sobre la textura geométrica. */
+.home-dashboard .acta-card,
+.home-dashboard .acta-blue,
+.home-dashboard .acta-mint,
+.home-dashboard .acta-amber,
+.home-dashboard .acta-violet,
+.home-dashboard .acta-rose,
+.home-dashboard .admin-card {
+  min-height: 10.8rem;
+  border: 1px solid rgba(218, 224, 230, 0.3) !important;
+  border-top: 3px solid var(--home-accent) !important;
+  border-left: 1px solid rgba(218, 224, 230, 0.3) !important;
+  border-radius: 1rem !important;
+  background: rgba(20, 24, 29, 0.93) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.36) !important;
+  backdrop-filter: none;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  margin-top: 1.9rem;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 1.18rem !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  max-width: calc(100% - 2.25rem);
+  color: #c8cfd6 !important;
+  font-size: 0.91rem !important;
+  line-height: 1.45;
+}
+
+.home-dashboard .card-code {
+  border-color: var(--home-accent) !important;
+  border-radius: 0.45rem !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #f6f7f8 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.home-dashboard .acta-card::after,
+.home-dashboard .admin-card::after {
+  position: absolute;
+  right: 1.35rem;
+  bottom: 1.15rem;
+  display: grid !important;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--home-accent);
+  content: "→";
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  opacity: 1;
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .admin-card:hover {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  border-top-color: var(--home-accent) !important;
+  background: rgba(30, 36, 43, 0.97) !important;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.48) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* Variante compacta: elimina el espacio vacío y prioriza la lectura. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  display: grid !important;
+  grid-template-columns: 3.15rem minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 1.05rem;
+  align-content: center;
+  min-height: 8.9rem;
+  padding: 1.3rem 1.45rem !important;
+}
+
+.home-dashboard .card-code {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  display: grid;
+  width: 3.15rem;
+  height: 3.15rem;
+  place-items: center;
+  align-self: center;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  grid-row: 1;
+  grid-column: 2;
+  margin: 0 !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  grid-row: 2;
+  grid-column: 2;
+  max-width: none;
+  margin: 0.42rem 0 0 !important;
+}
+
+.home-dashboard .acta-card::after,
+.home-dashboard .admin-card::after {
+  display: none !important;
+}
+
+/* Navegación activa: misma superficie de vidrio oscuro, sin bloque amarillo. */
+.app-sidebar .sidebar-link.bg-blue-600,
+.app-sidebar .sidebar-link.bg-blue-600:hover {
+  border-color: rgba(255, 255, 255, 0.38) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.035)), rgba(23, 27, 32, 0.76) !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.16), 0 10px 22px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Menú lateral: el mismo fondo se percibe detrás de una capa de vidrio oscuro. */
+.app-shell {
+  background: url("/fondos/textura-geometrica-hd.png") center / cover fixed !important;
+}
+
+.app-shell .app-sidebar {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), transparent 28%), rgba(10, 12, 15, 0.42) !important;
+  box-shadow: 16px 0 44px rgba(0, 0, 0, 0.28), inset -1px 0 rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(5px) saturate(110%);
+}
+
+/* Portada: tarjetas pequeñas, sin códigos abreviados. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  display: block !important;
+  min-height: 0;
+  padding: 1.05rem 1.2rem !important;
+}
+
+.home-dashboard .card-code {
+  display: none !important;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  margin: 0 !important;
+  font-size: 1.05rem !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  margin: 0.32rem 0 0 !important;
+  font-size: 0.84rem !important;
+}
+
+/* Portada: tarjetas minimalistas con elevación al seleccionarlas. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  min-height: 7.1rem;
+  border: 1px solid rgba(202, 194, 218, 0.18) !important;
+  border-top: 2px solid var(--home-accent) !important;
+  border-radius: 0.55rem !important;
+  background: linear-gradient(145deg, rgba(29, 25, 38, 0.94), rgba(17, 19, 25, 0.96)) !important;
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.32) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease !important;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  font-size: 0.98rem !important;
+  font-weight: 750 !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  margin-top: 0.48rem !important;
+  padding-top: 0.48rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #bfc1cb !important;
+  font-size: 0.78rem !important;
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .acta-card:focus-visible,
+.home-dashboard .admin-card:hover,
+.home-dashboard .admin-card:focus-visible {
+  z-index: 2;
+  border-color: var(--home-accent) !important;
+  background: linear-gradient(145deg, rgba(42, 35, 55, 0.98), rgba(21, 23, 31, 0.99)) !important;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.52), 0 0 0 1px var(--home-accent) !important;
+  outline: none;
+  transform: translateY(-12px) scale(1.015) !important;
+}
+
+.home-dashboard .acta-card:active,
+.home-dashboard .admin-card:active {
+  transform: translateY(-5px) scale(1.005) !important;
+}
+
+/* Portada: cuadrícula de tarjetas cuadradas y separadas. */
+.home-dashboard > .grid {
+  gap: 1.25rem !important;
+}
+
+@media (min-width: 1280px) {
+  .home-dashboard > .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .home-dashboard .acta-card,
+  .home-dashboard .admin-card {
+    display: flex !important;
+    aspect-ratio: 1 / 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .home-dashboard > .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Portada: cuadrícula más compacta con solapamiento controlado. */
+.home-dashboard > .grid {
+  gap: 0.5rem !important;
+  overflow: visible;
+}
+
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  position: relative;
+  margin: -0.28rem;
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .acta-card:focus-visible,
+.home-dashboard .admin-card:hover,
+.home-dashboard .admin-card:focus-visible {
+  z-index: 3;
+}
+
+/* Portada: efecto de baraja, cada tarjeta se monta ligeramente sobre la siguiente. */
+@media (min-width: 768px) {
+  .home-dashboard > .grid {
+    column-gap: 0.15rem !important;
+    overflow: visible;
+  }
+
+  .home-dashboard .acta-card,
+  .home-dashboard .admin-card {
+    margin: -0.28rem -0.65rem;
+    z-index: 1;
+  }
+
+  .home-dashboard .acta-card:nth-child(4n + 1),
+  .home-dashboard .admin-card:nth-child(4n + 1) {
+    margin-left: 0;
+    z-index: 1;
+  }
+
+  .home-dashboard .acta-card:nth-child(4n + 2),
+  .home-dashboard .admin-card:nth-child(4n + 2) {
+    z-index: 2;
+  }
+
+  .home-dashboard .acta-card:nth-child(4n + 3),
+  .home-dashboard .admin-card:nth-child(4n + 3) {
+    z-index: 3;
+  }
+
+  .home-dashboard .acta-card:nth-child(4n),
+  .home-dashboard .admin-card:nth-child(4n) {
+    margin-right: 0;
+    z-index: 4;
+  }
+
+  .home-dashboard .acta-card:hover,
+  .home-dashboard .acta-card:focus-visible,
+  .home-dashboard .admin-card:hover,
+  .home-dashboard .admin-card:focus-visible {
+    z-index: 20;
+    transform: translateY(-10px) scale(1.025) !important;
+  }
+}
+
+/* En pantallas grandes, las tarjetas quedan pequeñas y centradas. */
+@media (min-width: 1280px) {
+  .home-dashboard > .grid {
+    grid-template-columns: repeat(4, minmax(11rem, 15rem)) !important;
+    justify-content: center;
+    gap: 0.5rem !important;
+  }
+
+  .home-dashboard .acta-card,
+  .home-dashboard .admin-card {
+    aspect-ratio: 1 / 1;
+    padding: 1.15rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .home-dashboard > .grid {
+    grid-template-columns: repeat(2, minmax(11rem, 15rem)) !important;
+    justify-content: center;
+    gap: 0.5rem !important;
+  }
+}
+
+/* Portada: acabado neutro para que el fondo y el contenido respiren. */
+.home-dashboard .acta-card,
+.home-dashboard .admin-card {
+  border: 1px solid rgba(214, 222, 231, 0.24) !important;
+  border-top: 2px solid rgba(214, 222, 231, 0.66) !important;
+  background: linear-gradient(145deg, rgba(28, 33, 39, 0.95), rgba(10, 13, 17, 0.97)) !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.38) !important;
+  backdrop-filter: blur(8px) saturate(75%);
+}
+
+.home-dashboard .acta-card:hover,
+.home-dashboard .acta-card:focus-visible,
+.home-dashboard .admin-card:hover,
+.home-dashboard .admin-card:focus-visible {
+  border-color: rgba(224, 234, 244, 0.56) !important;
+  border-top-color: #dbe8f5 !important;
+  background: linear-gradient(145deg, rgba(45, 53, 62, 0.98), rgba(17, 22, 28, 0.99)) !important;
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(219, 232, 245, 0.42) !important;
+}
+
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  color: #f3f6f9 !important;
+}
+
+.home-dashboard .acta-card p,
+.home-dashboard .admin-card p {
+  color: #c8d0d8 !important;
 }
 
 /* El formulario no cambia a blanco al pasar el cursor. */

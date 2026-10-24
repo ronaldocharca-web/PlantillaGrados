@@ -300,7 +300,7 @@ export default function SorteoDocentes({ docentes }: Props) {
     <main className="sorteo-page min-h-screen p-8">
       <header className="mx-auto flex max-w-7xl flex-wrap items-start justify-between gap-5">
         <div>
-          <p className="eyebrow">Asignación aleatoria por área</p>
+          <p className="sorteo-eyebrow">Asignación aleatoria por área</p>
           <h1 className="mt-2 text-4xl font-black tracking-tight text-white md:text-5xl">Sorteo de docentes</h1>
           <p className="mt-3 max-w-2xl text-base text-slate-300">Selecciona un área, define el intervalo y asigna un número único a cada docente disponible.</p>
         </div>

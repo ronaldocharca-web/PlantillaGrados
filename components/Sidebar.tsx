@@ -64,6 +64,11 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [contraida, setContraida] = useState(false);
 
+  // La portada funciona como panel principal a pantalla completa.
+  if (pathname === "/") {
+    return null;
+  }
+
   return (
     <aside className={`app-sidebar w-64 min-h-screen text-white p-5 ${contraida ? "sidebar-collapsed" : ""}`}>
       <button
