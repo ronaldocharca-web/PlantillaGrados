@@ -544,6 +544,250 @@ main .text-slate-300 {
   color: #f2f3f5 !important;
 }
 
+/* Manual compartido: paleta actual aplicada sobre las reglas antiguas. */
+.manual-dialog {
+  border: 1px solid rgba(177, 195, 213, 0.34) !important;
+  border-radius: 18px !important;
+  background: rgba(13, 17, 22, 0.96) !important;
+  color: #edf2f7 !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.72), inset 0 1px rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(18px) saturate(115%) !important;
+}
+
+.manual-dialog::backdrop {
+  background: rgba(3, 7, 11, 0.76) !important;
+  backdrop-filter: blur(7px) !important;
+}
+
+.manual-dialog .manual-header,
+.manual-dialog .manual-footer {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+  background: rgba(24, 32, 40, 0.96) !important;
+}
+
+.manual-dialog .manual-header h2,
+.manual-dialog .manual-content h3,
+.manual-dialog .manual-details dt {
+  color: #f2f6fa !important;
+}
+
+.manual-dialog .manual-eyebrow,
+.manual-dialog .manual-step-label {
+  color: #9cb5cc !important;
+}
+
+.manual-dialog .manual-summary,
+.manual-dialog .manual-description,
+.manual-dialog .manual-details dd,
+.manual-dialog .manual-footer > span,
+.manual-dialog .manual-nav small {
+  color: #c0cbd5 !important;
+}
+
+.manual-dialog .manual-nav {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+  background: rgba(9, 14, 19, 0.98) !important;
+}
+
+.manual-dialog .manual-nav > p {
+  color: #91a7bb !important;
+}
+
+.manual-dialog .manual-nav button {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #c1ccd6 !important;
+  box-shadow: none !important;
+}
+
+.manual-dialog .manual-nav button span {
+  color: #8399ad !important;
+}
+
+.manual-dialog .manual-nav button[aria-current="step"] {
+  border: 1px solid rgba(146, 174, 199, 0.44) !important;
+  border-radius: 8px !important;
+  background: rgba(73, 101, 126, 0.34) !important;
+  color: #f5f8fb !important;
+  box-shadow: none !important;
+}
+
+.manual-dialog .manual-nav button[aria-current="step"] span {
+  color: #bfd2e4 !important;
+}
+
+.manual-dialog .manual-close,
+.manual-dialog .manual-secondary {
+  border: 1px solid rgba(185, 201, 216, 0.28) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #e1e8ef !important;
+  box-shadow: none !important;
+}
+
+.manual-dialog .manual-primary {
+  border: 1px solid rgba(164, 190, 212, 0.48) !important;
+  border-radius: 8px !important;
+  background: rgba(65, 91, 116, 0.76) !important;
+  color: #f5f8fb !important;
+  box-shadow: none !important;
+}
+
+.manual-dialog .manual-details > div,
+.manual-dialog .manual-figure a {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+}
+
+.manual-dialog .manual-figure a {
+  border-radius: 10px !important;
+  background: rgba(7, 11, 15, 0.72) !important;
+}
+
+.manual-dialog .manual-figure figcaption {
+  color: #93a4b4 !important;
+}
+
+/* Fuerza también el lienzo interior frente al antiguo tema de alto contraste. */
+html body dialog.manual-dialog,
+html body dialog.manual-dialog .manual-shell,
+html body dialog.manual-dialog .manual-layout,
+html body dialog.manual-dialog .manual-content {
+  background: rgba(13, 17, 22, 0.97) !important;
+  color: #edf2f7 !important;
+}
+
+html body dialog.manual-dialog .manual-header,
+html body dialog.manual-dialog .manual-footer {
+  background: rgba(24, 32, 40, 0.96) !important;
+  color: #edf2f7 !important;
+}
+
+html body dialog.manual-dialog .manual-header h2,
+html body dialog.manual-dialog .manual-content h3,
+html body dialog.manual-dialog .manual-details dt,
+html body dialog.manual-dialog .manual-summary,
+html body dialog.manual-dialog .manual-description,
+html body dialog.manual-dialog .manual-details dd,
+html body dialog.manual-dialog .manual-step-label,
+html body dialog.manual-dialog .manual-eyebrow,
+html body dialog.manual-dialog .manual-figure figcaption {
+  color: #e7edf3 !important;
+}
+
+html body dialog.manual-dialog .manual-nav button[aria-current="step"],
+html body dialog.manual-dialog .manual-nav button[aria-current="step"]:hover,
+html body dialog.manual-dialog .manual-nav button[aria-current="step"]:focus-visible {
+  border: 1px solid rgba(159, 185, 208, 0.58) !important;
+  border-radius: 8px !important;
+  background: linear-gradient(145deg, rgba(67, 89, 109, 0.68), rgba(35, 49, 62, 0.92)) !important;
+  color: #f4f7fa !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 6px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+html body dialog.manual-dialog .manual-nav button[aria-current="step"] span {
+  color: #b9cee0 !important;
+}
+
+/* Portada: títulos centrados dentro de cada tarjeta. */
+.home-dashboard .acta-card h2,
+.home-dashboard .admin-card h2 {
+  text-align: center !important;
+}
+
+/* Manuales: misma versión oscura, transparente y legible del sistema. */
+.manual-dialog {
+  border: 1px solid rgba(182, 199, 216, 0.34) !important;
+  border-radius: 1rem !important;
+  background: rgba(10, 15, 20, 0.82) !important;
+  color: #edf2f7 !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.72), inset 0 1px rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(18px) saturate(115%) !important;
+}
+
+.manual-dialog::backdrop {
+  background: rgba(3, 7, 11, 0.76) !important;
+  backdrop-filter: blur(7px) !important;
+}
+
+.manual-header,
+.manual-footer {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+  background: rgba(24, 32, 40, 0.68) !important;
+}
+
+.manual-header h2,
+.manual-content h3,
+.manual-details dt {
+  color: #f2f6fa !important;
+}
+
+.manual-eyebrow,
+.manual-step-label {
+  color: #9cb5cc !important;
+}
+
+.manual-summary,
+.manual-description,
+.manual-details dd,
+.manual-footer > span,
+.manual-nav small {
+  color: #c0cbd5 !important;
+}
+
+.manual-nav {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+  background: rgba(9, 14, 19, 0.62) !important;
+  backdrop-filter: blur(10px);
+}
+
+.manual-nav > p {
+  color: #91a7bb !important;
+}
+
+.manual-nav button {
+  color: #c1ccd6 !important;
+}
+
+.manual-nav button span {
+  color: #8399ad !important;
+}
+
+.manual-nav button[aria-current="step"] {
+  border-color: rgba(146, 174, 199, 0.44) !important;
+  background: rgba(73, 101, 126, 0.34) !important;
+  color: #f5f8fb !important;
+}
+
+.manual-nav button[aria-current="step"] span {
+  color: #bfd2e4 !important;
+}
+
+.manual-close,
+.manual-secondary {
+  border-color: rgba(185, 201, 216, 0.28) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #e1e8ef !important;
+}
+
+.manual-primary {
+  border-color: rgba(164, 190, 212, 0.48) !important;
+  background: rgba(65, 91, 116, 0.76) !important;
+  color: #f5f8fb !important;
+}
+
+.manual-details > div,
+.manual-figure a {
+  border-color: rgba(185, 201, 216, 0.14) !important;
+}
+
+.manual-figure a {
+  background: rgba(7, 11, 15, 0.54) !important;
+}
+
+.manual-figure figcaption {
+  color: #93a4b4 !important;
+}
+
 /* Portada: color individual y suave para cada módulo. */
 .home-dashboard .acta-card,
 .home-dashboard .admin-card {
