@@ -75,11 +75,11 @@ function acta(titulo: string, pantalla: PantallaManual, detalles: Detalle[], wor
 }
 
 const fechaPresidente: Detalle[] = [
-  { titulo: "Número superior y Libro N.º", texto: "Escribe únicamente números en estos dos campos. El número superior se muestra arriba del acta y el Libro N.º aparece junto a la palabra «Libro». Cada pantalla conserva un valor inicial que puedes editar antes de generar el Word o el PDF." },
+  { titulo: "Folio y Libro N.º", texto: "Escribe únicamente números en estos dos campos. El folio se muestra arriba del acta y el Libro N.º aparece junto a la palabra «Libro». Cada pantalla conserva un valor inicial que puedes editar antes de generar el Word o el PDF." },
   { titulo: "Fecha y hora", texto: "Escribe la fecha en el campo o elígela con el icono de calendario. El orden de día y mes lo muestra tu navegador. Selecciona también la hora de la defensa." },
   { titulo: "Presidente del tribunal", texto: "Selecciona uno de los presidentes activos registrados en Administración. El nombre elegido se utilizará tanto en el PDF como en el Word." },
 ];
-const nota: Detalle = { titulo: "Nota", texto: "Ingresa la calificación entre 0 y 100. Si dejas la nota vacía, el documento muestra __/100. Revisa el resultado en la vista previa." };
+const nota: Detalle = { titulo: "Nota opcional", texto: "Ingresa la calificación entre 0 y 100. Si dejas la nota vacía, el documento muestra __. Revisa el resultado en la vista previa." };
 const carnet = (sigla: string): Detalle => ({
   titulo: "Carnet de identidad (obligatorio)",
   texto: `Ingresa el CI antes de generar la vista previa PDF o descargar Word. El CI no se inserta dentro del acta: solo se usa para nombrar los archivos descargados con la sigla ${sigla.replace(/[^A-Z]/gi, "")}, por ejemplo 12345678-${sigla.replace(/[^A-Z]/gi, "")}.pdf. Los demás campos pueden conservar las reglas de borrador de esta pantalla.`,
@@ -94,10 +94,10 @@ export const manuales: Record<PantallaManual, Manual> = {
       descripcion: "Todos los campos del formulario son obligatorios para generar el PDF o descargar Word.",
       detalles: [
         { titulo: "Postulante y CI", texto: "Escribe el nombre y elige el género. El documento ajustará Licenciado/Licenciada y aprobado/aprobada. El CI solo nombra las descargas: 12345678-M.docx o 12345678-M.pdf; no aparece dentro del acta." },
-        { titulo: "Fecha, hora y número superior", texto: "Selecciona la fecha y hora de la defensa. El acta convierte la hora a a. m. o p. m. El número superior indica el folio inicial; las páginas siguientes continúan la numeración." },
+        { titulo: "Fecha, hora y folio", texto: "Selecciona la fecha y hora de la defensa. El acta convierte la hora a a. m. o p. m. El folio indica el número inicial; las páginas siguientes continúan la numeración." },
         { titulo: "Tesis y grado", texto: "Escribe el título completo, el nombre de la maestría y las siglas del grado. Después de «versión» se conservan tres espacios, sin guiones bajos." },
         { titulo: "Tribunales", texto: "Selecciona dos tribunales docentes, un revisor y un presidente. Los docentes y presidentes activos se gestionan en Administración." },
-        { titulo: "Nota", texto: "Ingresa un entero entre 0 y 100. El literal y el resultado se calculan automáticamente: 0–65 reprobado; 66–70 aprobado; 71–80 bueno; 81–90 muy bueno; 91–100 excelente." },
+        { titulo: "Nota opcional", texto: "Puedes ingresar un entero entre 0 y 100. Si la dejas vacía, el documento muestra __. Cuando existe una nota, el literal y el resultado se calculan automáticamente: 0–65 reprobado; 66–70 aprobado; 71–80 bueno; 81–90 muy bueno; 91–100 excelente." },
       ],
     }, revisarPdf, guardar("Descarga un Word editable con el nombre CI-M.docx. No necesitas activar el conversor para generar Word.")],
   },

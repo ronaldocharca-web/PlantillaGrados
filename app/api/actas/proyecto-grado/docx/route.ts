@@ -31,7 +31,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    documento.render(construirDatosActa(datos, SIGLAS_MODALIDAD.proyectoGrado));
+    documento.render(
+      construirDatosActa(datos, SIGLAS_MODALIDAD.proyectoGrado, {
+        nombresPostulantesEnLineas: true,
+      })
+    );
 
     const archivo = documento.getZip().generate({
       type: "nodebuffer",

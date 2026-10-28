@@ -34,7 +34,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    documento.render(construirDatosActa(datos, SIGLAS_MODALIDAD.proyectoGrado));
+    documento.render(
+      construirDatosActa(datos, SIGLAS_MODALIDAD.proyectoGrado, {
+        nombresPostulantesEnLineas: true,
+      })
+    );
 
     // 3. Generar DOCX en memoria
     const docx = documento.getZip().generate({

@@ -22,7 +22,11 @@ function articuloUniversitario(genero: string | undefined) {
   return genero === "femenino" ? "la" : "el";
 }
 
-export function construirDatosActa(datos: ActaRequestData, siglaModalidad: string) {
+export function construirDatosActa(
+  datos: ActaRequestData,
+  siglaModalidad: string,
+  opciones: { nombresPostulantesEnLineas?: boolean } = {}
+) {
   const postulante = datos.postulante?.trim() ?? "";
   const postulante2 = datos.postulante2?.trim() ?? "";
   const datosCi = construirDatosCi(datos.ci, siglaModalidad);
@@ -45,7 +49,9 @@ export function construirDatosActa(datos: ActaRequestData, siglaModalidad: strin
     ? `${primerPostulante}${conectorPostulantes}${articuloPostulante2}${universitario2}`
     : primerPostulante;
   const nombresPostulantes = postulante2
-    ? `${nombrePostulante1} y ${nombrePostulante2}`
+    ? opciones.nombresPostulantesEnLineas
+      ? `${nombrePostulante1}\n${nombrePostulante2}`
+      : `${nombrePostulante1} y ${nombrePostulante2}`
     : nombrePostulante1;
 
   const etiquetaPostulante = postulante2 ? "POSTULANTES" : "POSTULANTE";

@@ -71,10 +71,10 @@ export default function FormularioMaestria({ docentes, presidentes, presidente }
     } finally { setOcupado(null); }
   }
 
-  function campo(nombre: keyof Datos, opciones: InputHTMLAttributes<HTMLInputElement> = {}) {
+  function campo(nombre: keyof Datos, opciones: InputHTMLAttributes<HTMLInputElement> = {}, obligatorio = true) {
     return <div>
-      <label htmlFor={`maestria-${nombre}`} className="mb-2 block font-medium text-slate-700">{camposMaestria[nombre]} *</label>
-      <input {...opciones} id={`maestria-${nombre}`} required value={datos[nombre]} aria-invalid={Boolean(errores[nombre])}
+      <label htmlFor={`maestria-${nombre}`} className="mb-2 block font-medium text-slate-700">{camposMaestria[nombre]}{obligatorio ? " *" : " (opcional)"}</label>
+      <input {...opciones} id={`maestria-${nombre}`} required={obligatorio} value={datos[nombre]} aria-invalid={Boolean(errores[nombre])}
         onChange={evento => cambiar(nombre, evento.target.value)} className={control} />
     </div>;
   }
@@ -84,14 +84,14 @@ export default function FormularioMaestria({ docentes, presidentes, presidente }
   return <div className="dashboard-page p-8">
     <div className="dashboard-header mb-8">
       <div><h1 className="text-4xl font-bold tracking-tight text-slate-900">Acta de Maestría</h1>
-        <p className="mt-3 text-slate-500">Defensa de tesis de postgrado. Complete los datos para generar el acta.</p></div>
+        <p className="mt-3 text-slate-500">Defensa de tesis de postgrado. La nota es opcional; si queda vacía, el documento muestra __.</p></div>
       <div className="page-heading-actions"><ManualUsuario pantalla="maestria" /><ActivarGeneradorPdf /></div>
     </div>
 
     <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
       <section className="rounded-2xl bg-white p-6 shadow-sm">
         <h2 className="mb-6 text-2xl font-bold text-slate-800">Datos del acta</h2>
-        <p className="mb-6 text-sm text-slate-500">Los campos con * son obligatorios. El literal y la valoración se calculan desde la nota.</p>
+        <p className="mb-6 text-sm text-slate-500">Los campos con * son obligatorios. La nota es opcional; el literal y la valoración se calculan cuando la ingreses.</p>
         {Object.keys(errores).length > 0 && <div ref={aviso} tabIndex={-1} role="alert" className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           <p className="font-semibold">Revise los datos antes de generar el documento:</p>
           <ul className="mt-2 list-disc pl-5">{Object.entries(errores).map(([clave, texto]) => <li key={clave}>{texto}</li>)}</ul>
@@ -122,12 +122,12 @@ export default function FormularioMaestria({ docentes, presidentes, presidente }
             <div><p className="mb-2 font-medium text-slate-700">Presidente del tribunal *</p>
               <SelectorPresidente presidentes={presidentes} value={datos.presidente} onChange={valor => cambiar("presidente", valor)} />
               <p className="mt-2 text-sm text-slate-500">Puede agregar docentes y presidentes desde Administración.</p></div>
-            {campo("nota", { type: "number", min: 0, max: 100, step: 1, placeholder: "0 a 100" })}
+            {campo("nota", { type: "number", min: 0, max: 100, step: 1, placeholder: "0 a 100" }, false)}
             <div><label htmlFor="maestria-literal" className="mb-2 block font-medium text-slate-700">Nota literal (automática)</label>
-              <input id="maestria-literal" readOnly value={tieneNota ? notaEnLetras(Number(datos.nota)) : ""} className={control} />
+              <input id="maestria-literal" readOnly value={tieneNota ? notaEnLetras(Number(datos.nota)) : "__"} className={control} />
             </div>
             <div><label htmlFor="maestria-resultado" className="mb-2 block font-medium text-slate-700">Ha sido (automático)</label>
-              <input id="maestria-resultado" readOnly value={tieneNota ? resultadoMaestria(Number(datos.nota), datos.genero) : ""} className={control} />
+              <input id="maestria-resultado" readOnly value={tieneNota ? resultadoMaestria(Number(datos.nota), datos.genero) : "__"} className={control} />
             </div>
             <p className="text-sm leading-relaxed text-slate-500">0–65: reprobado · 66–70: aprobado · 71–80: bueno · 81–90: muy bueno · 91–100: excelente.</p>
             <button type="submit" className="w-full rounded-xl bg-blue-600 px-5 py-3 font-medium text-white">{ocupado === "pdf" ? "Generando PDF…" : "Generar vista previa PDF"}</button>

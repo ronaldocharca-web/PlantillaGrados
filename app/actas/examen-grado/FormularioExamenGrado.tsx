@@ -107,7 +107,7 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
     const requeridos: Array<[keyof Formulario, string]> = [
       ["postulante", "El nombre del postulante es obligatorio."],
       ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
-      ["pagina", "El número superior es obligatorio."],
+      ["pagina", "El folio es obligatorio."],
       ["libro", "El número de libro es obligatorio."],
       ["materia", "La materia es obligatoria."],
       ["area", "El área es obligatoria."],
@@ -117,7 +117,6 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
       ["fecha", "Seleccione la fecha del examen."],
       ["hora", "Seleccione la hora del examen."],
       ["duracion", "La duración es obligatoria."],
-      ["nota", "La nota es obligatoria."],
       ["aprobado", "Indique el texto de aprobado."],
       ["tribunal1", "Seleccione el primer tribunal evaluador."],
       ["tribunal2", "Seleccione el segundo tribunal evaluador."],
@@ -220,7 +219,7 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
               <input required value={formulario.ci} onChange={(e) => cambiar("ci", e.target.value)} placeholder="Ej. 12345678" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               <p className="mt-1 text-xs text-slate-500">Solo se usará para nombrar la descarga, por ejemplo 12345678-EG.</p>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Número superior", "pagina", "Ej. 08")}{campo("Libro N.º", "libro", "Ej. 9")}</div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Folio", "pagina", "Ej. 08")}{campo("Libro N.º", "libro", "Ej. 9")}</div>
             {campo("Materia", "materia", "Ej. TUR – 327 PLANIFICACIÓN TURÍSTICA")}
             {campo("Área", "area", "Ej. TURÍSTICA Y ADMINISTRATIVA")}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Aula", "aula", "Ej. 11-05")}{campo("N.º de convocatoria", "convocatoria", "Ej. 02")}</div>
@@ -235,7 +234,7 @@ export default function FormularioExamenGrado({ docentes, presidentes, president
                 <input type="time" value={formulario.hora} onChange={(e) => cambiar("hora", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               </div>
             </div>
-            {campo("Nota", "nota", "Ej. 90")}
+            {campo("Nota (opcional)", "nota", "Ej. 90")}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{campo("Texto de aprobado", "aprobado", "Ej. X")}{campo("Texto de reprobado", "reprobado", "Dejar vacío si no corresponde")}</div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <label htmlFor="filtro-area-tribunales" className="mb-2 block text-sm font-medium text-slate-700">Filtrar tribunales por área</label>

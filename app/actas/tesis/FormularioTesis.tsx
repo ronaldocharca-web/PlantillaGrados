@@ -182,7 +182,7 @@ function validarFormulario() {
   const requeridos: Array<[keyof typeof formulario, string]> = [
     ["postulante", "El nombre del primer postulante es obligatorio."],
     ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
-    ["pagina", "El número superior es obligatorio."],
+    ["pagina", "El folio es obligatorio."],
     ["libro", "El número de libro es obligatorio."],
     ["tribunal1", "Seleccione el primer miembro del tribunal."],
     ["tribunal2", "Seleccione el segundo miembro del tribunal."],
@@ -190,7 +190,6 @@ function validarFormulario() {
     ["fecha", "Seleccione la fecha de la defensa."],
     ["hora", "Seleccione la hora de la defensa."],
     ["tema", "El tema de la tesis es obligatorio."],
-    ["nota", "La nota es obligatoria."],
   ];
 
   for (const [campo, mensaje] of requeridos) {
@@ -386,7 +385,7 @@ async function generarActa() {
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Número superior</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Folio</label>
                 <input type="number" min="1" value={formulario.pagina} onChange={(e) => cambiarCampo("pagina", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               </div>
               <div>
@@ -529,7 +528,7 @@ async function generarActa() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Nota
+                Nota (opcional)
               </label>
 
               <input

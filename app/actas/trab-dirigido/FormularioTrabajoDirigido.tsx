@@ -73,12 +73,11 @@ export default function FormularioTrabajoDirigido({ docentes, presidentes, presi
     const requeridos: Array<[keyof Formulario, string]> = [
       ["postulante", "El nombre del postulante es obligatorio."],
       ["ci", "El carnet de identidad (CI) es obligatorio para generar el PDF o descargar el Word."],
-      ["pagina", "El número superior es obligatorio."],
+      ["pagina", "El folio es obligatorio."],
       ["libro", "El número de libro es obligatorio."],
       ["fecha", "Seleccione la fecha de la defensa."],
       ["hora", "Seleccione la hora de la defensa."],
       ["tema", "El tema del Trabajo Dirigido es obligatorio."],
-      ["nota", "La nota final es obligatoria."],
     ];
 
     for (const [campo, mensaje] of requeridos) {
@@ -92,6 +91,9 @@ export default function FormularioTrabajoDirigido({ docentes, presidentes, presi
     const tribunales = [formulario.tribunal1, formulario.tribunal2].filter(Boolean);
     if (new Set(tribunales).size !== tribunales.length) {
       nuevos.tribunal2 = "Los tribunales deben ser diferentes.";
+    }
+    if (formulario.nota.trim() && (Number.isNaN(Number(formulario.nota)) || Number(formulario.nota) < 0 || Number(formulario.nota) > 100)) {
+      nuevos.nota = "La nota debe estar entre 0 y 100.";
     }
     setErrores(nuevos);
     return Object.keys(nuevos).length === 0;
@@ -205,7 +207,7 @@ export default function FormularioTrabajoDirigido({ docentes, presidentes, presi
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Número superior</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Folio</label>
                 <input type="number" min="1" value={formulario.pagina} onChange={(e) => cambiar("pagina", e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
               </div>
               <div>
@@ -235,7 +237,7 @@ export default function FormularioTrabajoDirigido({ docentes, presidentes, presi
               <textarea value={formulario.tema} onChange={(e) => cambiar("tema", e.target.value)} placeholder="Ingrese el título completo" rows={4} className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Nota final</label>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Nota final (opcional)</label>
               <input value={formulario.nota} onChange={(e) => cambiar("nota", e.target.value)} placeholder="Ej. 95" className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500" />
             </div>
             {selector("Tribunal evaluador 1", "tribunal1", false)}

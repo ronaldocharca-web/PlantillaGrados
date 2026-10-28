@@ -1,7 +1,7 @@
 export const camposMaestria = {
   postulante: "Nombre del postulante",
   ci: "Carnet de identidad (CI)",
-  pagina: "Número superior inicial",
+  pagina: "Folio",
   genero: "Género del postulante",
   fecha: "Fecha de la defensa",
   hora: "Hora de la defensa",
@@ -39,15 +39,16 @@ export function validarMaestria(entrada: unknown): Record<string, string> {
   const datos = entrada && typeof entrada === "object" ? entrada as Record<string, unknown> : {};
   const errores: Record<string, string> = {};
   for (const [campo, etiqueta] of Object.entries(camposMaestria)) {
+    if (campo === "nota") continue;
     if (typeof datos[campo] !== "string" || !(datos[campo] as string).trim()) {
       errores[campo] = `Complete el campo «${etiqueta}».`;
     }
   }
-  if (!errores.nota && (!/^\d{1,3}$/.test(String(datos.nota).trim()) || Number(datos.nota) > 100)) {
+  if (String(datos.nota ?? "").trim() && (!/^\d{1,3}$/.test(String(datos.nota).trim()) || Number(datos.nota) > 100)) {
     errores.nota = "La nota debe ser un número entero entre 0 y 100.";
   }
   if (!errores.pagina && (!/^\d+$/.test(String(datos.pagina).trim()) || Number(datos.pagina) < 1 || Number(datos.pagina) > 99998)) {
-    errores.pagina = "El número superior debe ser un entero entre 1 y 99998.";
+    errores.pagina = "El folio debe ser un entero entre 1 y 99998.";
   }
   if (!errores.genero && !["masculino", "femenino"].includes(String(datos.genero))) errores.genero = "Seleccione un género válido.";
   if (!errores.siglasGrado && !String(datos.siglasGrado).replace(/[()\s]/g, "")) errores.siglasGrado = "Ingrese las siglas del grado académico.";
@@ -69,7 +70,8 @@ export function validarMaestria(entrada: unknown): Record<string, string> {
 export function construirDatosMaestria(formulario: FormularioMaestria) {
   const femenino = formulario.genero === "femenino";
   const [hora, minuto] = formulario.hora.split(":").map(Number);
-  const nota = Number(formulario.nota);
+  const notaIngresada = formulario.nota.trim();
+  const nota = Number(notaIngresada);
   return {
     postulante: formulario.postulante.trim(),
     tratamiento: femenino ? "la Licenciada" : "el Licenciado",
@@ -81,9 +83,9 @@ export function construirDatosMaestria(formulario: FormularioMaestria) {
     tema: formulario.tema.trim(),
     maestria: formulario.maestria.trim(),
     siglasGrado: formulario.siglasGrado.trim().replace(/^\(+|\)+$/g, ""),
-    notaTexto: String(nota),
-    notaLiteral: notaEnLetras(nota),
-    resultado: resultadoMaestria(nota, formulario.genero),
+    notaTexto: notaIngresada || "__",
+    notaLiteral: notaIngresada ? notaEnLetras(nota) : "__",
+    resultado: notaIngresada ? resultadoMaestria(nota, formulario.genero) : "__",
     tribunal1: formulario.tribunal1.trim(),
     tribunal2: formulario.tribunal2.trim(),
     revisor: formulario.revisor.trim(),
