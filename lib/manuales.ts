@@ -6,6 +6,8 @@ export type PantallaManual =
   | "excelencia"
   | "trab-dirigido"
   | "maestria"
+  | "petaeng-memoria-laboral"
+  | "petaeng-cursos"
   | "sorteo-docentes"
   | "admin";
 
@@ -116,6 +118,8 @@ export const manuales: Record<PantallaManual, Manual> = {
         { titulo: "Excelencia", texto: "Genera un acta de graduación por excelencia con uno, dos o tres tribunales evaluadores." },
         { titulo: "Trabajo Dirigido", texto: "Genera el acta de defensa de Trabajo Dirigido, con tutor y uno o dos miembros del tribunal." },
         { titulo: "Maestría", texto: "Prepara el acta de tesis de postgrado, con dos tribunales docentes, un revisor, presidente y valoración automática de la nota." },
+        { titulo: "Memoria Laboral PETAENG", texto: "Genera el acta de defensa pública de Memoria Laboral con tutor, dos tribunales de grado y presidente." },
+        { titulo: "Cursos PETAENG", texto: "Genera el acta de conformidad de Cursos con tres tribunales revisores y presidente." },
         { titulo: "Sorteo de docentes", texto: "Asigna números aleatorios a los docentes de un área, controla cuántas áreas puede ocupar cada docente y descarga el resultado en PDF." },
         { titulo: "Administración", texto: "Permite agregar, editar, activar o desactivar docentes, y configurar al presidente del tribunal." },
       ],
@@ -179,6 +183,37 @@ export const manuales: Record<PantallaManual, Manual> = {
     nota,
     { titulo: "Borrador", texto: "Puedes generar la vista previa y descargar Word sin completar los demás datos, pero el CI siempre es obligatorio. Comprueba el documento antes de usar el acta final." },
   ], "Pulsa «Descargar Word». El sistema elige la plantilla de uno o dos tribunales. El CI es obligatorio; los demás campos pueden quedar vacíos."),
+  "petaeng-memoria-laboral": {
+    titulo: "Defensa de Memoria Laboral PETAENG",
+    resumen: "Completa los datos de la defensa y genera el documento con la plantilla oficial.",
+    pasos: [activarPdf, {
+      titulo: "Completa los datos de la Memoria Laboral",
+      descripcion: "Los campos obligatorios se utilizan en las dos páginas del acta.",
+      detalles: [
+        { titulo: "Postulante y CI", texto: "Escribe el nombre completo. El CI solo se utiliza para nombrar los archivos y no aparece dentro del acta." },
+        { titulo: "Folio, libro y gestión", texto: "El folio corresponde a la primera página; la segunda página usa automáticamente el número siguiente. Verifica también el libro y la gestión." },
+        { titulo: "Tema", texto: "Escribe el título completo de la Memoria Laboral tal como debe aparecer en el encabezado y en el texto del acta." },
+        { titulo: "Tribunales", texto: "Selecciona dos tribunales de grado, el docente tutor y el presidente. Las cuatro personas deben ser diferentes." },
+        { titulo: "Fecha y hora", texto: "Selecciona la fecha y la hora exactas de la defensa. El documento las convierte al texto formal de la plantilla." },
+        nota,
+      ],
+    }, revisarPdf, guardar("Descarga el Word editable con el nombre CI-PETAENG-ML.docx. El conversor PDF no es necesario para esta descarga.")],
+  },
+  "petaeng-cursos": {
+    titulo: "Conformidad de Cursos PETAENG",
+    resumen: "Completa los datos de conformidad y genera el documento con la plantilla oficial.",
+    pasos: [activarPdf, {
+      titulo: "Completa los datos de Cursos PETAENG",
+      descripcion: "El acta utiliza tres tribunales revisores y un presidente.",
+      detalles: [
+        { titulo: "Postulante y CI", texto: "Escribe el nombre completo. El CI solo se utiliza para nombrar los archivos y no aparece dentro del acta." },
+        { titulo: "Folio, libro y gestión", texto: "Verifica los tres valores antes de generar el documento; se muestran en el encabezado y en el texto del acta." },
+        { titulo: "Tribunales revisores", texto: "Selecciona tres tribunales revisores y el presidente. Las cuatro personas deben ser diferentes." },
+        { titulo: "Fecha y hora", texto: "Selecciona la fecha y la hora del acto de conformidad." },
+        nota,
+      ],
+    }, revisarPdf, guardar("Descarga el Word editable con el nombre CI-PETAENG-C.docx. El conversor PDF no es necesario para esta descarga.")],
+  },
   "sorteo-docentes": {
     titulo: "Sorteo de docentes",
     resumen: "Asigna números al azar por área y conserva un límite de participación entre sorteos.",

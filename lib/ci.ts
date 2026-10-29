@@ -5,6 +5,8 @@ export const SIGLAS_MODALIDAD = {
   excelencia: "E.",
   trabajoDirigido: "T.D.",
   maestria: "M.",
+  memoriaLaboralPetaeng: "PETAENG-ML",
+  cursosPetaeng: "PETAENG-C",
 } as const;
 
 export class ErrorValidacionActa extends Error {
@@ -15,6 +17,7 @@ export class ErrorValidacionActa extends Error {
 }
 
 export function construirDatosCi(ci: string | undefined, sigla: string) {
+  void sigla;
   const valor = ci?.trim() ?? "";
 
   if (!valor) {

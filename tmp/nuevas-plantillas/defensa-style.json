@@ -1,0 +1,135 @@
+{
+  "input": "C:\\Users\\ronal\\OneDrive\\Desktop\\08. ACTA DE DEFENSA - Univ. Maribel Leon.docx",
+  "fonts_by_char_count": {
+    "Times New Roman": 2399
+  },
+  "direct_run_formatting_runs": 201,
+  "direct_paragraph_formatting_paragraphs": 47,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 1,
+      "text": "Folio: N\u00ba74",
+      "style": "Header"
+    },
+    {
+      "para_index": 2,
+      "text": "Libro: N\u00ba 9",
+      "style": "Header"
+    },
+    {
+      "para_index": 5,
+      "text": "Universidad Mayor de San Andr\u00e9s",
+      "style": "Normal"
+    },
+    {
+      "para_index": 6,
+      "text": "Facultad de Humanidades y Ciencias de la Educaci\u00f3n",
+      "style": "Normal"
+    },
+    {
+      "para_index": 7,
+      "text": "CARRERA DE TURISMO",
+      "style": "Normal"
+    },
+    {
+      "para_index": 9,
+      "text": "ACTA DE DEFENSA P\u00daBLICA \u2013 MEMORIA LABORAL \u2013 PETAENG 2026",
+      "style": "Normal"
+    },
+    {
+      "para_index": 13,
+      "text": "     POSTULANTE: \tOlivia Maribel Le\u00f3n Mendoza",
+      "style": "Normal"
+    },
+    {
+      "para_index": 14,
+      "text": "TUTOR: \t\tMSc. Wendy Jenny Echalar D\u00e1vila ",
+      "style": "Normal"
+    },
+    {
+      "para_index": 15,
+      "text": "TRIBUNAL: \t\tPh.D. Juana Margot Cavero Vda. De Rojas",
+      "style": "Normal"
+    },
+    {
+      "para_index": 18,
+      "text": "PRESIDENTE TRIBUNAL:\t\t Mg. Tur. Dante Enrique Caero Miranda",
+      "style": "Normal"
+    },
+    {
+      "para_index": 28,
+      "text": "Folio: N\u00ba 75",
+      "style": "Header"
+    },
+    {
+      "para_index": 29,
+      "text": "Libro: N\u00ba 9",
+      "style": "Header"
+    },
+    {
+      "para_index": 53,
+      "text": "           DOCENTE TUTOR (A)\t\t\t                       PRESIDENTE de TRIBUNAL",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_run_formatting": [
+      {
+        "para_index": 1,
+        "run_text": "Folio: N\u00ba",
+        "style": "Header"
+      },
+      {
+        "para_index": 1,
+        "run_text": "7",
+        "style": "Header"
+      },
+      {
+        "para_index": 1,
+        "run_text": "4",
+        "style": "Header"
+      },
+      {
+        "para_index": 2,
+        "run_text": "Libro: ",
+        "style": "Header"
+      },
+      {
+        "para_index": 2,
+        "run_text": "N\u00ba",
+        "style": "Header"
+      }
+    ],
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 4,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "text": "Universidad Mayor de San Andr\u00e9s",
+        "style": "Normal"
+      },
+      {
+        "para_index": 6,
+        "text": "Facultad de Humanidades y Ciencias de la Educaci\u00f3n",
+        "style": "Normal"
+      },
+      {
+        "para_index": 7,
+        "text": "CARRERA DE TURISMO",
+        "style": "Normal"
+      },
+      {
+        "para_index": 8,
+        "text": "",
+        "style": "Normal"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

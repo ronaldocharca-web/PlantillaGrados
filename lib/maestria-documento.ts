@@ -9,7 +9,7 @@ export function generarWordMaestria(entrada: unknown) {
   const errores = validarMaestria(entrada);
   if (Object.keys(errores).length) throw new ErrorValidacionActa(Object.values(errores).join("\n"));
   const formulario = entrada as FormularioMaestria;
-  const zip = new PizZip(fs.readFileSync(path.join(process.cwd(), "templates", "acta-defensa-maestria.docx")));
+  const zip = new PizZip(fs.readFileSync(path.join(process.cwd(), "templates", "acta-defensa-maestria-compacta.docx")));
   const documento = new Docxtemplater(zip, {
     paragraphLoop: true, linebreaks: true, delimiters: { start: "{{", end: "}}" },
     nullGetter: () => "",

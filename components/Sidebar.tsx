@@ -57,8 +57,25 @@ const opciones: Array<{ nombre: string; ruta: string; icono: IconName }> = [
     icono: "work",
   },
   { nombre: "Acta de Maestría", ruta: "/actas/maestria", icono: "thesis" },
-  { nombre: "Sorteo de docentes", ruta: "/sorteo-docentes", icono: "raffle" },
 ];
+
+const opcionesPetaeng: Array<{ nombre: string; ruta: string; icono: IconName }> = [
+  { nombre: "Memoria Laboral PETAENG", ruta: "/actas/petaeng-memoria-laboral", icono: "document" },
+  { nombre: "Cursos PETAENG", ruta: "/actas/petaeng-cursos", icono: "exam" },
+];
+
+function EnlaceMenu({ opcion, pathname, contraida }: {
+  opcion: { nombre: string; ruta: string; icono: IconName };
+  pathname: string;
+  contraida: boolean;
+}) {
+  const activo = pathname === opcion.ruta;
+  return <Link href={opcion.ruta} aria-label={opcion.nombre} title={contraida ? opcion.nombre : undefined}
+    className={`sidebar-link block rounded-xl px-4 py-3 transition ${activo ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800"}`}>
+    <span className="sidebar-item-content"><span className="sidebar-icon"><SidebarIcon name={opcion.icono} /></span>
+      <span className="sidebar-label">{opcion.nombre}</span></span>
+  </Link>;
+}
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -99,28 +116,20 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-navigation space-y-1.5" aria-label="Navegación principal">
-        {opciones.map((opcion) => {
-          const activo = pathname === opcion.ruta;
+        {opciones.map(opcion => <EnlaceMenu key={opcion.ruta} opcion={opcion} pathname={pathname} contraida={contraida} />)}
 
-          return (
-            <Link
-              key={opcion.nombre}
-              href={opcion.ruta}
-              aria-label={opcion.nombre}
-              title={contraida ? opcion.nombre : undefined}
-              className={`sidebar-link block rounded-xl px-4 py-3 transition ${
-                activo
-                  ? "bg-blue-600 text-white"
-                  : "text-slate-300 hover:bg-slate-800"
-              }`}
-            >
-              <span className="sidebar-item-content">
-                <span className="sidebar-icon"><SidebarIcon name={opcion.icono} /></span>
-                <span className="sidebar-label">{opcion.nombre}</span>
-              </span>
-            </Link>
-          );
-        })}
+        <div className="my-4 border-y border-slate-600/70 py-3">
+          <p className="sidebar-label mb-2 px-4 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-slate-400">PETAENG</p>
+          <div className="space-y-1.5">
+            {opcionesPetaeng.map(opcion => <EnlaceMenu key={opcion.ruta} opcion={opcion} pathname={pathname} contraida={contraida} />)}
+          </div>
+        </div>
+
+        <EnlaceMenu opcion={{ nombre: "Sorteo de docentes", ruta: "/sorteo-docentes", icono: "raffle" }} pathname={pathname} contraida={contraida} />
+
+        <div className="sidebar-mobile-admin">
+          <EnlaceMenu opcion={{ nombre: "Administración", ruta: "/admin", icono: "settings" }} pathname={pathname} contraida={contraida} />
+        </div>
       </nav>
 
       <div className="sidebar-admin-section mt-10 border-t border-slate-700 pt-5">

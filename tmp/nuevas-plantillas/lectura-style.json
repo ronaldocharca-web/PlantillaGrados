@@ -1,0 +1,90 @@
+{
+  "input": "C:\\Users\\ronal\\OneDrive\\Desktop\\84. ACTA DE LECTURA - CURSOS - PETAENG  2026 - Univ. Valle Pusarico Vivian.docx",
+  "fonts_by_char_count": {
+    "Times New Roman": 1380
+  },
+  "direct_run_formatting_runs": 117,
+  "direct_paragraph_formatting_paragraphs": 23,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 1,
+      "text": "Folio: N\u00ba 84",
+      "style": "Header"
+    },
+    {
+      "para_index": 2,
+      "text": "Libro: N\u00ba 9",
+      "style": "Header"
+    },
+    {
+      "para_index": 6,
+      "text": "ACTA DE CONFORMIDAD",
+      "style": "Normal"
+    },
+    {
+      "para_index": 23,
+      "text": "         TRIBUNAL REVISOR\t\t\t\t\t     PRESIDENTE de TRIBUNAL",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_run_formatting": [
+      {
+        "para_index": 1,
+        "run_text": "Folio: ",
+        "style": "Header"
+      },
+      {
+        "para_index": 1,
+        "run_text": "N\u00ba",
+        "style": "Header"
+      },
+      {
+        "para_index": 1,
+        "run_text": " ",
+        "style": "Header"
+      },
+      {
+        "para_index": 1,
+        "run_text": "84",
+        "style": "Header"
+      },
+      {
+        "para_index": 2,
+        "run_text": "Libro: ",
+        "style": "Header"
+      }
+    ],
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 4,
+        "text": "PLAN EXCEPCIONAL DE TITULACI\u00d3N PARA ESTUDIANTES                 ANTIGUOS NO GRADUADOS - P.E.T.A.E.N.G. 2026",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 6,
+        "text": "ACTA DE CONFORMIDAD",
+        "style": "Normal"
+      },
+      {
+        "para_index": 7,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 8,
+        "text": "A horas 15:00 del d\u00eda viernes 23 de octubre 2026, en la sala de defensas de la Carrera de Turismo, en presencia del Trib",
+        "style": "Normal"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

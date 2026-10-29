@@ -97,6 +97,30 @@ export default function Home() {
           <p className="mt-2 text-sm text-slate-500">Generar actas de defensa de tesis de postgrado de Maestría.</p>
         </Link>
 
+        <div className="col-span-full my-1 flex items-center gap-4" aria-label="Módulos PETAENG">
+          <span className="h-px flex-1 bg-slate-500/50" />
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-300">PETAENG</span>
+          <span className="h-px flex-1 bg-slate-500/50" />
+        </div>
+
+        <Link href="/actas/petaeng-memoria-laboral" className="acta-card acta-rose group rounded-2xl p-6 transition">
+          <span className="card-code">ML</span>
+          <h2 className="text-lg font-semibold text-slate-800">Defensa de Memoria Laboral</h2>
+          <p className="mt-2 text-sm text-slate-500">Generar el acta de defensa pública de Memoria Laboral PETAENG.</p>
+        </Link>
+
+        <Link href="/actas/petaeng-cursos" className="acta-card acta-amber group rounded-2xl p-6 transition">
+          <span className="card-code">CU</span>
+          <h2 className="text-lg font-semibold text-slate-800">Conformidad de Cursos</h2>
+          <p className="mt-2 text-sm text-slate-500">Generar el acta de conformidad de Cursos PETAENG.</p>
+        </Link>
+
+        <div className="col-span-full my-1 flex items-center gap-4" aria-label="Herramientas del sistema">
+          <span className="h-px flex-1 bg-slate-500/50" />
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-300">Herramientas</span>
+          <span className="h-px flex-1 bg-slate-500/50" />
+        </div>
+
         <Link href="/sorteo-docentes" className="acta-card acta-blue group rounded-2xl p-6 transition">
           <span className="card-code">SO</span>
           <h2 className="text-lg font-semibold text-slate-800">Sorteo de docentes</h2>
